@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute">
+	
+	<mx:Style source="Main.css" />
+	
+	<mx:Panel x="76" y="72" width="250" height="200" layout="absolute">
+		<mx:ControlBar>
+		</mx:ControlBar>
+	</mx:Panel>
+	
+</mx:WindowedApplication>

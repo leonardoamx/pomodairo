@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="600">
+	<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+	
+	<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+	<mx:HRule y="56" width="352" x="395"/>
+	<mx:HRule y="113" width="352" x="395"/>
+	<mx:VRule x="261" y="13" height="240"/>
+	<mx:VRule x="361.2" y="13" height="240"/>
+	<mx:PopUpButton x="395" y="72" label="PopUpButton"/>
+	<mx:PopUpButton x="576" y="72" label="Disabled" enabled="false"/>
+	<mx:PopUpMenuButton x="395" y="17" label="PopUpMenuButton">
+		<mx:dataProvider>
+			<mx:Array>
+				<mx:Object label="Menu 1"/>
+				<mx:Object label="Menu 2"/>
+				<mx:Object label="Menu 3"/>
+			</mx:Array>
+		</mx:dataProvider>
+	</mx:PopUpMenuButton>
+	<mx:PopUpMenuButton x="576" y="17" label="DisabledPopUpMenu"  enabled="false"/>
+	
+	<mx:NumericStepper x="506" y="180"/>
+	
+	<mx:DateChooser x="22" y="17"/>
+	<mx:VSlider x="305" y="45"/>
+	<mx:Label x="291" y="19" text="VSlider"/>
+	
+	<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+	<mx:Label x="395" y="182" text="Numeric Stepper"/>
+	
+	<mx:ColorPicker x="479" y="131"/>
+	<mx:Label x="395" y="135" text="Color Picker"/>
+	
+	<mx:Label x="395" y="225" text="HSlider"/>
+	<mx:HSlider x="395" y="243"/>
+	
+	
+	<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+	<mx:HRule y="273" left="20" right="30"/>
+	<mx:ProgressBar id="progress" x="22" y="287" width="210" creationComplete="progress.setProgress(50,100)" mode="manual"/>
+	<mx:ProgressBar x="278.2" y="287" width="210" indeterminate="true"/>
+	
+</mx:Canvas>
