@@ -14,14 +14,14 @@
 -->
 
 	<!-- The application identifier string, unique to this application. Required. -->
-	<id>pomodoro</id>
+	<id>pomodairo</id>
 
 	<!-- Used as the filename for the application. Required. -->
-	<filename>pomodoro</filename>
+	<filename>pomodairo</filename>
 
 	<!-- The name that is displayed in the AIR application installer. 
 	     May have multiple values for each language. See samples or xsd schema file. Optional. -->
-	<name>pomodoro</name>
+	<name>pomodairo</name>
 
 	<!-- An application version designator (such as "v1", "2.5", or "Alpha 1"). Required. -->
 	<version>v1</version>
