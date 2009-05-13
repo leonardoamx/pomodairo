@@ -6,24 +6,61 @@
 	
 	<mx:Style source="Main.css" />
 	
-	 <mx:Script>
+    <mx:Script>
         <![CDATA[
-        	import com.pomodairo.db.Storage;
-		
-			var storage:Storage;
-			
-			private function init():void
-			{
-				storage = new Storage();
-				storage.initAndOpenDatabase();
-			}
+        	import flash.utils.getTimer;
+            import flash.utils.Timer;
+            import flash.events.TimerEvent;
+		    import flash.display.Sprite;
+		    import flash.media.Sound;
+		    import flash.media.SoundChannel;
+		    
+        	[Embed(source="alarm.mp3")]
+        	public var alarmClass:Class;		                
 
-       ]]>
-     </mx:Script>
+            private const MIN_MASK:String = "00";
+            private const SEC_MASK:String = "00";
+            private const TIMER_INTERVAL:int = 10;
+
+            private var baseTimer:int;
+            private var t:Timer;
+
+            private function init():void {
+                t = new Timer(TIMER_INTERVAL);
+                t.addEventListener(TimerEvent.TIMER, updateTimer);
+            }
+
+            private function updateTimer(evt:TimerEvent):void {
+            	if (getTimer() >= baseTimer) {
+            		counter.text = "TIMEOUT!!!!";
+            		var alarm:Sound = new alarmClass() as Sound;
+            		alarm.play();
+            		t.stop();
+            	} else {
+	                var d:Date = new Date(baseTimer - getTimer());
+	                var min:String = (MIN_MASK + d.minutes).substr(-MIN_MASK.length);
+	                var sec:String = (SEC_MASK + d.seconds).substr(-SEC_MASK.length);
+	                counter.text = String(min + ":" + sec);
+	            }
+            }
+
+            private function startTimer():void {
+                baseTimer = getTimer();
+                //baseTimer += 25*60*1000+1000;
+                baseTimer += 6*1000;
+                t.start();
+            }
+
+            private function stopTimer():void {
+                t.stop();
+            }
+        ]]>
+    </mx:Script>
 
 	
-	<mx:Panel x="0" y="0" height="100%" width="100%" mouseDown="{nativeWindow.startMove()}">
-		
+	<mx:Panel x="0" y="0" height="100%" width="100%" mouseDown="{nativeWindow.startMove()}">				
+		<mx:Button label="Start timer" click="startTimer()"/>
+		<mx:Label id="counter" fontSize="20"  text="25:00" color="#FFFFFF"/>
 		<mx:ControlBar>
 		</mx:ControlBar>
 	</mx:Panel>
