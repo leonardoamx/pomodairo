@@ -34,10 +34,10 @@
 
             private function updateTimer(evt:TimerEvent):void {
             	if (getTimer() >= baseTimer) {
-            		counter.text = "00:00";
             		var alarm:Sound = new alarmClass() as Sound;
             		alarm.play();
             		t.stop();
+            		restartTimer();
             	} else {
 	                var d:Date = new Date(baseTimer - getTimer());
 	                var min:String = (MIN_MASK + d.minutes).substr(-MIN_MASK.length);
@@ -61,9 +61,13 @@
 
             private function stopTimer(event:Event):void {
                 t.stop();
+                restartTimer();
+            }
+            
+            private function restartTimer():void {
                 counter.text = "25:00";
                 button.label = "Start timer";
-                button.addEventListener(MouseEvent.CLICK, startTimer);
+                button.addEventListener(MouseEvent.CLICK, startTimer);            	
             }
         ]]>
     </mx:Script>
