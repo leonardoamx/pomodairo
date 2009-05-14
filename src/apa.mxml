@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" 
-	layout="absolute" height="240" width="320" showFlexChrome="false"
+	layout="absolute" height="400" width="320" showFlexChrome="false"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	creationComplete="init()" xmlns:views="com.views.*" xmlns:ns1="com.pomodairo.components.*">
 	
@@ -8,14 +8,15 @@
 	
     <mx:Script>
         <![CDATA[
+        
             private function toggleTaskList():void {
-            	
+				taskListPanel.visible = !taskListPanel.visible;	
             }
         ]]>
     </mx:Script>
 
 	
-	<mx:Panel x="0" y="0" height="100%" width="100%" mouseDown="{nativeWindow.startMove()}">				
+	<mx:Panel x="0" y="0" height="200" width="320" mouseDown="{nativeWindow.startMove()}">				
 		<ns1:timer width="135" height="83">
 		</ns1:timer>
 		<mx:ControlBar>
@@ -25,5 +26,10 @@
 	
 	<mx:Label text=" quit " click="close()" color="#FFFFFF" x="280" y="10"/>
 	<mx:Label text=" minimize " click="minimize()" color="#FFFFFF" x="220" y="10"/>
+	
+	<mx:Panel id="taskListPanel" x="0" y="200" height="200" width="320" visible="false">				
+		<ns1:TaskListCanvas x="0" y="0" height="100%" width="100%">
+		</ns1:TaskListCanvas>
+	</mx:Panel>
 	
 </mx:WindowedApplication>
