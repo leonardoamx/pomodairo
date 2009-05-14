@@ -55,8 +55,11 @@ package com.pomodairo.db
 		 	q.sqlConnection = sqlConnection;
 		 	
 		 	var sql:String = "CREATE TABLE IF NOT EXISTS pomodoro( " +
+		 				"id INTEGER PRIMARY KEY ASC, " +
 		 				"name TEXT, " +
 		 				"pomodoros INTEGER, " +
+		 				"unplanned INTEGER, " +
+		 				"interruptions INTEGER, " +
 		 				"done BOOLEAN )";
 		 					
 		 	q.text = sql;
@@ -109,7 +112,8 @@ package com.pomodairo.db
 		public function addPomodoro(pom:Pomodoro):void
         {
         	trace("Add Pomodoro");
-        	var sqlInsert:String = "insert into Pomodoro values('"+pom.name+"','"+pom.pomodoros+"','"+pom.done+"');";
+        	var sqlInsert:String = "insert into Pomodoro (name, pomodoros, unplanned, interruptions, done) " + 
+        			"values('"+pom.name+"','"+pom.pomodoros+"','"+pom.unplanned+"','"+pom.interruptions+"','"+pom.done+"');";
 			dbStatement.text = sqlInsert;
 			dbStatement.removeEventListener(SQLEvent.RESULT, onDBStatementSelectResult);
 			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
@@ -119,7 +123,7 @@ package com.pomodairo.db
 	
 		public function remove(pom:Pomodoro):void
 		{
-			var sqlDelete:String = "delete from Pomodoro where name='"+pom.name+"';";
+			var sqlDelete:String = "delete from Pomodoro where id='"+pom.id+"';";
 			dbStatement.text = sqlDelete;
 			dbStatement.removeEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
 			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);

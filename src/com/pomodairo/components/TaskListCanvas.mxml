@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="696" height="518"
+	initialize="init()"	horizontalScrollPolicy="off" verticalScrollPolicy="off">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.pomodairo.Pomodoro;
+			import com.pomodairo.db.Storage;
+			
+			private var db:Storage = new Storage();;
+			
+			private function init():void {
+				db.initAndOpenDatabase();
+				nameInput.addEventListener(KeyboardEvent.KEY_DOWN,checkSubmit);
+			}
+			
+			private function onUsersDataGridChanged(event:Event):void{}
+	        
+	        private function onRemovePomodoroClicked(event:MouseEvent):void
+	        {
+	        	db.remove(pomodorosDataGrid.selectedItem as Pomodoro);
+	        }
+	        
+	        function checkSubmit(event:KeyboardEvent):void
+            {
+                if(event.charCode == 13)
+                       onAddPomodoroClicked(null);
+            }
+            
+			private function onAddPomodoroClicked(event:Event):void
+	        {
+	        	var pom:Pomodoro = new Pomodoro();
+	        	pom.name = nameInput.text;
+	        	db.addPomodoro(pom);
+	        	nameInput.text = "";
+	        } 
+			
+		]]>
+	</mx:Script>
+	
+	<mx:DataGrid id="pomodorosDataGrid"
+		dataProvider="{db.dataset}" 
+		height="140"
+		editable="false"
+		change="onUsersDataGridChanged(event)" width="100%" >
+		<mx:columns>
+			<mx:DataGridColumn width="40" headerText="ID" dataField="id"/>
+			<mx:DataGridColumn width="160" headerText="Name" dataField="name"/>
+			<mx:DataGridColumn width="30" headerText="P" dataField="pomodoros" dataTipField="pomodorosDescription" showDataTips="true" />
+			<mx:DataGridColumn width="30" headerText="U" dataField="unplanned" dataTipField="unplannedDescription" showDataTips="true" />
+			<mx:DataGridColumn width="30" headerText="I" dataField="interruptions" dataTipField="interruptionsDescription" showDataTips="true" />
+			<mx:DataGridColumn headerText="Done" dataField="done"/>
+		</mx:columns>
+	</mx:DataGrid>
+	
+	<mx:ControlBar y="140">
+		<mx:TextInput id="nameInput" color="#FFFFFF"/>
+		<mx:Button id="addPomoButton" label="Add" click="onAddPomodoroClicked(event)"/>
+		<mx:Button id="removePomoButton" 
+			label="Remove"
+			click="onRemovePomodoroClicked(event)"/>
+		<mx:Button label="Set as done" id="closePomoButton"/>
+		<mx:Button label="Start"/>
+	</mx:ControlBar>
+	
+
+</mx:Canvas>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application xmlns="http://ns.adobe.com/air/application/1.0">
+<application xmlns="http://ns.adobe.com/air/application/1.1">
 
 <!-- Adobe AIR Application Descriptor File Template.
 
@@ -14,17 +14,17 @@
 -->
 
 	<!-- The application identifier string, unique to this application. Required. -->
-	<id>apa</id>
+	<id>TaskListViewer</id>
 
 	<!-- Used as the filename for the application. Required. -->
-	<filename>apa</filename>
+	<filename>TaskListViewer</filename>
 
 	<!-- The name that is displayed in the AIR application installer. 
 	     May have multiple values for each language. See samples or xsd schema file. Optional. -->
-	<name>apa</name>
+	<name>TaskListViewer</name>
 
 	<!-- An application version designator (such as "v1", "2.5", or "Alpha 1"). Required. -->
-	<!--version>v1</version-->
+	<version>v1</version>
 
 	<!-- Description, displayed in the AIR application installer.
 	     May have multiple values for each language. See samples or xsd schema file. Optional. -->
@@ -40,16 +40,16 @@
 		<content>[This value will be overwritten by Flex Builder in the output app.xml]</content>
 		
 		<!-- The title of the main window. Optional. -->
-		<title>Pomodairo</title>
+		<!-- <title></title> -->
 
 		<!-- The type of system chrome to use (either "standard" or "none"). Optional. Default standard. -->
-		<systemChrome>none</systemChrome>
+		<!-- <systemChrome></systemChrome> -->
 
 		<!-- Whether the window is transparent. Only applicable when systemChrome is none. Optional. Default false. -->
-		<transparent>false</transparent>
+		<!-- <transparent></transparent> -->
 
 		<!-- Whether the window is initially visible. Optional. Default false. -->
-		<visible>true</visible>
+		<!-- <visible></visible> -->
 
 		<!-- Whether the user can minimize the window. Optional. Default true. -->
 		<!-- <minimizable></minimizable> -->
@@ -61,7 +61,7 @@
 		<!-- <resizable></resizable> -->
 
 		<!-- The window's initial width. Optional. -->
-		<!-- <width></width> -->
+		<width>800</width>
 
 		<!-- The window's initial height. Optional. -->
 		<!-- <height></height> -->

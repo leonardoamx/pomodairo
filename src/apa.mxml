@@ -2,7 +2,7 @@
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" 
 	layout="absolute" height="240" width="320" showFlexChrome="false"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
-	creationComplete="init()" xmlns:views="com.views.*">
+	creationComplete="init()" xmlns:views="com.views.*" xmlns:ns1="com.pomodairo.components.*">
 	
 	<mx:Style source="Main.css" />
 	
@@ -54,6 +54,10 @@
             private function stopTimer():void {
                 t.stop();
             }
+            
+            private function toggleTaskList():void {
+            	
+            }
         ]]>
     </mx:Script>
 
@@ -62,10 +66,20 @@
 		<mx:Button label="Start timer" click="startTimer()"/>
 		<mx:Label id="counter" fontSize="20"  text="25:00" color="#FFFFFF"/>
 		<mx:ControlBar>
+			<mx:Button label="Task List" id="taskListButton" click="toggleTaskList()"/>
 		</mx:ControlBar>
 	</mx:Panel>
 	
 	<mx:Label text=" quit " click="close()" color="#FFFFFF" x="280" y="10"/>
 	<mx:Label text=" minimize " click="minimize()" color="#FFFFFF" x="220" y="10"/>
+	
+	
+	<mx:Panel x="0" y="260" height="100%" width="100%" mouseDown="{nativeWindow.startMove()}">				
+		<mx:Button label="Start timer" click="startTimer()"/>
+		<mx:Label fontSize="20"  text="25:00" color="#FFFFFF"/>
+		<mx:ControlBar>
+			<mx:Button label="Task List" click="toggleTaskList()"/>
+		</mx:ControlBar>
+	</mx:Panel>
 	
 </mx:WindowedApplication>
