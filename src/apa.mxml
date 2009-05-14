@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" 
-	layout="absolute" height="400" width="320" showFlexChrome="false"
+	layout="absolute" height="200" width="320" showFlexChrome="false"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
-	creationComplete="init()" xmlns:views="com.views.*" xmlns:ns1="com.pomodairo.components.*" backgroundGradientAlphas="[1.0, 1.0]" backgroundGradientColors="[#1C1C1C, #1C1C1C]">
+	creationComplete="init()" xmlns:views="com.views.*" xmlns:ns1="com.pomodairo.components.*"
+	backgroundColor="#292929">
 	
 	<mx:Style source="Main.css" />
 	
@@ -10,15 +11,22 @@
         <![CDATA[
         
             private function toggleTaskList():void {
+            	if (!taskListPanel.visible) {
+            		this.height = 400;
+            	} else {
+            		this.height = 200;
+            		
+            	}
 				taskListPanel.visible = !taskListPanel.visible;	
             }
         ]]>
     </mx:Script>
 
+	<mx:Fade id="fadein" />
+	<mx:Fade id="fadeout" />
+
 	
 	<mx:Panel x="0" y="0" height="200" width="320" mouseDown="{nativeWindow.startMove()}">				
-		
-		
 		<ns1:timer width="135" height="83">
 		</ns1:timer>
 		<mx:ControlBar>
@@ -29,7 +37,7 @@
 	<mx:Label text="x" click="close()" color="#FFFFFF" x="300" y="10"/>
 	<mx:Label text="_" click="minimize()" color="#FFFFFF" x="280" y="10"/>
 	
-	<mx:Canvas id="taskListPanel" x="0" y="200" height="200" width="320" visible="false">				
+	<mx:Canvas id="taskListPanel" x="0" y="200" height="200" width="320" visible="false" showEffect="fadein" hideEffect="fadeout">				
 		<ns1:TaskListCanvas x="0" y="0" height="100%" width="100%">
 		</ns1:TaskListCanvas>
 	</mx:Canvas>
