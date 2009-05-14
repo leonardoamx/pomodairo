@@ -43,16 +43,20 @@
 	            }
             }
 
-            private function startTimer():void {
+            private function startTimer(event:Event = null):void {
                 baseTimer = getTimer();
                 baseTimer += 25*60*1000+1000;
                 //baseTimer += 6*1000;
                 t.start();
-                button.label = "Stop";
+                button.label = "Stop timer";
+                button.addEventListener(MouseEvent.CLICK, stopTimer);
             }
 
-            private function stopTimer():void {
+            private function stopTimer(event:Event):void {
                 t.stop();
+                counter.text = "25:00";
+                button.label = "Start timer";
+                button.addEventListener(MouseEvent.CLICK, startTimer);
             }
         ]]>
     </mx:Script>
