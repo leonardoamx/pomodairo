@@ -16,7 +16,7 @@
 
 	
 	<mx:Panel x="0" y="0" height="100%" width="100%" mouseDown="{nativeWindow.startMove()}">				
-		<ns1:timer width="266" height="120">
+		<ns1:timer width="135" height="83">
 		</ns1:timer>
 		<mx:ControlBar>
 			<mx:Button label="Task List" id="taskListButton" click="toggleTaskList()"/>

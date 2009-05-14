@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="114" height="92" backgroundColor="#FFFFFF" backgroundAlpha="0.0">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	width="114" 
+	height="92"  
+	backgroundAlpha="0.0"
+	initialize="init()">
+	
 	    <mx:Script>
         <![CDATA[
         	import flash.utils.getTimer;
@@ -20,6 +25,8 @@
             private var t:Timer;
 
             private function init():void {
+                t = new Timer(TIMER_INTERVAL);
+                t.addEventListener(TimerEvent.TIMER, updateTimer);            	
             }
 
             private function updateTimer(evt:TimerEvent):void {
@@ -40,9 +47,8 @@
                 baseTimer = getTimer();
                 baseTimer += 25*60*1000+1000;
                 //baseTimer += 6*1000;
-                t = new Timer(TIMER_INTERVAL);
-                t.addEventListener(TimerEvent.TIMER, updateTimer);                
                 t.start();
+                button.label = "Stop";
             }
 
             private function stopTimer():void {
@@ -51,7 +57,7 @@
         ]]>
     </mx:Script>
     
-	<mx:Button label="Start timer" click="startTimer()"/>
+	<mx:Button id="button" label="Start timer" click="startTimer()"/>
 	<mx:Label id="counter" fontSize="20"  text="25:00" color="#FFFFFF" x="20" y="36"/>
     
 </mx:Canvas>
