@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="696" height="518"
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="320" height="200"
 	initialize="init()"	horizontalScrollPolicy="off" verticalScrollPolicy="off">
 	
 	<mx:Script>
@@ -33,6 +33,7 @@
 	        	pom.name = nameInput.text;
 	        	db.addPomodoro(pom);
 	        	nameInput.text = "";
+	        	
 	        } 
 			
 		]]>
@@ -44,24 +45,23 @@
 		editable="false"
 		change="onUsersDataGridChanged(event)" width="100%" >
 		<mx:columns>
-			<mx:DataGridColumn width="40" headerText="ID" dataField="id"/>
-			<mx:DataGridColumn width="160" headerText="Name" dataField="name"/>
+			<mx:DataGridColumn width="150" headerText="Name" dataField="name"/>
 			<mx:DataGridColumn width="30" headerText="P" dataField="pomodoros" dataTipField="pomodorosDescription" showDataTips="true" />
 			<mx:DataGridColumn width="30" headerText="U" dataField="unplanned" dataTipField="unplannedDescription" showDataTips="true" />
 			<mx:DataGridColumn width="30" headerText="I" dataField="interruptions" dataTipField="interruptionsDescription" showDataTips="true" />
-			<mx:DataGridColumn headerText="Done" dataField="done"/>
+			<mx:DataGridColumn width="50" headerText="Done" dataField="done"/>
 		</mx:columns>
 	</mx:DataGrid>
 	
-	<mx:ControlBar y="140">
-		<mx:TextInput id="nameInput" color="#FFFFFF"/>
-		<mx:Button id="addPomoButton" label="Add" click="onAddPomodoroClicked(event)"/>
+	<mx:ControlBar y="165" height="35">
+		<mx:Button id="addPomoButton" label="Add" click="onAddPomodoroClicked(event)" fontSize="8" width="50" height="22"/>
 		<mx:Button id="removePomoButton" 
 			label="Remove"
-			click="onRemovePomodoroClicked(event)"/>
-		<mx:Button label="Set as done" id="closePomoButton"/>
-		<mx:Button label="Start"/>
+			click="onRemovePomodoroClicked(event)" fontSize="8" width="83" height="22"/>
+		<mx:Button label="Set as done" id="closePomoButton" fontSize="8" width="91" height="22"/>
+		<mx:Button label="Start" fontSize="8" width="50" height="22"/>
 	</mx:ControlBar>
+	<mx:TextInput id="nameInput" color="#FFFFFF" fontSize="10" width="139" x="10" y="148" backgroundColor="#FFF8F8"/>
 	
 
 </mx:Canvas>
