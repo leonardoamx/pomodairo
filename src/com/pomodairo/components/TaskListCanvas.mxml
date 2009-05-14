@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="320" height="200"
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="320" height="300"
 	initialize="init()"	horizontalScrollPolicy="off" verticalScrollPolicy="off">
 	
 	<mx:Script>
@@ -41,7 +41,7 @@
 	
 	<mx:DataGrid id="pomodorosDataGrid"
 		dataProvider="{db.dataset}" 
-		height="140"
+		height="241"
 		editable="false"
 		change="onUsersDataGridChanged(event)" width="100%" >
 		<mx:columns>
@@ -53,15 +53,15 @@
 		</mx:columns>
 	</mx:DataGrid>
 	
-	<mx:ControlBar y="165" height="35">
-		<mx:Button id="addPomoButton" label="Add" click="onAddPomodoroClicked(event)" fontSize="8" width="50" height="22"/>
+	<mx:ControlBar y="265" height="35">
+		<mx:Button id="addPomoButton" label="Add" click="onAddPomodoroClicked(event)" fontSize="8" width="50" height="24"/>
 		<mx:Button id="removePomoButton" 
 			label="Remove"
-			click="onRemovePomodoroClicked(event)" fontSize="8" width="83" height="22"/>
-		<mx:Button label="Set as done" id="closePomoButton" fontSize="8" width="91" height="22"/>
-		<mx:Button label="Start" fontSize="8" width="50" height="22"/>
+			click="onRemovePomodoroClicked(event)" fontSize="8" width="83" height="24"/>
+		<mx:Button label="Set as done" id="closePomoButton" fontSize="8" width="91" height="24"/>
+		<mx:Button label="Start" fontSize="8" width="50" height="24"/>
 	</mx:ControlBar>
-	<mx:TextInput id="nameInput" color="#FFFFFF" fontSize="10" width="139" x="10" y="148" backgroundColor="#FFF8F8"/>
+	<mx:TextInput id="nameInput" color="#FFFFFF" fontSize="10" width="139" x="10" y="249" backgroundColor="#FFF8F8"/>
 	
 
 </mx:Canvas>
