@@ -10,6 +10,7 @@ package com.pomodairo.events
 		public static var TIME_OUT:String = "pomodoro time out";
 		public static var UNPLANNED:String = "pomodoro unplanned";
 		public static var INTERRUPTION:String = "pomodoro interruption";
+		public static var DONE:String = "pomodoro done";
 		
 		public var pomodoro:Pomodoro;
 		
