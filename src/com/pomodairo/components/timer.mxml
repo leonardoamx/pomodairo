@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
-	width="114" 
-	height="92"  
+	width="282" 
+	height="80"  
 	backgroundAlpha="0.0"
 	initialize="init()">
 	
@@ -72,7 +72,7 @@
         ]]>
     </mx:Script>
     
-	<mx:Button id="button" label="Start timer" click="startTimer()"/>
-	<mx:Label id="counter" fontSize="20"  text="25:00" color="#FFFFFF" x="20" y="36"/>
+	<mx:Button id="button" label="Start timer" click="startTimer()" x="192" y="17"/>
+	<mx:Label id="counter" fontSize="60"  text="25:00" color="#FFFF00" x="0" y="0" height="69"/>
     
 </mx:Canvas>

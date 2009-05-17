@@ -61,7 +61,7 @@
 		<mx:Button label="Set as done" id="closePomoButton" fontSize="8" width="91" height="24"/>
 		<mx:Button label="Start" fontSize="8" width="50" height="24"/>
 	</mx:ControlBar>
-	<mx:TextInput id="nameInput" color="#FFFFFF" fontSize="10" width="139" x="10" y="249" backgroundColor="#FFF8F8"/>
+	<mx:TextInput id="nameInput" color="#FFFFFF" fontSize="10" width="139" x="10" y="242" backgroundColor="#FFF8F8"/>
 	
 
 </mx:Canvas>
