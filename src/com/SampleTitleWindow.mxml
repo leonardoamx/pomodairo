@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="400" height="300" creationComplete="centerWindow()" title="TitleWindow" showCloseButton="true" close="closeWindow()">
+	
+	<mx:Script>
+        <![CDATA[
+            import mx.managers.PopUpManager;
+            
+            public function centerWindow():void
+            {
+            	PopUpManager.centerPopUp(this);
+            }
+            
+            public function closeWindow():void
+            {
+            	PopUpManager.removePopUp(this);
+            }
+            
+       ]]>
+       
+	</mx:Script>
+	
+	<mx:Label text="This is a sample TitleWindow." verticalCenter="0" horizontalCenter="0"/>
+	
+</mx:TitleWindow>

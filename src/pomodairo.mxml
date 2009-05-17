@@ -1,4 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute">
-	<mx:Style source="Main.css" />
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="absolute" height="200" width="320" showFlexChrome="false"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	creationComplete="init()" xmlns:views="com.views.*" xmlns:ns1="com.pomodairo.components.*"
+	backgroundColor="#292929">
+	
+	<mx:Style source="style/style.css"/>
+	
+    <mx:Script>
+        <![CDATA[
+        	import com.pomodairo.components.PomoItemInput;
+        	import mx.controls.TextInput;
+        
+            private function toggleTaskList():void {
+            	if (!taskListPanel.visible) {
+            		this.height = 500;
+            	} else {
+            		this.height = 200;
+            		
+            	}
+				taskListPanel.visible = !taskListPanel.visible;	
+            }
+
+            private function newInterruption():void {
+            	trace("Add interruption");
+            	var input:PomoItemInput = new PomoItemInput();
+            	input.x = 40;
+            	input.y = 80;
+            	this.addChild(input);
+            }
+        ]]>
+    </mx:Script>
+
+	<mx:Fade id="fadein" />
+	<mx:Fade id="fadeout" />
+
+	
+	<mx:Panel title="Pomodairo" x="0" y="0" height="200" width="320" mouseDown="{nativeWindow.startMove()}">				
+		<ns1:timer width="135" height="83">
+		</ns1:timer>
+		<mx:ControlBar id="controls">
+			<mx:Image source="assets/appicons/Bloc-Notes-SZ-32x32.png" click="toggleTaskList()"/>
+			<mx:Image id="interruptionButton" source="assets/appicons/Arreter-SZ-32x32.png" click="newInterruption()" x="50" />
+			<mx:Image source="assets/appicons/Brush-SZ-32x32.png" x="140" />
+		</mx:ControlBar>
+	</mx:Panel>
+	
+	<mx:Label text="x" click="close()" color="#FFFFFF" x="300" y="10"/>
+	<mx:Label text="_" click="minimize()" color="#FFFFFF" x="280" y="10"/>
+	
+	<mx:Canvas id="taskListPanel" x="0" y="200" height="300" width="320" visible="false" showEffect="fadein" hideEffect="fadeout">				
+		<ns1:TaskListCanvas x="0" y="0" height="100%" width="100%">
+		</ns1:TaskListCanvas>
+	</mx:Canvas>
 </mx:WindowedApplication>
