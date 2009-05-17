@@ -4,6 +4,8 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.pomodairo.events.PomodoroEvent;
+			import com.pomodairo.PomodoroEventDispatcher;
 			import com.pomodairo.Pomodoro;
 			import com.pomodairo.db.Storage;
 			
@@ -31,9 +33,17 @@
 	        {
 	        	var pom:Pomodoro = new Pomodoro();
 	        	pom.name = nameInput.text;
+	        	pom.type = Pomodoro.TYPE_POMODORO;
 	        	db.addPomodoro(pom);
 	        	nameInput.text = "";
-	        	
+	        } 
+	        
+	        private function onStartPomodoroClicked(event:Event):void
+	        {
+	        	var pom:Pomodoro = pomodorosDataGrid.selectedItem as Pomodoro;
+	        	var evt:PomodoroEvent = new PomodoroEvent(PomodoroEvent.SELECTED);
+	        	evt.pomodoro = pom;
+	        	PomodoroEventDispatcher.getInstance().dispatchEvent(evt);
 	        } 
 			
 		]]>
@@ -59,7 +69,7 @@
 			label="Remove"
 			click="onRemovePomodoroClicked(event)" fontSize="8" width="83" height="24"/>
 		<mx:Button label="Set as done" id="closePomoButton" fontSize="8" width="91" height="24"/>
-		<mx:Button label="Start" fontSize="8" width="50" height="24"/>
+		<mx:Button label="Start" fontSize="8" width="50" height="24" click="onStartPomodoroClicked(event)"/>
 	</mx:ControlBar>
 	<mx:TextInput id="nameInput" color="#FFFFFF" fontSize="10" width="139" x="10" y="242" backgroundColor="#FFF8F8"/>
 	

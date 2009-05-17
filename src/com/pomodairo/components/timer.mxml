@@ -7,6 +7,10 @@
 	
 	    <mx:Script>
         <![CDATA[
+        	import com.pomodairo.events.PomodoroEvent;
+        	import com.pomodairo.PomodoroEventDispatcher;
+        	import com.pomodairo.Pomodoro;
+        	import mx.binding.utils.BindingUtils;
         	import flash.utils.getTimer;
             import flash.utils.Timer;
             import flash.events.TimerEvent;
@@ -20,6 +24,9 @@
         	[Embed(source="ticking.mp3")]
         	public var tickClass:Class;
 
+			[Bindable]
+			public var pomodoro:Pomodoro;
+
             private const MIN_MASK:String = "00";
             private const SEC_MASK:String = "00";
             private const TIMER_INTERVAL:int = 10;
@@ -29,8 +36,14 @@
 
             private function init():void {
                 t = new Timer(TIMER_INTERVAL);
-                t.addEventListener(TimerEvent.TIMER, updateTimer);            	
+                t.addEventListener(TimerEvent.TIMER, updateTimer);    
+                PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, handlePomodoroEvent);   	
             }
+
+			private function handlePomodoroEvent(e:PomodoroEvent) {
+				trace("New pomodoro event: "+e);
+				pomodoro = e.pomodoro;
+			}
 
             private function updateTimer(evt:TimerEvent):void {
             	if (getTimer() >= baseTimer) {
@@ -74,5 +87,6 @@
     
 	<mx:Button id="button" label="Start timer" click="startTimer()" x="192" y="17"/>
 	<mx:Label id="counter" fontSize="60"  text="25:00" color="#FFFF00" x="0" y="0" height="69"/>
+	<mx:Label x="10" y="63" text="{pomodoro.name}" width="262" height="17"/>
     
 </mx:Canvas>

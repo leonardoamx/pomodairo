@@ -57,9 +57,12 @@ package com.pomodairo.db
 		 	var sql:String = "CREATE TABLE IF NOT EXISTS pomodoro( " +
 		 				"id INTEGER PRIMARY KEY ASC, " +
 		 				"name TEXT, " +
+		 				"type TEXT, " +
 		 				"pomodoros INTEGER, " +
 		 				"unplanned INTEGER, " +
 		 				"interruptions INTEGER, " +
+		 				"created DATETIME, " +
+		 				"closed DATETIME, " +
 		 				"done BOOLEAN )";
 		 					
 		 	q.text = sql;
@@ -112,9 +115,19 @@ package com.pomodairo.db
 		public function addPomodoro(pom:Pomodoro):void
         {
         	trace("Add Pomodoro");
-        	var sqlInsert:String = "insert into Pomodoro (name, pomodoros, unplanned, interruptions, done) " + 
-        			"values('"+pom.name+"','"+pom.pomodoros+"','"+pom.unplanned+"','"+pom.interruptions+"','"+pom.done+"');";
+        	var sqlInsert:String = "insert into Pomodoro (name, type, pomodoros, unplanned, interruptions, created, closed, done) " + 
+        			"values(:name,:type,:pomodoros,:unplanned,:interruptions,:created,:closed,:done);";
+        			
 			dbStatement.text = sqlInsert;
+			dbStatement.parameters[":name"] = pom.name;
+			dbStatement.parameters[":type"] = pom.type; 
+			dbStatement.parameters[":pomodoros"] = pom.pomodoros; 
+			dbStatement.parameters[":unplanned"] = pom.unplanned; 
+			dbStatement.parameters[":interruptions"] = pom.interruptions; 
+			dbStatement.parameters[":created"] = pom.created; 
+			dbStatement.parameters[":closed"] = pom.closed; 
+			dbStatement.parameters[":done"] = pom.done;  
+			
 			dbStatement.removeEventListener(SQLEvent.RESULT, onDBStatementSelectResult);
 			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
 			dbStatement.execute();
