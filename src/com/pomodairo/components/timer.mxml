@@ -64,7 +64,7 @@
                 baseTimer += 25*60*1000+1000;
                 //baseTimer += 6*1000;
                 t.start();
-                button.label = "Stop timer";
+                button.label = "Stop";
                 button.addEventListener(MouseEvent.CLICK, stopTimer);
                 
                 // Play sound
@@ -79,13 +79,13 @@
             
             private function restartTimer():void {
                 counter.text = "25:00";
-                button.label = "Start timer";
+                button.label = "Start";
                 button.addEventListener(MouseEvent.CLICK, startTimer);            	
             }
         ]]>
     </mx:Script>
     
-	<mx:Button id="button" label="Start timer" click="startTimer()" x="192" y="17"/>
+	<mx:Button id="button" label="Start" click="startTimer()" x="192" y="17"/>
 	<mx:Label id="counter" fontSize="60"  text="25:00" color="#FFFF00" x="0" y="0" height="69"/>
 	<mx:Label x="10" y="63" text="{pomodoro.name}" width="262" height="17"/>
     

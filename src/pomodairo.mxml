@@ -43,10 +43,13 @@
 	<mx:Panel title="Pomodairo" x="0" y="0" height="164" width="320" layout="absolute" mouseDown="{nativeWindow.startMove()}">				
 		<ns1:timer id="timerCanvas" x="0" y="0">
 		</ns1:timer>
-		<mx:ControlBar id="controls" height="45" y="88">
-			<mx:Image source="assets/appicons/note_edit.png" click="toggleTaskList()"  toolTip="View task list"/>
-			<mx:Image source="assets/appicons/note_add.png" x="140"  toolTip="Add unplanned"/>
-			<mx:Image id="interruptionButton" source="assets/appicons/warning.png" click="newInterruption()" x="50" toolTip="Add interruption"/>
+		<mx:ControlBar id="controls" height="42" y="88">
+			<mx:Button label="Task List" click="toggleTaskList()" toolTip="Open/close task list"/>
+			<mx:Button label="Unplanned" toolTip="Add unplanned"/>
+			<mx:Button label="Interruption" click="newInterruption()" toolTip="Add interruption"/>
+			<!--mx:Image source="assets/appicons/note_edit.png" click="toggleTaskList()"  toolTip="View task list"/>
+			<mx:Image source="assets/appicons/note_add.png" x="140" toolTip="Add unplanned"/>
+			<mx:Image id="interruptionButton" source="assets/appicons/warning.png" click="newInterruption()" x="50" toolTip="Add interruption"/-->
 		</mx:ControlBar>
 	</mx:Panel>
 	

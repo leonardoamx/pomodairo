@@ -46,6 +46,7 @@
 			editable="false"
 			change="onUsersDataGridChanged(event)" width="100%">
 			<mx:columns>
+				<mx:DataGridColumn width="20" headerText="ID" dataField="id"/>
 				<mx:DataGridColumn width="70" headerText="Name" dataField="name"/>
 				<mx:DataGridColumn width="70" headerText="Type" dataField="type"/>
 				<mx:DataGridColumn width="40" headerText="Pomodoros" dataField="pomodoros"/>
