@@ -50,6 +50,7 @@
 	        {
 	        	var pom:Pomodoro = pomodorosDataGrid.selectedItem as Pomodoro;
 	        	pom.done = true;
+	        	db.markDone(pom);
 	        	var evt:PomodoroEvent = new PomodoroEvent(PomodoroEvent.DONE);
 	        	evt.pomodoro = pom;
 	        	PomodoroEventDispatcher.getInstance().dispatchEvent(evt);

@@ -161,6 +161,14 @@ package com.pomodairo.db
 			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
 			dbStatement.execute();
 		}
+		
+		public function markDone(pom:Pomodoro):void
+		{
+			var sqlMarkDone:String = "update Pomodoro set done = true where id='"+pom.id+"';";
+			dbStatement.text = sqlMarkDone;
+			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
+			dbStatement.execute();
+		}		
 	}
 	
 }
