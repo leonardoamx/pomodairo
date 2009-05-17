@@ -16,6 +16,7 @@ package com.pomodairo
 		public var interruptions:int = 0;
 		public var created:Date = new Date();
 		public var closed:Date;
+		public var parent:int = 0;
 		
 		// Descriptions
 		public var pomodorosDescription:String = "Number of pomodoros used";

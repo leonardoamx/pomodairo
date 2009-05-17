@@ -4,8 +4,12 @@
 	
 	<mx:Script>
         <![CDATA[
+        	import com.pomodairo.Pomodoro;
+        	import com.pomodairo.events.PomodoroEvent;
+        	import com.pomodairo.PomodoroEventDispatcher;
         
-        	public var type:String = "POMODORO";
+        	public var type:String = Pomodoro.TYPE_POMODORO;
+        	public var reference:Pomodoro;
         	
         	private function init():void {
 				input.addEventListener(KeyboardEvent.KEY_DOWN,checkSubmit);
@@ -22,6 +26,20 @@
 			private function fireSubmit(event:Event):void
 	        {
 	        	trace("SUBMIT: "+input.text);
+	        	var interruption:Pomodoro = new Pomodoro();
+	        	interruption.name = input.text;
+	        	if (reference != null) {
+	        		interruption.parent = reference.id;
+	        	} else {
+	        		interruption.parent = 0;
+	        	}
+	        	interruption.type = type;
+	        	
+	        	var evt:PomodoroEvent = new PomodoroEvent(PomodoroEvent.INTERRUPTION)
+	        	evt.pomodoro = reference;
+	        	evt.other = interruption;
+	        	
+	        	PomodoroEventDispatcher.getInstance().dispatchEvent(evt);
 	        	this.parent.removeChild(this);
 	        } 
 	        

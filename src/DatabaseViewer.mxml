@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" 
 	layout="vertical"
-	 width="420" height="550" 
+	 width="600" height="550" 
 	 backgroundGradientAlphas="[1.0, 1.0]" 
 	 backgroundGradientColors="[#232323, #0A0A0A]"
 	 verticalScrollPolicy="off"
@@ -16,6 +16,7 @@
 			
 			private function init():void {
 				db.initAndOpenDatabase();
+				db.getAllItems();
 			}
 			
 			private function onUsersDataGridChanged(event:Event):void{}
@@ -47,10 +48,11 @@
 			<mx:columns>
 				<mx:DataGridColumn width="70" headerText="Name" dataField="name"/>
 				<mx:DataGridColumn width="70" headerText="Type" dataField="type"/>
-				<mx:DataGridColumn width="70" headerText="Pomodoros" dataField="pomodoros"/>
-				<mx:DataGridColumn headerText="Done" dataField="done"/>
-				<mx:DataGridColumn width="70" headerText="Created" dataField="created"/>
-				<mx:DataGridColumn width="70" headerText="Closed" dataField="closed"/>
+				<mx:DataGridColumn width="40" headerText="Pomodoros" dataField="pomodoros"/>
+				<mx:DataGridColumn width="40" headerText="Done" dataField="done"/>
+				<mx:DataGridColumn width="40" headerText="Parent" dataField="parent"/>
+				<mx:DataGridColumn width="100" headerText="Created" dataField="created"/>
+				<mx:DataGridColumn width="100" headerText="Closed" dataField="closed"/>
 			</mx:columns>
 		</mx:DataGrid>
 		<mx:ControlBar>
@@ -60,10 +62,13 @@
 		</mx:ControlBar>
 	</mx:Panel>
 	
-	<mx:Panel width="90%" height="200" layout="vertical" id="addUserPanel" title="Add User">
+	<mx:Panel width="90%" height="200" layout="vertical" id="addUserPanel" title="Add Item">
 		<mx:Form>
 			<mx:FormItem label="Name:">
 				<mx:TextInput id="nameInput"/>
+			</mx:FormItem>
+			<mx:FormItem label="Type:">
+				<mx:TextInput id="typeInput"/>
 			</mx:FormItem>
 			<mx:FormItem label="Pomodoros:">
 				<mx:TextInput id="countInput"/>

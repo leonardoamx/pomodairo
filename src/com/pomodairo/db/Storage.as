@@ -1,6 +1,8 @@
 package com.pomodairo.db
 {
 	import com.pomodairo.Pomodoro;
+	import com.pomodairo.PomodoroEventDispatcher;
+	import com.pomodairo.events.PomodoroEvent;
 	
 	import flash.data.SQLConnection;
 	import flash.data.SQLMode;
@@ -12,6 +14,8 @@ package com.pomodairo.db
 	
 	public class Storage
 	{
+		public static var instance:Storage = new Storage();
+		
 		[Bindable]
 		public var dataset:Array;
 			
@@ -19,16 +23,17 @@ package com.pomodairo.db
 		private var sqlConnection:SQLConnection;
 		private var dbStatement:SQLStatement;
 		
-		public function Storage()
-		{
+		public function Storage() {
+			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.INTERRUPTION, addInterruption);
+		}
+		
+		private function addInterruption(e:PomodoroEvent) {
+			addPomodoro(e.other);
 		}
 		
 		public function initAndOpenDatabase():void {       		
 			sqlConnectionFile = File.userDirectory.resolvePath("pomodairo.db");
 			sqlConnection = new SQLConnection();
-
-			
-			// sqlConnection.addEventListener(SQLErrorEvent.ERROR, onSQLConnectionError);
 			
 			if(!sqlConnectionFile.exists) {
 				trace("Creating pomodairo database: "+sqlConnectionFile.url);
@@ -63,6 +68,7 @@ package com.pomodairo.db
 		 				"interruptions INTEGER, " +
 		 				"created DATETIME, " +
 		 				"closed DATETIME, " +
+		 				"parent INTEGER, " +
 		 				"done BOOLEAN )";
 		 					
 		 	q.text = sql;
@@ -72,6 +78,18 @@ package com.pomodairo.db
 		}
 
 		public function getAllPomodoros():void
+		{
+			trace("Get All Pomodoros");
+			dbStatement = new SQLStatement();
+			dbStatement.itemClass = Pomodoro;
+			dbStatement.sqlConnection = sqlConnection;
+			var sqlQuery:String = "select * from Pomodoro where type='"+Pomodoro.TYPE_POMODORO+"'";
+			dbStatement.text = sqlQuery;
+			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementSelectResult);
+			dbStatement.execute();
+		}
+		
+		public function getAllItems():void
 		{
 			trace("Get All Pomodoros");
 			dbStatement = new SQLStatement();
@@ -115,8 +133,8 @@ package com.pomodairo.db
 		public function addPomodoro(pom:Pomodoro):void
         {
         	trace("Add Pomodoro");
-        	var sqlInsert:String = "insert into Pomodoro (name, type, pomodoros, unplanned, interruptions, created, closed, done) " + 
-        			"values(:name,:type,:pomodoros,:unplanned,:interruptions,:created,:closed,:done);";
+        	var sqlInsert:String = "insert into Pomodoro (name, type, pomodoros, unplanned, interruptions, created, closed, done, parent) " + 
+        			"values(:name,:type,:pomodoros,:unplanned,:interruptions,:created,:closed,:done, :parent);";
         			
 			dbStatement.text = sqlInsert;
 			dbStatement.parameters[":name"] = pom.name;
@@ -126,7 +144,8 @@ package com.pomodairo.db
 			dbStatement.parameters[":interruptions"] = pom.interruptions; 
 			dbStatement.parameters[":created"] = pom.created; 
 			dbStatement.parameters[":closed"] = pom.closed; 
-			dbStatement.parameters[":done"] = pom.done;  
+			dbStatement.parameters[":done"] = pom.done;
+			dbStatement.parameters[":parent"] = pom.parent;    
 			
 			dbStatement.removeEventListener(SQLEvent.RESULT, onDBStatementSelectResult);
 			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);

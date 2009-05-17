@@ -9,7 +9,7 @@
 			import com.pomodairo.Pomodoro;
 			import com.pomodairo.db.Storage;
 			
-			private var db:Storage = new Storage();;
+			private var db:Storage = Storage.instance;
 			
 			private function init():void {
 				db.initAndOpenDatabase();
