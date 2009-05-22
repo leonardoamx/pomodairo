@@ -164,7 +164,7 @@ package com.pomodairo.db
 		
 		public function markDone(pom:Pomodoro):void
 		{
-			var sqlMarkDone:String = "update Pomodoro set done = true where id='"+pom.id+"';";
+			var sqlMarkDone:String = "update Pomodoro set done = "+pom.done+" where id='"+pom.id+"';";
 			dbStatement.text = sqlMarkDone;
 			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
 			dbStatement.execute();

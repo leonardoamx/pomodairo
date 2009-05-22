@@ -5,6 +5,7 @@
 	<mx:Script>
 		<![CDATA[
 			import com.pomodairo.events.PomodoroEvent;
+			import com.pomodairo.components.CustomRenderer;
 			import com.pomodairo.PomodoroEventDispatcher;
 			import com.pomodairo.Pomodoro;
 			import com.pomodairo.db.Storage;
@@ -48,8 +49,10 @@
 	        
 	        private function onDonePomodoroClicked(event:Event=null):void
 	        {
+	        	if (!pomodorosDataGrid.selectedItem) return;
+	        		
 	        	var pom:Pomodoro = pomodorosDataGrid.selectedItem as Pomodoro;
-	        	pom.done = true;
+	        	pom.done = !pom.done;
 	        	db.markDone(pom);
 	        	var evt:PomodoroEvent = new PomodoroEvent(PomodoroEvent.DONE);
 	        	evt.pomodoro = pom;
@@ -65,11 +68,11 @@
 		editable="false"
 		change="onUsersDataGridChanged(event)" width="100%" >
 		<mx:columns>
-			<mx:DataGridColumn width="150" headerText="Name" dataField="name"/>
-			<mx:DataGridColumn width="30" headerText="P" dataField="pomodoros" dataTipField="pomodorosDescription" showDataTips="true" />
-			<mx:DataGridColumn width="30" headerText="U" dataField="unplanned" dataTipField="unplannedDescription" showDataTips="true" />
-			<mx:DataGridColumn width="30" headerText="I" dataField="interruptions" dataTipField="interruptionsDescription" showDataTips="true" />
-			<mx:DataGridColumn width="50" headerText="Done" dataField="done"/>
+			<mx:DataGridColumn width="150" headerText="Name" dataField="name" itemRenderer="com.pomodairo.components.CustomRenderer" />
+			<mx:DataGridColumn width="30" headerText="P" dataField="pomodoros" dataTipField="pomodorosDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
+			<mx:DataGridColumn width="30" headerText="U" dataField="unplanned" dataTipField="unplannedDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
+			<mx:DataGridColumn width="30" headerText="I" dataField="interruptions" dataTipField="interruptionsDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
+			<mx:DataGridColumn width="50" headerText="Done" dataField="done" itemRenderer="com.pomodairo.components.CustomRenderer" />
 		</mx:columns>
 	</mx:DataGrid>
 	

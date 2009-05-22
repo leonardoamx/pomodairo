@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Label 
+  xmlns:mx="http://www.adobe.com/2006/mxml"
+  width="100%" height="100%" creationComplete="init()">
+  <mx:Script>
+    <![CDATA[
+      import mx.events.ListEvent;
+      import mx.controls.DataGrid;
+      import com.pomodairo.Pomodoro;
+      import mx.controls.dataGridClasses.DataGridListData;
+      
+      private var dg:DataGrid;
+      private var _strikethrough: Boolean = false;
+      
+      private function init():void
+      {
+        dg = listData.owner as DataGrid;
+      }
+        
+	    public function set strikethrough(bool: Boolean): void {
+	        this._strikethrough = bool;
+	        this.invalidateDisplayList();
+	    }
+	    
+	    public function get strikethrough(): Boolean {
+	        return this._strikethrough;
+	    }
+		
+		
+		override protected function updateDisplayList(unscaledWidth: Number, unscaledHeight: Number): void {
+	        if(data.done)
+	        {
+	          //This row is selected update stuff
+	          strikethrough = true;
+	        }
+	        else
+	        {
+	          //This row is not selected reset stuff
+	          strikethrough = false;
+	        }     	
+			
+			
+            super.updateDisplayList (unscaledWidth, unscaledHeight);
+           
+            this.graphics.clear();
+            if (this._strikethrough) {
+                this.graphics.lineStyle(1, this.getStyle("color"));
+                this.graphics.moveTo(0, unscaledHeight/2);
+                this.graphics.lineTo(unscaledWidth, unscaledHeight/2);
+            }
+        }
+      
+    ]]>
+  </mx:Script>
+</mx:Label>
