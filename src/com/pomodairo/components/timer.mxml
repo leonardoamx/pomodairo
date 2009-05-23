@@ -3,7 +3,8 @@
 	width="282" 
 	height="80"  
 	backgroundAlpha="0.0"
-	initialize="init()">
+	initialize="init()"
+	verticalScrollPolicy="off">
 	
 	    <mx:Script>
         <![CDATA[
@@ -37,12 +38,13 @@
             private function init():void {
                 t = new Timer(TIMER_INTERVAL);
                 t.addEventListener(TimerEvent.TIMER, updateTimer);    
-                PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, handlePomodoroEvent);   	
+                PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, onPomodoroSelected);   	
             }
 
-			private function handlePomodoroEvent(e:PomodoroEvent) {
-				trace("New pomodoro event: "+e);
+			private function onPomodoroSelected(e:PomodoroEvent) {
 				pomodoro = e.pomodoro;
+				newTaskButton.visible = false;
+				startTimerButton.visible = true;
 			}
 
             private function updateTimer(evt:TimerEvent):void {
@@ -64,12 +66,18 @@
                 baseTimer += 25*60*1000+1000;
                 //baseTimer += 6*1000;
                 t.start();
-                button.label = "Stop";
-                button.addEventListener(MouseEvent.CLICK, stopTimer);
+                startTimerButton.label = "Stop Timer";
+                // FIXME: This doesnt work. You have to remove the previous listener etc.
+                // It might be better to have a generic toogleTimer method.
+                startTimerButton.addEventListener(MouseEvent.CLICK, stopTimer);
+                
+				var startEvent:PomodoroEvent = new PomodoroEvent(PomodoroEvent.START_POMODORO);
+				startEvent.pomodoro = pomodoro;
+				PomodoroEventDispatcher.getInstance().dispatchEvent(startEvent);
                 
                 // Play sound
             	var tick:Sound = new tickClass() as Sound;
-            	tick.play();                
+            	// tick.play(); <- No thanks! ;)                
             }
 
             private function stopTimer(event:Event):void {
@@ -79,14 +87,26 @@
             
             private function restartTimer():void {
                 counter.text = "25:00";
-                button.label = "Start";
-                button.addEventListener(MouseEvent.CLICK, startTimer);            	
+                startTimerButton.label = "Start Timer";
+                // FIXME: This doesnt work. You have to remove the previous listener etc.
+                // It might be better to have a generic toogleTimer method.
+                startTimerButton.addEventListener(MouseEvent.CLICK, startTimer);            	
+            }
+            
+            private function createPomodoro():void {
+            	var input:PomoItemInput = new PomoItemInput();
+            	input.type = Pomodoro.TYPE_POMODORO;
+            	input.x = 10;
+            	input.y = 10;
+            	input.selectAfterCreate = true;
+            	this.addChild(input);
             }
         ]]>
     </mx:Script>
     
-	<mx:Button id="button" label="Start" click="startTimer()" x="192" y="17"/>
-	<mx:Label id="counter" fontSize="60"  text="25:00" color="#FFFF00" x="0" y="0" height="69"/>
-	<mx:Label x="10" y="63" text="{pomodoro.name}" width="262" height="17"/>
+	<mx:Button id="startTimerButton" label="Start Timer" click="startTimer()" x="192" y="17" visible="false"/>
+	<mx:Button id="newTaskButton" label="New Task" click="createPomodoro()" x="192" y="17"/>
+	<mx:Label id="counter" fontSize="60"  text="25:00" color="#FFFF00" x="0" y="-7" height="69"/>
+	<mx:Label x="10" y="65" text="{pomodoro.name}" width="262" height="17"/>
     
 </mx:Canvas>

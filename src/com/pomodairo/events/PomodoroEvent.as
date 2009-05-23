@@ -8,8 +8,10 @@ package com.pomodairo.events
 	{
 		public static var SELECTED:String = "pomodoro selected";
 		public static var TIME_OUT:String = "pomodoro time out";
-		public static var UNPLANNED:String = "pomodoro unplanned";
-		public static var INTERRUPTION:String = "pomodoro interruption";
+		public static var START_POMODORO:String = "pomodoro started";
+		public static var NEW_POMODORO:String = "pomodoro created";
+		public static var NEW_UNPLANNED:String = "unplanned created";
+		public static var NEW_INTERRUPTION:String = "interruption created";
 		public static var DONE:String = "pomodoro done";
 		
 		public var pomodoro:Pomodoro;

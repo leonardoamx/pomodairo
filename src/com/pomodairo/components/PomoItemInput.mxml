@@ -4,12 +4,14 @@
 	
 	<mx:Script>
         <![CDATA[
+        	import com.pomodairo.db.Storage;
         	import com.pomodairo.Pomodoro;
         	import com.pomodairo.events.PomodoroEvent;
         	import com.pomodairo.PomodoroEventDispatcher;
         
         	public var type:String = Pomodoro.TYPE_POMODORO;
         	public var reference:Pomodoro;
+        	public var selectAfterCreate:Boolean = false;
         	
         	private function init():void {
 				input.addEventListener(KeyboardEvent.KEY_DOWN,checkSubmit);
@@ -26,21 +28,58 @@
 			private function fireSubmit(event:Event):void
 	        {
 	        	trace("SUBMIT: "+input.text);
-	        	var interruption:Pomodoro = new Pomodoro();
-	        	interruption.name = input.text;
+	        	var item:Pomodoro = new Pomodoro();
+	        	item.name = input.text;
 	        	if (reference != null) {
-	        		interruption.parent = reference.id;
+	        		item.parent = reference.id;
 	        	} else {
-	        		interruption.parent = 0;
+	        		item.parent = 0;
 	        	}
-	        	interruption.type = type;
+	        	item.type = type;
 	        	
-	        	var evt:PomodoroEvent = new PomodoroEvent(PomodoroEvent.INTERRUPTION)
+	        	var eventType:String;
+	        	switch (type) 
+	        	{
+	        		case Pomodoro.TYPE_POMODORO:
+	        			eventType = PomodoroEvent.NEW_POMODORO;
+	        			break;
+	        			
+	        		case Pomodoro.TYPE_UNPLANNED:
+	        			eventType = PomodoroEvent.NEW_UNPLANNED;
+	        			break;
+	        		
+	        		case Pomodoro.TYPE_INTERRUPTION:
+	        			eventType = PomodoroEvent.NEW_INTERRUPTION;
+	        			break;
+	        	}
+	        	
+	        	
+	        	var evt:PomodoroEvent = new PomodoroEvent(eventType)
 	        	evt.pomodoro = reference;
-	        	evt.other = interruption;
+	        	evt.other = item;
 	        	
 	        	PomodoroEventDispatcher.getInstance().dispatchEvent(evt);
 	        	this.parent.removeChild(this);
+	        	
+	        	if (selectAfterCreate)
+	        	{
+	        		// Ugh.. Don't get me started. Fugly warning ahead!
+	        		// 1. The pomodoro.id is not set since the insert must be run
+	        		// and the item read from the db again.
+	        		// 2. The db does not have a easy synchronous get.
+	        		Storage.instance.getAllPomodoros();
+					var dataset:Array = Storage.instance.dataset;
+					for each (var pom:Pomodoro in dataset)
+					{
+						if (pom.name == item.name) {
+							// Match (not guaranteed to be unique)
+							var select:PomodoroEvent = new PomodoroEvent(PomodoroEvent.SELECTED);
+	        				select.pomodoro = pom;
+	        				PomodoroEventDispatcher.getInstance().dispatchEvent(select);
+	        				break;
+						}	
+					}
+	        	}
 	        } 
 	        
         ]]>

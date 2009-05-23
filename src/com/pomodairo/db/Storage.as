@@ -24,10 +24,27 @@ package com.pomodairo.db
 		private var dbStatement:SQLStatement;
 		
 		public function Storage() {
-			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.INTERRUPTION, addInterruption);
+			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.START_POMODORO, startPomodoro);
+			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.NEW_INTERRUPTION, addInterruption);
+			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.NEW_UNPLANNED, addUnplanned);
+			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.NEW_POMODORO, addNewPomodoro);
+		}
+		
+		private function startPomodoro(e:PomodoroEvent) {
+			increasePomodoroCount(e.pomodoro);
 		}
 		
 		private function addInterruption(e:PomodoroEvent) {
+			addPomodoro(e.other);
+			increaseInterruptionCount(e.pomodoro);
+		}
+		
+		private function addUnplanned(e:PomodoroEvent) {
+			addPomodoro(e.other);
+			increaseUnplannedCount(e.pomodoro);
+		}
+		
+		private function addNewPomodoro(e:PomodoroEvent) {
 			addPomodoro(e.other);
 		}
 		
@@ -79,11 +96,10 @@ package com.pomodairo.db
 
 		public function getAllPomodoros():void
 		{
-			trace("Get All Pomodoros");
 			dbStatement = new SQLStatement();
 			dbStatement.itemClass = Pomodoro;
 			dbStatement.sqlConnection = sqlConnection;
-			var sqlQuery:String = "select * from Pomodoro where type='"+Pomodoro.TYPE_POMODORO+"'";
+			var sqlQuery:String = "select * from Pomodoro where type='"+Pomodoro.TYPE_POMODORO+"' or type='"+Pomodoro.TYPE_UNPLANNED+"'";
 			dbStatement.text = sqlQuery;
 			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementSelectResult);
 			dbStatement.execute();
@@ -91,7 +107,6 @@ package com.pomodairo.db
 		
 		public function getAllItems():void
 		{
-			trace("Get All Pomodoros");
 			dbStatement = new SQLStatement();
 			dbStatement.itemClass = Pomodoro;
 			dbStatement.sqlConnection = sqlConnection;
@@ -107,10 +122,6 @@ package com.pomodairo.db
 		    if (result != null)
 		    {
 		    	dataset = result.data;
-				trace("Got data: "+dataset);
-				for each (var pom:Pomodoro in dataset) {
-					trace("Got Pom: "+pom.name);
-				}
 		    }
 		}
 		
@@ -132,7 +143,6 @@ package com.pomodairo.db
 		
 		public function addPomodoro(pom:Pomodoro):void
         {
-        	trace("Add Pomodoro");
         	var sqlInsert:String = "insert into Pomodoro (name, type, pomodoros, unplanned, interruptions, created, closed, done, parent) " + 
         			"values(:name,:type,:pomodoros,:unplanned,:interruptions,:created,:closed,:done, :parent);";
         			
@@ -165,6 +175,34 @@ package com.pomodairo.db
 		public function markDone(pom:Pomodoro):void
 		{
 			var sqlMarkDone:String = "update Pomodoro set done = "+pom.done+" where id='"+pom.id+"';";
+			dbStatement.text = sqlMarkDone;
+			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
+			dbStatement.execute();
+		}		
+		
+		public function increasePomodoroCount(pom:Pomodoro):void
+		{
+			trace("Increase DB Pomoodor count: "+pom.pomodoros);
+			pom.pomodoros++;
+			var sqlMarkDone:String = "update Pomodoro set pomodoros = "+pom.pomodoros+" where id='"+pom.id+"';";
+			dbStatement.text = sqlMarkDone;
+			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
+			dbStatement.execute();
+		}		
+		
+		public function increaseInterruptionCount(pom:Pomodoro):void
+		{
+			pom.interruptions++;
+			var sqlMarkDone:String = "update Pomodoro set interruptions = "+pom.interruptions+" where id='"+pom.id+"';";
+			dbStatement.text = sqlMarkDone;
+			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
+			dbStatement.execute();
+		}		
+		
+		public function increaseUnplannedCount(pom:Pomodoro):void
+		{
+			pom.unplanned++;
+			var sqlMarkDone:String = "update Pomodoro set unplanned = "+pom.unplanned+" where id='"+pom.id+"';";
 			dbStatement.text = sqlMarkDone;
 			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
 			dbStatement.execute();
