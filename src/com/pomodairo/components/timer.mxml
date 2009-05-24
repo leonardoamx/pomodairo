@@ -66,10 +66,7 @@
                 baseTimer += 25*60*1000+1000;
                 //baseTimer += 6*1000;
                 t.start();
-                startTimerButton.label = "Stop Timer";
-                // FIXME: This doesnt work. You have to remove the previous listener etc.
-                // It might be better to have a generic toogleTimer method.
-                startTimerButton.addEventListener(MouseEvent.CLICK, stopTimer);
+                toggleButton();
                 
 				var startEvent:PomodoroEvent = new PomodoroEvent(PomodoroEvent.START_POMODORO);
 				startEvent.pomodoro = pomodoro;
@@ -77,20 +74,32 @@
                 
                 // Play sound
             	var tick:Sound = new tickClass() as Sound;
-            	// tick.play(); <- No thanks! ;)                
+            }
+            
+            private function toggleButton(on:Boolean=false):void
+            {
+            	if (on)
+            	{
+	                startTimerButton.label = "Start Timer";
+	                startTimerButton.removeEventListener(MouseEvent.CLICK, stopTimer);
+	                startTimerButton.addEventListener(MouseEvent.CLICK, startTimer);            		            	
+	            } 
+	            else
+	            {
+	                startTimerButton.label = "Stop Timer";
+	                startTimerButton.removeEventListener(MouseEvent.CLICK, startTimer);
+	                startTimerButton.addEventListener(MouseEvent.CLICK, stopTimer);
+	            }            	
             }
 
             private function stopTimer(event:Event):void {
                 t.stop();
-                restartTimer();
+                restartTimer();                
             }
             
             private function restartTimer():void {
                 counter.text = "25:00";
-                startTimerButton.label = "Start Timer";
-                // FIXME: This doesnt work. You have to remove the previous listener etc.
-                // It might be better to have a generic toogleTimer method.
-                startTimerButton.addEventListener(MouseEvent.CLICK, startTimer);            	
+                toggleButton(true);
             }
             
             private function createPomodoro():void {
