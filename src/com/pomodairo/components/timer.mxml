@@ -80,21 +80,19 @@
             {
             	if (on)
             	{
-	                startTimerButton.label = "Start Timer";
-	                startTimerButton.removeEventListener(MouseEvent.CLICK, stopTimer);
-	                startTimerButton.addEventListener(MouseEvent.CLICK, startTimer);            		            	
+            		startTimerButton.visible = true;
+            		stopTimerButton.visible = false;
 	            } 
 	            else
 	            {
-	                startTimerButton.label = "Stop Timer";
-	                startTimerButton.removeEventListener(MouseEvent.CLICK, startTimer);
-	                startTimerButton.addEventListener(MouseEvent.CLICK, stopTimer);
+	            	startTimerButton.visible = false;
+	            	stopTimerButton.visible = true;
 	            }            	
             }
 
-            private function stopTimer(event:Event):void {
+            private function stopTimer(event:Event=null):void {
                 t.stop();
-                restartTimer();                
+                restartTimer();
             }
             
             private function restartTimer():void {
@@ -114,6 +112,7 @@
     </mx:Script>
     
 	<mx:Button id="startTimerButton" label="Start Timer" click="startTimer()" x="192" y="17" visible="false"/>
+	<mx:Button id="stopTimerButton" label="Stop Timer" click="stopTimer()" x="192" y="17" visible="false"/>
 	<mx:Button id="newTaskButton" label="New Task" click="createPomodoro()" x="192" y="17"/>
 	<mx:Label id="counter" fontSize="60"  text="25:00" color="#FFFF00" x="0" y="-7" height="69"/>
 	<mx:Label x="10" y="65" text="{pomodoro.name}" width="262" height="17"/>
