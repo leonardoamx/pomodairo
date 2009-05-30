@@ -45,12 +45,14 @@
 				pomodoro = e.pomodoro;
 				newTaskButton.visible = false;
 				startTimerButton.visible = true;
+				counter.text = "25:00";
 			}
 
             private function updateTimer(evt:TimerEvent):void {
             	if (getTimer() >= baseTimer) {
             		var alarm:Sound = new alarmClass() as Sound;
             		alarm.play();
+            		PomodoroEventDispatcher.getInstance().dispatchEvent(new PomodoroEvent(PomodoroEvent.TIME_OUT));
             		t.stop();
             		restartTimer();
             	} else {
@@ -96,7 +98,7 @@
             }
             
             private function restartTimer():void {
-                counter.text = "25:00";
+                counter.text = "00:00";
                 toggleButton(true);
             }
             
