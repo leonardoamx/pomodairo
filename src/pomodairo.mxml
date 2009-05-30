@@ -18,6 +18,12 @@
         
         	private function init():void {
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, onPomodoroSelected);
+        		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.TIME_OUT, onPomodoroTimeout);
+        	}
+        	
+        	private function onPomodoroTimeout(event:PomodoroEvent):void {
+        		nativeWindow.notifyUser(NotificationType.INFORMATIONAL);
+        		nativeWindow.orderToFront();
         	}
         	
         	private function onPomodoroSelected(event:PomodoroEvent):void {
