@@ -19,6 +19,9 @@
 		    import flash.media.Sound;
 		    import flash.media.SoundChannel;
 		    
+		    private static var DEFAULT:String = "default";
+		    private static var TIME_OUT:String = "timeout";
+		    
         	[Embed(source="alarm.mp3")]
         	public var alarmClass:Class;
         	
@@ -45,7 +48,20 @@
 				pomodoro = e.pomodoro;
 				newTaskButton.visible = false;
 				startTimerButton.visible = true;
-				counter.text = "25:00";
+				setTimerStyle(DEFAULT);
+			}
+			
+			private function setTimerStyle(status:String):void {
+				switch (status) {
+					case DEFAULT:
+						counter.setStyle("color", "Yellow");
+						counter.text = "25:00";
+						break;
+						
+					case TIME_OUT:
+						counter.setStyle("color", "Red");
+						break;	
+				}
 			}
 
             private function updateTimer(evt:TimerEvent):void {
@@ -60,13 +76,17 @@
 	                var min:String = (MIN_MASK + d.minutes).substr(-MIN_MASK.length);
 	                var sec:String = (SEC_MASK + d.seconds).substr(-SEC_MASK.length);
 	                counter.text = String(min + ":" + sec);
+	                if (min == "00") {
+	                	setTimerStyle(TIME_OUT);
+	                }
 	            }
             }
 
             private function startTimer(event:Event = null):void {
+            	setTimerStyle(DEFAULT);
                 baseTimer = getTimer();
                 baseTimer += 25*60*1000+1000;
-                //baseTimer += 6*1000;
+                // baseTimer += 6*1000;
                 t.start();
                 toggleButton();
                 
@@ -98,7 +118,7 @@
             }
             
             private function restartTimer():void {
-                counter.text = "00:00";
+            	setTimerStyle(TIME_OUT);
                 toggleButton(true);
             }
             
