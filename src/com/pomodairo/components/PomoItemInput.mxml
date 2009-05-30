@@ -15,7 +15,6 @@
         	
         	private function init():void {
 				input.addEventListener(KeyboardEvent.KEY_DOWN,checkSubmit);
-				trace("SET FOCUS");
 				input.setFocus();
 			}
            
@@ -23,11 +22,24 @@
             {
                 if(event.charCode == 13)
                        fireSubmit(null);
+                       
+                if(event.charCode == 27)
+                       exit();
+            }
+            
+            private function exit():void
+            {
+            	this.parent.removeChild(this);
             }
             
 			private function fireSubmit(event:Event):void
 	        {
-	        	trace("SUBMIT: "+input.text);
+	        	if (input.text == null || input.text == "")
+	        	{
+					exit();
+					return;	        		
+	        	}
+	        	
 	        	var item:Pomodoro = new Pomodoro();
 	        	item.name = input.text;
 	        	if (reference != null) {
@@ -59,7 +71,7 @@
 	        	evt.other = item;
 	        	
 	        	PomodoroEventDispatcher.getInstance().dispatchEvent(evt);
-	        	this.parent.removeChild(this);
+	        	exit();
 	        	
 	        	if (selectAfterCreate)
 	        	{
