@@ -36,11 +36,16 @@
             private const TIMER_INTERVAL:int = 10;
 
             private var baseTimer:int;
-            private var t:Timer;
+            private var pomodoroTimer:Timer;
+            private var breakTimer:Timer;
 
             private function init():void {
-                t = new Timer(TIMER_INTERVAL);
-                t.addEventListener(TimerEvent.TIMER, updateTimer);    
+                pomodoroTimer = new Timer(TIMER_INTERVAL);
+                pomodoroTimer.addEventListener(TimerEvent.TIMER, updateTimer);
+                
+				breakTimer = new Timer(TIMER_INTERVAL);
+                breakTimer.addEventListener(TimerEvent.TIMER, updateBreakTimer);    
+
                 PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, onPomodoroSelected);   	
             }
 
@@ -69,8 +74,9 @@
             		var alarm:Sound = new alarmClass() as Sound;
             		alarm.play();
             		PomodoroEventDispatcher.getInstance().dispatchEvent(new PomodoroEvent(PomodoroEvent.TIME_OUT));
-            		t.stop();
-            		restartTimer();
+            		pomodoroTimer.stop();
+            		setTimerStyle(TIME_OUT);
+            		startBreakTimer();
             	} else {
 	                var d:Date = new Date(baseTimer - getTimer());
 	                var min:String = (MIN_MASK + d.minutes).substr(-MIN_MASK.length);
@@ -81,14 +87,43 @@
 	                }
 	            }
             }
+            
+            private function startBreakTimer():void
+            {
+            	baseTimer = getTimer();
+            	breakTimer.start();            	
+            }
+            
+            private function updateBreakTimer(evt:TimerEvent):void 
+            {
+            	var timeBeforeBreakStarts:int = 5;
+			    var d:Date = new Date(getTimer() - baseTimer);
+            	if (d.minutes == 0 && d.seconds > timeBeforeBreakStarts)
+            	{
+            		// Start the break counter after 10 seconds.
+            		setTimerStyle(DEFAULT);
+            		showBreakButton();
+            		pomodoroLabel.text = "On Break";
+	                var min:String = (MIN_MASK + d.minutes).substr(-MIN_MASK.length);
+	                var sec:String = (SEC_MASK + (d.seconds - timeBeforeBreakStarts)).substr(-SEC_MASK.length);
+                	counter.text = String(min + ":" + sec);
+            	}
+            }
+            
+            private function stopBreakTimer():void
+            {
+            	breakTimer.stop();
+            	pomodoroLabel.text = "";
+            	showNewTaskButton();
+            }
 
             private function startTimer(event:Event = null):void {
             	setTimerStyle(DEFAULT);
                 baseTimer = getTimer();
-                baseTimer += 25*60*1000+1000;
-                // baseTimer += 6*1000;
-                t.start();
-                toggleButton();
+                //baseTimer += 25*60*1000+1000;
+                baseTimer += 6*1000;
+                pomodoroTimer.start();
+                showStopButton();
                 
 				var startEvent:PomodoroEvent = new PomodoroEvent(PomodoroEvent.START_POMODORO);
 				startEvent.pomodoro = pomodoro;
@@ -98,28 +133,38 @@
             	var tick:Sound = new tickClass() as Sound;
             }
             
-            private function toggleButton(on:Boolean=false):void
+            private function showBreakButton():void
             {
-            	if (on)
-            	{
-            		startTimerButton.visible = true;
-            		stopTimerButton.visible = false;
-	            } 
-	            else
-	            {
-	            	startTimerButton.visible = false;
-	            	stopTimerButton.visible = true;
-	            }            	
-            }
-
-            private function stopTimer(event:Event=null):void {
-                t.stop();
-                restartTimer();
+        		startTimerButton.visible = false;
+        		stopTimerButton.visible = false;
+        		stopBreakButton.visible = true;
+            }            
+            
+            private function showStartButton():void
+            {
+        		startTimerButton.visible = true;
+        		stopTimerButton.visible = false;
+        		stopBreakButton.visible = false;
+        		counter.text = "25:00";
             }
             
-            private function restartTimer():void {
-            	setTimerStyle(TIME_OUT);
-                toggleButton(true);
+            private function showStopButton():void
+            {
+            	startTimerButton.visible = false;
+            	stopTimerButton.visible = true;            	
+            }
+            
+            private function showNewTaskButton():void
+            {
+            	startTimerButton.visible = false;
+            	stopTimerButton.visible = false;
+            	stopBreakButton.visible = false;
+            	newTaskButton.visible = true;            	
+            }            
+
+            private function stopTimer(event:Event=null):void {
+                pomodoroTimer.stop();
+                showStartButton();
             }
             
             private function createPomodoro():void {
@@ -135,8 +180,9 @@
     
 	<mx:Button id="startTimerButton" label="Start Timer" click="startTimer()" x="192" y="17" visible="false"/>
 	<mx:Button id="stopTimerButton" label="Stop Timer" click="stopTimer()" x="192" y="17" visible="false"/>
+	<mx:Button id="stopBreakButton" label="Stop Break" click="stopBreakTimer()" x="192" y="17" visible="false"/>
 	<mx:Button id="newTaskButton" label="New Task" click="createPomodoro()" x="192" y="17"/>
 	<mx:Label id="counter" fontSize="60"  text="25:00" color="#FFFF00" x="0" y="-7" height="69"/>
-	<mx:Label x="10" y="65" text="{pomodoro.name}" width="262" height="17"/>
+	<mx:Label id="pomodoroLabel" x="10" y="65" text="{pomodoro.name}" width="262" height="17"/>
     
 </mx:Canvas>
