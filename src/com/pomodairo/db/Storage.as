@@ -14,6 +14,8 @@ package com.pomodairo.db
 	
 	public class Storage
 	{
+		public static var DATABASE_FILE:String = "pomodairo-1.1.db";
+		
 		public static var instance:Storage = new Storage();
 		
 		[Bindable]
@@ -49,7 +51,7 @@ package com.pomodairo.db
 		}
 		
 		public function initAndOpenDatabase():void {       		
-			sqlConnectionFile = File.userDirectory.resolvePath("pomodairo.db");
+			sqlConnectionFile = File.userDirectory.resolvePath(DATABASE_FILE);
 			sqlConnection = new SQLConnection();
 			
 			if(!sqlConnectionFile.exists) {
@@ -86,6 +88,7 @@ package com.pomodairo.db
 		 				"created DATETIME, " +
 		 				"closed DATETIME, " +
 		 				"parent INTEGER, " +
+		 				"visible BOOLEAN, " +
 		 				"done BOOLEAN )";
 		 					
 		 	q.text = sql;
@@ -99,7 +102,7 @@ package com.pomodairo.db
 			dbStatement = new SQLStatement();
 			dbStatement.itemClass = Pomodoro;
 			dbStatement.sqlConnection = sqlConnection;
-			var sqlQuery:String = "select * from Pomodoro where type='"+Pomodoro.TYPE_POMODORO+"' or type='"+Pomodoro.TYPE_UNPLANNED+"'";
+			var sqlQuery:String = "select * from Pomodoro where (type='"+Pomodoro.TYPE_POMODORO+"' or type='"+Pomodoro.TYPE_UNPLANNED+"') and visible=true";
 			dbStatement.text = sqlQuery;
 			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementSelectResult);
 			dbStatement.execute();
@@ -143,8 +146,10 @@ package com.pomodairo.db
 		
 		public function addPomodoro(pom:Pomodoro):void
         {
-        	var sqlInsert:String = "insert into Pomodoro (name, type, pomodoros, unplanned, interruptions, created, closed, done, parent) " + 
-        			"values(:name,:type,:pomodoros,:unplanned,:interruptions,:created,:closed,:done, :parent);";
+        	var sqlInsert:String = "insert into Pomodoro " + 
+        			"(name, type, pomodoros, unplanned, interruptions, created, closed, done, parent, visible) " + 
+        			"values" + 
+        			"(:name,:type,:pomodoros,:unplanned,:interruptions,:created,:closed,:done, :parent, :visible);";
         			
 			dbStatement.text = sqlInsert;
 			dbStatement.parameters[":name"] = pom.name;
@@ -155,7 +160,8 @@ package com.pomodairo.db
 			dbStatement.parameters[":created"] = pom.created; 
 			dbStatement.parameters[":closed"] = pom.closed; 
 			dbStatement.parameters[":done"] = pom.done;
-			dbStatement.parameters[":parent"] = pom.parent;    
+			dbStatement.parameters[":parent"] = pom.parent;
+			dbStatement.parameters[":visible"] = pom.visible;       
 			
 			dbStatement.removeEventListener(SQLEvent.RESULT, onDBStatementSelectResult);
 			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
@@ -175,6 +181,14 @@ package com.pomodairo.db
 		public function markDone(pom:Pomodoro):void
 		{
 			var sqlMarkDone:String = "update Pomodoro set done = "+pom.done+" where id='"+pom.id+"';";
+			dbStatement.text = sqlMarkDone;
+			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
+			dbStatement.execute();
+		}		
+		
+		public function updateVisibility(pom:Pomodoro):void
+		{
+			var sqlMarkDone:String = "update Pomodoro set visible = "+pom.visible+" where id='"+pom.id+"';";
 			dbStatement.text = sqlMarkDone;
 			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
 			dbStatement.execute();
