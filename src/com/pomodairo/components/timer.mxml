@@ -34,6 +34,10 @@
             private const MIN_MASK:String = "00";
             private const SEC_MASK:String = "00";
             private const TIMER_INTERVAL:int = 10;
+            private const DELAY_BEFORE_BREAK_STARTS:int = 5; // Seconds
+
+			[Bindable]
+			public var pomodoroLengthInMinutes:int = 25;
 
             private var baseTimer:int;
             private var pomodoroTimer:Timer;
@@ -49,7 +53,7 @@
                 PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, onPomodoroSelected);   	
             }
 
-			private function onPomodoroSelected(e:PomodoroEvent) {
+			private function onPomodoroSelected(e:PomodoroEvent):void {
 				pomodoro = e.pomodoro;
 				newTaskButton.visible = false;
 				startTimerButton.visible = true;
@@ -60,7 +64,6 @@
 				switch (status) {
 					case DEFAULT:
 						counter.setStyle("color", "Yellow");
-						counter.text = "25:00";
 						break;
 						
 					case TIME_OUT:
@@ -96,16 +99,15 @@
             
             private function updateBreakTimer(evt:TimerEvent):void 
             {
-            	var timeBeforeBreakStarts:int = 5;
 			    var d:Date = new Date(getTimer() - baseTimer);
-            	if (d.minutes == 0 && d.seconds > timeBeforeBreakStarts)
+            	if (d.minutes == 0 && d.seconds > DELAY_BEFORE_BREAK_STARTS)
             	{
             		// Start the break counter after 10 seconds.
             		setTimerStyle(DEFAULT);
             		showBreakButton();
             		pomodoroLabel.text = "On Break";
 	                var min:String = (MIN_MASK + d.minutes).substr(-MIN_MASK.length);
-	                var sec:String = (SEC_MASK + (d.seconds - timeBeforeBreakStarts)).substr(-SEC_MASK.length);
+	                var sec:String = (SEC_MASK + (d.seconds - DELAY_BEFORE_BREAK_STARTS)).substr(-SEC_MASK.length);
                 	counter.text = String(min + ":" + sec);
             	}
             }
@@ -120,8 +122,8 @@
             private function startTimer(event:Event = null):void {
             	setTimerStyle(DEFAULT);
                 baseTimer = getTimer();
-                //baseTimer += 25*60*1000+1000;
-                baseTimer += 6*1000;
+                baseTimer += pomodoroLengthInMinutes*60*1000+1000;
+                //baseTimer += 6*1000;
                 pomodoroTimer.start();
                 showStopButton();
                 
@@ -145,7 +147,8 @@
         		startTimerButton.visible = true;
         		stopTimerButton.visible = false;
         		stopBreakButton.visible = false;
-        		counter.text = "25:00";
+        		counter.text = pomodoroLengthInMinutes+":00";
+        		setTimerStyle(DEFAULT);
             }
             
             private function showStopButton():void
@@ -159,7 +162,8 @@
             	startTimerButton.visible = false;
             	stopTimerButton.visible = false;
             	stopBreakButton.visible = false;
-            	newTaskButton.visible = true;            	
+            	newTaskButton.visible = true; 
+            	counter.text = pomodoroLengthInMinutes+":00";           	
             }            
 
             private function stopTimer(event:Event=null):void {
@@ -175,6 +179,15 @@
             	input.selectAfterCreate = true;
             	this.addChild(input);
             }
+            
+            private function toTwoDigitString(number:int):String
+            {
+            	if (number < 10)
+            	{
+            		return ""+0+number;
+            	}
+            	return ""+number;
+            }
         ]]>
     </mx:Script>
     
@@ -182,7 +195,7 @@
 	<mx:Button id="stopTimerButton" label="Stop Timer" click="stopTimer()" x="192" y="17" visible="false"/>
 	<mx:Button id="stopBreakButton" label="Stop Break" click="stopBreakTimer()" x="192" y="17" visible="false"/>
 	<mx:Button id="newTaskButton" label="New Task" click="createPomodoro()" x="192" y="17"/>
-	<mx:Label id="counter" fontSize="60"  text="25:00" color="#FFFF00" x="0" y="-7" height="69"/>
+	<mx:Label id="counter" fontSize="60"  text="{toTwoDigitString(pomodoroLengthInMinutes)}:00" color="#FFFF00" x="0" y="-7" height="69"/>
 	<mx:Label id="pomodoroLabel" x="10" y="65" text="{pomodoro.name}" width="262" height="17"/>
     
 </mx:Canvas>
