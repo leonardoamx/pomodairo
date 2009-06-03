@@ -61,6 +61,7 @@
 			
 			private function setStartAvailable():void {
 				setTimerStyle(DEFAULT);
+				counter.text = pomodoroLengthInMinutes+":00";
 				stopBreakButton.visible = false;
 				newTaskButton.visible = false;
 				startTimerButton.visible = true;
@@ -135,8 +136,8 @@
             private function startTimer(event:Event = null):void {
             	setTimerStyle(DEFAULT);
                 baseTimer = getTimer();
-                //baseTimer += pomodoroLengthInMinutes*60*1000+1000;
-                baseTimer += 6*1000;
+                baseTimer += pomodoroLengthInMinutes*60*1000+1000;
+                // baseTimer += 6*1000;
                 pomodoroTimer.start();
                 showStopButton();
                 
