@@ -17,6 +17,7 @@
         	import mx.controls.TextInput;
         
         	private function init():void {
+        		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.START_POMODORO, closeTaskList);
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, onPomodoroSelected);
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.TIME_OUT, onPomodoroTimeout);
         	}
@@ -41,7 +42,7 @@
             	}
             }
             
-            private function closeTaskList():void {
+            private function closeTaskList(event:PomodoroEvent=null):void {
             	this.height = 166;
             	taskListPanel.visible = false;
             }
@@ -73,7 +74,7 @@
 
 	
 	<mx:Panel title="Pomodairo" x="0" y="0" height="164" width="320" layout="absolute" mouseDown="{nativeWindow.startMove()}">				
-		<ns1:timer id="timerCanvas" x="0" y="0" pomodoroLengthInMinutes="25" pomodoroStarted="closeTaskList()">
+		<ns1:timer id="timerCanvas" x="0" y="0" pomodoroLengthInMinutes="25">
 		</ns1:timer>
 		<mx:ControlBar id="controls" height="42" y="88">
 			<mx:Button label="Task List" click="toggleTaskList()" toolTip="Open/close task list"/>
