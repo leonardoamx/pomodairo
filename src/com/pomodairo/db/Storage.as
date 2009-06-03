@@ -89,6 +89,7 @@ package com.pomodairo.db
 		 				"closed DATETIME, " +
 		 				"parent INTEGER, " +
 		 				"visible BOOLEAN, " +
+		 				"ordinal INTEGER, " +
 		 				"done BOOLEAN )";
 		 					
 		 	q.text = sql;
@@ -102,7 +103,8 @@ package com.pomodairo.db
 			dbStatement = new SQLStatement();
 			dbStatement.itemClass = Pomodoro;
 			dbStatement.sqlConnection = sqlConnection;
-			var sqlQuery:String = "select * from Pomodoro where (type='"+Pomodoro.TYPE_POMODORO+"' or type='"+Pomodoro.TYPE_UNPLANNED+"') and visible=true";
+			var sqlQuery:String = "select * from Pomodoro where (type='"+Pomodoro.TYPE_POMODORO+"' or type='"+Pomodoro.TYPE_UNPLANNED+"') and visible=true " + 
+					"order by ordinal desc";
 			dbStatement.text = sqlQuery;
 			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementSelectResult);
 			dbStatement.execute();
@@ -147,9 +149,9 @@ package com.pomodairo.db
 		public function addPomodoro(pom:Pomodoro):void
         {
         	var sqlInsert:String = "insert into Pomodoro " + 
-        			"(name, type, pomodoros, unplanned, interruptions, created, closed, done, parent, visible) " + 
+        			"(name, type, pomodoros, unplanned, interruptions, created, closed, done, parent, visible, ordinal) " + 
         			"values" + 
-        			"(:name,:type,:pomodoros,:unplanned,:interruptions,:created,:closed,:done, :parent, :visible);";
+        			"(:name,:type,:pomodoros,:unplanned,:interruptions,:created,:closed,:done, :parent, :visible, :ordinal);";
         			
 			dbStatement.text = sqlInsert;
 			dbStatement.parameters[":name"] = pom.name;
@@ -161,7 +163,8 @@ package com.pomodairo.db
 			dbStatement.parameters[":closed"] = pom.closed; 
 			dbStatement.parameters[":done"] = pom.done;
 			dbStatement.parameters[":parent"] = pom.parent;
-			dbStatement.parameters[":visible"] = pom.visible;       
+			dbStatement.parameters[":visible"] = pom.visible;
+			dbStatement.parameters[":ordinal"] = pom.ordinal;          
 			
 			dbStatement.removeEventListener(SQLEvent.RESULT, onDBStatementSelectResult);
 			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
@@ -189,6 +192,14 @@ package com.pomodairo.db
 		public function updateVisibility(pom:Pomodoro):void
 		{
 			var sqlMarkDone:String = "update Pomodoro set visible = "+pom.visible+" where id='"+pom.id+"';";
+			dbStatement.text = sqlMarkDone;
+			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
+			dbStatement.execute();
+		}	
+		
+		public function updateOrdinal(pom:Pomodoro):void
+		{
+			var sqlMarkDone:String = "update Pomodoro set ordinal = "+pom.ordinal+" where id='"+pom.id+"';";
 			dbStatement.text = sqlMarkDone;
 			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
 			dbStatement.execute();
@@ -220,7 +231,7 @@ package com.pomodairo.db
 			dbStatement.text = sqlMarkDone;
 			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
 			dbStatement.execute();
-		}		
+		}
 	}
 	
 }

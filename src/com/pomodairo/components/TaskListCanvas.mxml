@@ -88,12 +88,11 @@
 	
 	<mx:ControlBar y="265" height="35" width="320">
 		<mx:Button id="removePomoButton" 
-			label="Remove"
-			click="onRemovePomodoroClicked(event)" width="83" height="24"/>
-		<mx:Button label="Done" id="closePomoButton" width="70" height="24"
-			click="onDonePomodoroClicked()"/>
-		<mx:Button label="Start" width="65" height="24" click="onStartPomodoroClicked()"/>
-		<mx:Button label="Clear" id="clearButton" click="onClosePomodoroClicked(event)"/>
+			label="Remove" enabled="{pomodorosDataGrid.selectedItem}"
+			click="onRemovePomodoroClicked(event)" width="83" height="24" toolTip="Remove this pomodoro from the list"/>
+		<mx:Button label="Clean" id="clearButton" click="onClosePomodoroClicked(event)" toolTip="Removes all 'done' items"/>
+		<mx:Button label="Done" id="closePomoButton" width="70" height="24" enabled="{pomodorosDataGrid.selectedItem}" click="onDonePomodoroClicked()" toolTip="Mark this item as done"/>
+		<mx:Button label="Start" width="65" height="24" click="onStartPomodoroClicked()" enabled="{pomodorosDataGrid.selectedItem}" toolTip="Use this task as current"/>
 	</mx:ControlBar>
 	<mx:TextInput id="nameInput" color="#FFFFFF" width="139" x="10" y="242" backgroundColor="#FFF8F8"/>
 	<mx:Button id="addPomoButton" label="Add New" click="onAddPomodoroClicked()" width="95" height="24" x="157" y="241"/>

@@ -76,6 +76,7 @@
 				<mx:DataGridColumn width="40" headerText="Parent" dataField="parent"/>
 				<mx:DataGridColumn width="100" headerText="Created" dataField="created"/>
 				<mx:DataGridColumn width="100" headerText="Closed" dataField="closed"/>
+				<mx:DataGridColumn width="100" headerText="Visible" dataField="visible"/>
 			</mx:columns>
 		</mx:DataGrid>
 		<mx:ControlBar>

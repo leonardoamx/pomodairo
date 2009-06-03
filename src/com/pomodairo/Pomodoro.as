@@ -18,6 +18,7 @@ package com.pomodairo
 		public var closed:Date;
 		public var parent:int = 0;
 		public var visible:Boolean = true;
+		public var ordinal:int = 0;
 		
 		// Descriptions
 		public var pomodorosDescription:String = "Number of pomodoros used";
