@@ -21,6 +21,7 @@
 		    
 		    private static var DEFAULT:String = "default";
 		    private static var TIME_OUT:String = "timeout";
+		    private static var BREAK:String = "break";
 		    
         	[Embed(source="alarm.mp3")]
         	public var alarmClass:Class;
@@ -55,9 +56,15 @@
 
 			private function onPomodoroSelected(e:PomodoroEvent):void {
 				pomodoro = e.pomodoro;
+				setStartAvailable();
+			}
+			
+			private function setStartAvailable():void {
+				setTimerStyle(DEFAULT);
+				stopBreakButton.visible = false;
 				newTaskButton.visible = false;
 				startTimerButton.visible = true;
-				setTimerStyle(DEFAULT);
+				pomodoroLabel.text = pomodoro.name;
 			}
 			
 			private function setTimerStyle(status:String):void {
@@ -68,6 +75,10 @@
 						
 					case TIME_OUT:
 						counter.setStyle("color", "Red");
+						break;
+						
+					case BREAK:
+						counter.setStyle("color", "Green");
 						break;	
 				}
 			}
@@ -95,7 +106,7 @@
             {
             	baseTimer = getTimer();
             	breakTimer.start();
-            	setTimerStyle(DEFAULT);
+            	setTimerStyle(BREAK);
             	showBreakButton();
             	pomodoroLabel.text = "On Break";
             }
@@ -117,9 +128,8 @@
             
             private function stopBreakTimer():void
             {
+        		setStartAvailable();
             	breakTimer.stop();
-            	pomodoroLabel.text = "";
-            	showNewTaskButton();
             }
 
             private function startTimer(event:Event = null):void {
@@ -194,10 +204,10 @@
         ]]>
     </mx:Script>
     
-	<mx:Button id="startTimerButton" label="Start Timer" click="startTimer()" x="192" y="17" visible="false"/>
-	<mx:Button id="stopTimerButton" label="Stop Timer" click="stopTimer()" x="192" y="17" visible="false"/>
-	<mx:Button id="stopBreakButton" label="Stop Break" click="stopBreakTimer()" x="192" y="17" visible="false"/>
-	<mx:Button id="newTaskButton" label="New Task" click="createPomodoro()" x="192" y="17"/>
+	<mx:Button id="startTimerButton" label="Start Timer" click="startTimer()" x="192" y="13" height="60" visible="false"/>
+	<mx:Button id="stopTimerButton" label="Stop Timer" click="stopTimer()" x="192" y="13" height="60" visible="false"/>
+	<mx:Button id="stopBreakButton" label="Stop Break" click="stopBreakTimer()" x="192" y="13" height="60" visible="false"/>
+	<mx:Button id="newTaskButton" label="New Task" click="createPomodoro()" x="192" y="13" height="60"/>
 	<mx:Label id="counter" fontSize="60"  text="{toTwoDigitString(pomodoroLengthInMinutes)}:00" color="#FFFF00" x="0" y="-7" height="69"/>
 	<mx:Label id="pomodoroLabel" x="10" y="65" text="{pomodoro.name}" width="262" height="17"/>
     
