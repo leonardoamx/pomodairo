@@ -110,9 +110,8 @@
             
             private function scheduleBreakTimerStart():void
             {
-            	var delayBeforeBreakStartTimer:Timer = new Timer(DELAY_BEFORE_BREAK_STARTS);
+            	var delayBeforeBreakStartTimer:Timer = new Timer(DELAY_BEFORE_BREAK_STARTS, 1);
             	delayBeforeBreakStartTimer.addEventListener(TimerEvent.TIMER, startBreakTimer);
-            	delayBeforeBreakStartTimer.repeatCount = 1;
             	delayBeforeBreakStartTimer.start();
             }
             
@@ -126,8 +125,8 @@
             private function startTimer(event:Event = null):void {
             	setTimerStyle(DEFAULT);
                 baseTimer = getTimer();
-                baseTimer += pomodoroLengthInMinutes*60*1000+1000;
-                //baseTimer += 6*1000;
+                //baseTimer += pomodoroLengthInMinutes*60*1000+1000;
+                baseTimer += 6*1000;
                 pomodoroTimer.start();
                 showStopButton();
                 
