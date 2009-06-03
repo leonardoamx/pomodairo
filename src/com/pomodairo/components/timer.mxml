@@ -6,6 +6,8 @@
 	initialize="init()"
 	verticalScrollPolicy="off">
 	
+		<mx:Metadata> [Event(name="pomodoroStarted", type="flash.events.Event")] </mx:Metadata>
+	
 	    <mx:Script>
         <![CDATA[
         	import com.pomodairo.events.PomodoroEvent;
@@ -138,6 +140,10 @@
                 
                 // Play sound
             	var tick:Sound = new tickClass() as Sound;
+            	
+            	// Dispatch event
+            	var pomodoroStartedEvent:Event = new Event("pomodoroStarted");
+            	dispatchEvent(pomodoroStartedEvent);
             }
             
             private function showBreakButton():void

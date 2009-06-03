@@ -76,6 +76,7 @@
 		dataProvider="{db.dataset}" 
 		height="241"
 		editable="false"
+		itemClick="onStartPomodoroClicked(event)"
 		change="onUsersDataGridChanged(event)" width="100%" >
 		<mx:columns>
 			<mx:DataGridColumn width="150" headerText="Name" dataField="name" itemRenderer="com.pomodairo.components.CustomRenderer" />
