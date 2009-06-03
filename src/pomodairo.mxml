@@ -30,7 +30,6 @@
         		trace("Pomodoro selected: "+event.pomodoro.name);
         		unplannedButton.enabled = true;
         		interruptionButton.enabled = true;
-        		closeTaskList();
         	}
         
             private function toggleTaskList():void {
@@ -74,7 +73,7 @@
 
 	
 	<mx:Panel title="Pomodairo" x="0" y="0" height="164" width="320" layout="absolute" mouseDown="{nativeWindow.startMove()}">				
-		<ns1:timer id="timerCanvas" x="0" y="0" pomodoroLengthInMinutes="25">
+		<ns1:timer id="timerCanvas" x="0" y="0" pomodoroLengthInMinutes="25" pomodoroStarted="closeTaskList()">
 		</ns1:timer>
 		<mx:ControlBar id="controls" height="42" y="88">
 			<mx:Button label="Task List" click="toggleTaskList()" toolTip="Open/close task list"/>
