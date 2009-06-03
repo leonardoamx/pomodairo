@@ -34,7 +34,7 @@
             private const MIN_MASK:String = "00";
             private const SEC_MASK:String = "00";
             private const TIMER_INTERVAL:int = 10;
-            private const DELAY_BEFORE_BREAK_STARTS:int = 5; // Seconds
+            private const DELAY_BEFORE_BREAK_STARTS:int = 5000; // Milliseconds
 
 			[Bindable]
 			public var pomodoroLengthInMinutes:int = 25;
@@ -79,7 +79,7 @@
             		PomodoroEventDispatcher.getInstance().dispatchEvent(new PomodoroEvent(PomodoroEvent.TIME_OUT));
             		pomodoroTimer.stop();
             		setTimerStyle(TIME_OUT);
-            		startBreakTimer();
+            		scheduleBreakTimerStart();
             	} else {
 	                var d:Date = new Date(baseTimer - getTimer());
 	                var min:String = (MIN_MASK + d.minutes).substr(-MIN_MASK.length);
@@ -91,25 +91,29 @@
 	            }
             }
             
-            private function startBreakTimer():void
+            private function startBreakTimer(evt:TimerEvent):void
             {
             	baseTimer = getTimer();
-            	breakTimer.start();            	
+            	breakTimer.start();
+            	setTimerStyle(DEFAULT);
+            	showBreakButton();
+            	pomodoroLabel.text = "On Break";
             }
             
             private function updateBreakTimer(evt:TimerEvent):void 
             {
 			    var d:Date = new Date(getTimer() - baseTimer);
-            	if (d.minutes == 0 && d.seconds > DELAY_BEFORE_BREAK_STARTS)
-            	{
-            		// Start the break counter after 10 seconds.
-            		setTimerStyle(DEFAULT);
-            		showBreakButton();
-            		pomodoroLabel.text = "On Break";
-	                var min:String = (MIN_MASK + d.minutes).substr(-MIN_MASK.length);
-	                var sec:String = (SEC_MASK + (d.seconds - DELAY_BEFORE_BREAK_STARTS)).substr(-SEC_MASK.length);
-                	counter.text = String(min + ":" + sec);
-            	}
+	            var min:String = (MIN_MASK + d.minutes).substr(-MIN_MASK.length);
+	            var sec:String = (SEC_MASK + (d.seconds)).substr(-SEC_MASK.length);
+                counter.text = String(min + ":" + sec);
+            }
+            
+            private function scheduleBreakTimerStart():void
+            {
+            	var delayBeforeBreakStartTimer:Timer = new Timer(DELAY_BEFORE_BREAK_STARTS);
+            	delayBeforeBreakStartTimer.addEventListener(TimerEvent.TIMER, startBreakTimer);
+            	delayBeforeBreakStartTimer.repeatCount = 1;
+            	delayBeforeBreakStartTimer.start();
             }
             
             private function stopBreakTimer():void
