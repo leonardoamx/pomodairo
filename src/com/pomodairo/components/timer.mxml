@@ -56,16 +56,7 @@
 
 			private function onPomodoroSelected(e:PomodoroEvent):void {
 				pomodoro = e.pomodoro;
-				setStartAvailable();
-			}
-			
-			private function setStartAvailable():void {
-				setTimerStyle(DEFAULT);
-				counter.text = pomodoroLengthInMinutes+":00";
-				stopBreakButton.visible = false;
-				newTaskButton.visible = false;
-				startTimerButton.visible = true;
-				pomodoroLabel.text = pomodoro.name;
+				showStartButton();
 			}
 			
 			private function setTimerStyle(status:String):void {
@@ -129,15 +120,15 @@
             
             private function stopBreakTimer():void
             {
-        		setStartAvailable();
             	breakTimer.stop();
+            	showStartButton();
             }
 
             private function startTimer(event:Event = null):void {
             	setTimerStyle(DEFAULT);
                 baseTimer = getTimer();
                 baseTimer += pomodoroLengthInMinutes*60*1000+1000;
-                // baseTimer += 6*1000;
+                //baseTimer += 6*1000;
                 pomodoroTimer.start();
                 showStopButton();
                 
@@ -161,7 +152,10 @@
         		startTimerButton.visible = true;
         		stopTimerButton.visible = false;
         		stopBreakButton.visible = false;
+        		newTaskButton.visible = false;
+        		
         		counter.text = pomodoroLengthInMinutes+":00";
+        		pomodoroLabel.text = pomodoro.name;
         		setTimerStyle(DEFAULT);
             }
             
