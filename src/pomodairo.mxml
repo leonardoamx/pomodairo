@@ -92,7 +92,7 @@
 	<mx:Fade id="fadeout" />
 
 	
-	<mx:Panel title="Pomodairo 1.2" x="0" y="0" height="164" width="320" layout="absolute" mouseDown="{nativeWindow.startMove()}">				
+	<mx:Panel title="Pomodairo" x="0" y="0" height="164" width="320" layout="absolute" mouseDown="{nativeWindow.startMove()}">				
 		<ns1:timer id="timerCanvas" x="0" y="0" pomodoroLengthInMinutes="25">
 		</ns1:timer>
 		<mx:ControlBar id="controls" height="42" y="88">
