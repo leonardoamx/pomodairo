@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <update xmlns="http://ns.adobe.com/air/framework/update/description/1.0">
 	<version>1.2</version>
-	<url>http://pomodairo.googlecode.com/files/pomodairo-1.2.air</url>
+	<url>http://pomodairo.googlecode.com/files/pomodairo.air</url>
 	<description>
 		* Pomodairo 1.2 Release notes
 		- Autoupdate enabled for new releases
