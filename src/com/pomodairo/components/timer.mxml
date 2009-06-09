@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
-	width="282" 
+	width="312" 
 	height="80"  
 	backgroundAlpha="0.0"
 	initialize="init()"
@@ -43,6 +43,8 @@
             private var baseTimer:int;
             private var pomodoroTimer:Timer;
             private var breakTimer:Timer;
+            
+            private var soundEnabled:Boolean = true;
 
             private function init():void {
                 pomodoroTimer = new Timer(TIMER_INTERVAL);
@@ -77,8 +79,10 @@
 
             private function updateTimer(evt:TimerEvent):void {
             	if (getTimer() >= baseTimer) {
-            		var alarm:Sound = new alarmClass() as Sound;
-            		alarm.play();
+            		if (soundEnabled) {
+	            		var alarm:Sound = new alarmClass() as Sound;
+	            		alarm.play();
+            		}
             		PomodoroEventDispatcher.getInstance().dispatchEvent(new PomodoroEvent(PomodoroEvent.TIME_OUT));
             		pomodoroTimer.stop();
             		setTimerStyle(TIME_OUT);
@@ -127,8 +131,8 @@
             private function startTimer(event:Event = null):void {
             	setTimerStyle(DEFAULT);
                 baseTimer = getTimer();
-                baseTimer += pomodoroLengthInMinutes*60*1000+1000;
-                //baseTimer += 6*1000;
+                //baseTimer += pomodoroLengthInMinutes*60*1000+1000;
+                baseTimer += 6*1000;
                 pomodoroTimer.start();
                 showStopButton();
                 
@@ -197,6 +201,16 @@
             	}
             	return ""+number;
             }
+            
+            private function toggleSound():void {
+            	soundEnabled = !soundEnabled;
+				if (soundEnabled)
+				{
+					toggleSoundBtn.alpha = 1;
+				} else {
+					toggleSoundBtn.alpha = 0.2;
+				}	
+            }
         ]]>
     </mx:Script>
     
@@ -206,5 +220,6 @@
 	<mx:Button id="newTaskButton" label="New Task" click="createPomodoro()" x="192" y="13" height="60"/>
 	<mx:Label id="counter" fontSize="60"  text="{toTwoDigitString(pomodoroLengthInMinutes)}:00" color="#FFFF00" x="0" y="-7" height="69"/>
 	<mx:Label id="pomodoroLabel" x="10" y="65" text="{pomodoro.name}" width="262" height="17"/>
-    
+    <mx:Image id="toggleSoundBtn" x="280" y="13" source="assets/appicons/speaker.png" mouseDown="toggleSound()" toolTip="Toggle sound on/off" 
+    	useHandCursor="true" buttonMode="true" mouseChildren="false" />
 </mx:Canvas>
