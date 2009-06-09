@@ -1,0 +1,23 @@
+ - RELEASE MANUAL -
+
+* Make sure everyting is updated and committed.
+
+* Update version in pomodairo-app.xml.
+
+* Update version in update.xml (and filename if applicable). Add release notes.
+
+* Build the pomodairo application into an .air file. 
+
+* Use the cubeia.p12 certificate to sign the .air file. It will not update properly with different cert!
+
+* Try a local install. Verify database integrity (somehow).
+
+* Upload .air file.
+
+* Upload update.xml (must be the exact same name!)
+
+* Start previous local version, verify that the auto update will kick in.
+
+* Edit start page on Google code, enter the release notes as seems fit.
+
+* Have a beer!
