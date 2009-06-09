@@ -9,6 +9,8 @@
 	
     <mx:Script>
         <![CDATA[
+        	import air.update.events.UpdateEvent;
+        	import air.update.ApplicationUpdaterUI;
         	import com.pomodairo.events.PomodoroEvent;
         	import com.pomodairo.PomodoroEventDispatcher;
         	import com.pomodairo.components.timer;
@@ -16,11 +18,26 @@
         	import com.pomodairo.components.PomoItemInput;
         	import mx.controls.TextInput;
         
+			private var appUpdater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
+				
         	private function init():void {
+        		checkForUpdates();
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.START_POMODORO, closeTaskList);
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, onPomodoroSelected);
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.TIME_OUT, onPomodoroTimeout);
         	}
+        	
+        	private function checkForUpdates():void {
+				appUpdater.configurationFile = new File("app:/updateConfig.xml");
+				appUpdater.isCheckForUpdateVisible = false;
+				appUpdater.addEventListener(UpdateEvent.INITIALIZED,
+				updaterInitialised);
+				appUpdater.initialize();
+			}
+				
+			private function updaterInitialised(event:UpdateEvent):void {
+				appUpdater.checkNow();
+			}
         	
         	private function onPomodoroTimeout(event:PomodoroEvent):void {
         		nativeWindow.notifyUser(NotificationType.INFORMATIONAL);
@@ -66,6 +83,8 @@
             	input.y = 80;
             	this.addChild(input);
             }
+            
+            
         ]]>
     </mx:Script>
 
@@ -73,7 +92,7 @@
 	<mx:Fade id="fadeout" />
 
 	
-	<mx:Panel title="Pomodairo" x="0" y="0" height="164" width="320" layout="absolute" mouseDown="{nativeWindow.startMove()}">				
+	<mx:Panel title="Pomodairo 1.2" x="0" y="0" height="164" width="320" layout="absolute" mouseDown="{nativeWindow.startMove()}">				
 		<ns1:timer id="timerCanvas" x="0" y="0" pomodoroLengthInMinutes="25">
 		</ns1:timer>
 		<mx:ControlBar id="controls" height="42" y="88">

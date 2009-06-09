@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration xmlns="http://ns.adobe.com/air/framework/update/configuration/1.0">
+	<!--url>http://pomodairo.googlecode.com/files/update.xml</url-->
+	<url>C:/update.xml</url>
+	<delay>0.001</delay>
+</configuration>
