@@ -44,6 +44,8 @@
             private var pomodoroTimer:Timer;
             private var breakTimer:Timer;
             
+            private var blinkTimer:Timer = new Timer(300, 0);
+            
             private var soundEnabled:Boolean = true;
 
             private function init():void {
@@ -66,6 +68,8 @@
 				switch (status) {
 					case DEFAULT:
 						counter.setStyle("color", "Yellow");
+						stopBlink();
+						counter.visible = true;
 						break;
 						
 					case TIME_OUT:
@@ -74,6 +78,8 @@
 						
 					case BREAK:
 						counter.setStyle("color", "Green");
+						stopBlink();
+						counter.visible = true;
 						break;	
 				}
 			}
@@ -88,6 +94,7 @@
             		pomodoroTimer.stop();
             		setTimerStyle(TIME_OUT);
             		scheduleBreakTimerStart();
+            		startBlink();
             	} else {
 	                var d:Date = new Date(baseTimer - getTimer());
 	                var min:String = (MIN_MASK + d.minutes).substr(-MIN_MASK.length);
@@ -212,6 +219,24 @@
 					toggleSoundBtn.alpha = 0.2;
 				}	
             }
+            
+            
+            public function startBlink():void
+	        {
+	            blinkTimer.addEventListener(TimerEvent.TIMER, toggleText );
+	            blinkTimer.start();
+	        }
+	        
+	        public function stopBlink():void
+	        {
+	            blinkTimer.stop();
+	        }
+	
+	        public function toggleText( event:TimerEvent ):void
+	        {
+	        	counter.visible = !counter.visible;
+	        }
+
         ]]>
     </mx:Script>
     
