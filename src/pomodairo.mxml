@@ -9,6 +9,7 @@
 	
     <mx:Script>
         <![CDATA[
+        	import mx.managers.PopUpManager;
         	import air.update.events.UpdateEvent;
         	import air.update.ApplicationUpdaterUI;
         	import com.pomodairo.events.PomodoroEvent;
@@ -69,9 +70,8 @@
             	var input:PomoItemInput = new PomoItemInput();
             	input.type = Pomodoro.TYPE_INTERRUPTION;
             	input.reference = timerCanvas.pomodoro;
-            	input.x = 40;
-            	input.y = 80;
-            	this.addChild(input);
+            	PopUpManager.addPopUp(input, this, true);
+                PopUpManager.centerPopUp(input);
             }
             
              private function newUnplanned():void {
@@ -79,9 +79,8 @@
             	var input:PomoItemInput = new PomoItemInput();
             	input.type = Pomodoro.TYPE_UNPLANNED;
             	input.reference = timerCanvas.pomodoro;
-            	input.x = 40;
-            	input.y = 80;
-            	this.addChild(input);
+            	PopUpManager.addPopUp(input, this, true);
+                PopUpManager.centerPopUp(input);
             }
             
             
@@ -102,8 +101,8 @@
 		</mx:ControlBar>
 	</mx:Panel>
 	
-	<mx:Label text="x" click="close()" color="#FFFFFF" x="300" y="10"/>
-	<mx:Label text="_" click="minimize()" color="#FFFFFF" x="280" y="10"/>
+	<mx:Label text="x" click="close()" color="#FFFFFF" x="300" y="6"/>
+	<mx:Label text="_" click="minimize()" color="#FFFFFF" x="280" y="6"/>
 	
 	<mx:Canvas id="taskListPanel" x="0" y="166" height="300" width="320" visible="false" showEffect="fadein" hideEffect="fadeout">				
 		<ns1:TaskListCanvas x="0" y="0" height="100%" width="100%">
