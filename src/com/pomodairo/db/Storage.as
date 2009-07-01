@@ -1,5 +1,6 @@
 package com.pomodairo.db
 {
+	import com.pomodairo.ConfigProperty;
 	import com.pomodairo.Pomodoro;
 	import com.pomodairo.PomodoroEventDispatcher;
 	import com.pomodairo.events.PomodoroEvent;
@@ -11,6 +12,7 @@ package com.pomodairo.db
 	import flash.events.SQLErrorEvent;
 	import flash.events.SQLEvent;
 	import flash.filesystem.File;
+	import flash.utils.Dictionary;
 	
 	public class Storage
 	{
@@ -20,6 +22,9 @@ package com.pomodairo.db
 		
 		[Bindable]
 		public var dataset:Array;
+		
+		[Bindable]
+		public var config:Dictionary = new Dictionary();
 			
 		private var sqlConnectionFile:File;
 		private var sqlConnection:SQLConnection;
@@ -64,6 +69,8 @@ package com.pomodairo.db
             	sqlConnection.addEventListener(SQLEvent.OPEN, onSQLConnectionOpened);
             	sqlConnection.open(sqlConnectionFile, SQLMode.UPDATE);
             }
+            checkConfigurationTable();
+            getAllConfig();
 		}
 		
 		private function onSQLConnectionOpened(event:SQLEvent):void {
@@ -93,10 +100,11 @@ package com.pomodairo.db
 		 				"done BOOLEAN )";
 		 					
 		 	q.text = sql;
-		 	q.addEventListener( SQLEvent.RESULT, createResult );
 		 	q.addEventListener( SQLErrorEvent.ERROR, createError );
 		 	q.execute();
 		}
+
+		
 
 		public function getAllPomodoros():void
 		{
@@ -120,7 +128,8 @@ package com.pomodairo.db
 			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementSelectResult);
 			dbStatement.execute();
 		}
-
+		
+		
 		private function onDBStatementSelectResult(event:SQLEvent):void
 		{
 			var result:SQLResult = dbStatement.getResult();
@@ -139,7 +148,7 @@ package com.pomodairo.db
 		}
 
 		private function createError(event:SQLErrorEvent):void {
-		 	trace( 'Create Table Failed' );
+		 	trace( 'Create Table Failed. Message: '+event );
 		}
 		
 		private function createResult(event:SQLEvent):void {
@@ -232,6 +241,83 @@ package com.pomodairo.db
 			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
 			dbStatement.execute();
 		}
+		
+		
+		
+		/* ----------------------------------------------------
+			        CONFIGURATION TABLE STUFF
+		   ---------------------------------------------------- */
+		   
+		/**
+		 * New since 1.4. This method will create a configuration table if none exists.
+		 */
+		private function checkConfigurationTable():void {
+		 	var q:SQLStatement = new SQLStatement();
+		 	q.sqlConnection = sqlConnection;
+		 	
+		 	var sql:String = "CREATE TABLE IF NOT EXISTS config( " +
+		 				"name TEXT PRIMARY KEY, " +
+		 				"value TEXT )";
+		 					
+		 	q.text = sql;
+		 	q.addEventListener( SQLEvent.RESULT, createResult );
+		 	q.addEventListener( SQLErrorEvent.ERROR, createError );
+		 	q.execute();
+		}
+		
+		public function getAllConfig():void
+		{
+			dbStatement = new SQLStatement();
+			dbStatement.itemClass = ConfigProperty;
+			dbStatement.sqlConnection = sqlConnection;
+			var sqlQuery:String = "select * from Config";
+			dbStatement.text = sqlQuery;
+			dbStatement.addEventListener(SQLEvent.RESULT, getSelectConfigResult);
+			dbStatement.execute();
+		}
+		
+		private function getSelectConfigResult(event:SQLEvent):void
+		{
+			var result:SQLResult = dbStatement.getResult();
+		    if (result != null)
+		    {
+		    	for each (var cfg:ConfigProperty in result.data) 
+		    	{
+		    		trace("Read config: "+cfg.name+" -> "+cfg.value);
+		    		config[cfg.name] = cfg.value;	
+		    	}
+		    }
+		}
+		
+		private function onConfigInsertResult(event:SQLEvent):void
+		{
+		    if (sqlConnection.totalChanges >= 1)
+		    {
+		    	getAllConfig();
+		    }
+		}
+				
+		public function setConfigurationValue(name:String, value:String):void
+		{
+			var cfg:ConfigProperty = new ConfigProperty();
+			cfg.name = name;
+			cfg.value = value;
+			setConfiguration(cfg);
+		}
+		
+		public function setConfiguration(prop:ConfigProperty):void
+		{
+			var sqlMarkDone:String = "REPLACE INTO Config (name,value) VALUES ('"+prop.name+"','"+prop.value+"')";
+			dbStatement.text = sqlMarkDone;
+			dbStatement.addEventListener(SQLEvent.RESULT, onConfigInsertResult);
+			dbStatement.execute();
+		}
+		
+
+		   
+		/* ----------------------------------------------------
+			        END OF CONFIGURATION TABLE STUFF
+		   ---------------------------------------------------- */
 	}
 	
 }
