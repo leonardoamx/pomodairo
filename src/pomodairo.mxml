@@ -11,6 +11,7 @@
 	
     <mx:Script>
         <![CDATA[
+        	import com.pomodairo.components.ConfigPanel;
         	import com.pomodairo.db.Storage;
         	import mx.managers.PopUpManager;
         	import air.update.events.UpdateEvent;
@@ -33,6 +34,11 @@
 				if (setY >= 0) {
 					this.nativeWindow.y = setY;
 				}
+				
+				// Fugly hack... loads and presets all configuration values
+				var cfg:ConfigPanel = new ConfigPanel();
+				cfg.populate();
+				cfg.notifyConfiguration();
 			}
 				
         	private function init():void {

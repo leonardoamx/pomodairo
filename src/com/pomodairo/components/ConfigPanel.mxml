@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="298" height="120" backgroundColor="#313131"
-	creationComplete="populate()">
+	creationComplete="init()">
 
 
 <mx:Script>
         <![CDATA[
+        	import com.pomodairo.events.ConfigurationUpdatedEvent;
+        	import com.pomodairo.PomodoroEventDispatcher;
         	import com.pomodairo.db.Storage;
         	
         	var soundEnabled:Boolean = new Boolean(true);
         	var volume:Number = new Number(100);
         	var pomodoroLength:Number = new Number(25);  
         	
-        	private function populate():void
+        	
+        	private function init():void
+        	{
+        		populate();
+        		applyGuiValues();	
+        	}
+        	
+        	public function populate():void
         	{
         		var props:Dictionary = Storage.instance.config;
         		if (props["volume"] != null) 
@@ -29,13 +38,14 @@
         			pomodoroLength = props["pomodoroLength"];
         		}
         		
-        		trace("Volume: "+volume);
-        		trace("Sound: "+soundEnabled);
-        		
-        		volumeSlider.value = volume;
-        		soundCheckbox.selected = soundEnabled;
         	}
         	
+        	private function applyGuiValues():void
+            {
+        		volumeSlider.value = volume;
+        		soundCheckbox.selected = soundEnabled;
+        		lengthSlider.value = pomodoroLength;
+            }
         	
             private function exit():void
             {
@@ -44,9 +54,24 @@
             
             private function save():void
             {
-            	Storage.instance.setConfigurationValue("volume", ""+volumeSlider.value);
-            	Storage.instance.setConfigurationValue("sound", ""+soundCheckbox.selected);
+            	volume = volumeSlider.value;
+            	soundEnabled = soundCheckbox.selected;
+            	pomodoroLength = lengthSlider.value;
+            	
+            	Storage.instance.setConfigurationValue("volume", ""+volume);
+            	Storage.instance.setConfigurationValue("sound", ""+soundEnabled);
+            	Storage.instance.setConfigurationValue("pomodoroLength", ""+pomodoroLength);
             	exit();
+            	
+            	notifyConfiguration();
+            }
+            
+            public function notifyConfiguration():void
+            {
+            	// Notify the world 
+            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, "volume", ""+volume));
+            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, "sound", ""+soundEnabled));
+            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, "pomodoroLength", ""+pomodoroLength));
             }
 			            
         ]]>

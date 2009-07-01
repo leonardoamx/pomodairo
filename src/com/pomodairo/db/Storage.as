@@ -29,6 +29,7 @@ package com.pomodairo.db
 		private var sqlConnectionFile:File;
 		private var sqlConnection:SQLConnection;
 		private var dbStatement:SQLStatement;
+		private var dbCfgStatement:SQLStatement;
 		
 		public function Storage() {
 			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.START_POMODORO, startPomodoro);
@@ -267,18 +268,18 @@ package com.pomodairo.db
 		
 		public function getAllConfig():void
 		{
-			dbStatement = new SQLStatement();
-			dbStatement.itemClass = ConfigProperty;
-			dbStatement.sqlConnection = sqlConnection;
+			dbCfgStatement = new SQLStatement();
+			dbCfgStatement.itemClass = ConfigProperty;
+			dbCfgStatement.sqlConnection = sqlConnection;
 			var sqlQuery:String = "select * from Config";
-			dbStatement.text = sqlQuery;
-			dbStatement.addEventListener(SQLEvent.RESULT, getSelectConfigResult);
-			dbStatement.execute();
+			dbCfgStatement.text = sqlQuery;
+			dbCfgStatement.addEventListener(SQLEvent.RESULT, getSelectConfigResult);
+			dbCfgStatement.execute();
 		}
 		
 		private function getSelectConfigResult(event:SQLEvent):void
 		{
-			var result:SQLResult = dbStatement.getResult();
+			var result:SQLResult = dbCfgStatement.getResult();
 		    if (result != null)
 		    {
 		    	for each (var cfg:ConfigProperty in result.data) 
@@ -307,9 +308,9 @@ package com.pomodairo.db
 		public function setConfiguration(prop:ConfigProperty):void
 		{
 			var sqlMarkDone:String = "REPLACE INTO Config (name,value) VALUES ('"+prop.name+"','"+prop.value+"')";
-			dbStatement.text = sqlMarkDone;
-			dbStatement.addEventListener(SQLEvent.RESULT, onConfigInsertResult);
-			dbStatement.execute();
+			dbCfgStatement.text = sqlMarkDone;
+			dbCfgStatement.addEventListener(SQLEvent.RESULT, onConfigInsertResult);
+			dbCfgStatement.execute();
 		}
 		
 

@@ -8,6 +8,7 @@
 	
 	    <mx:Script>
         <![CDATA[
+        	import com.pomodairo.events.ConfigurationUpdatedEvent;
         	import com.pomodairo.ConfigProperty;
         	import com.pomodairo.db.Storage;
         	import mx.managers.PopUpManager;
@@ -41,7 +42,7 @@
             private const DELAY_BEFORE_BREAK_STARTS:int = 5000; // Milliseconds
 
 			[Bindable]
-			public var pomodoroLengthInMinutes:int = 25;
+			public var pomodoroLengthInMinutes:Number = 25;
 
             private var baseTimer:int;
             private var pomodoroTimer:Timer;
@@ -58,13 +59,32 @@
 				breakTimer = new Timer(TIMER_INTERVAL);
                 breakTimer.addEventListener(TimerEvent.TIMER, updateBreakTimer);    
 
-                PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, onPomodoroSelected);   	
+                PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, onPomodoroSelected);
+                PomodoroEventDispatcher.getInstance().addEventListener(ConfigurationUpdatedEvent.UPDATED, onConfigurationChange);   	   	
             }
 
 			private function onPomodoroSelected(e:PomodoroEvent):void {
 				pomodoro = e.pomodoro;
 				stopBreakTimer();
 				showStartButton();
+			}
+			
+			private function onConfigurationChange(e:ConfigurationUpdatedEvent):void {
+				if (e.configElement.name == "pomodoroLength") 
+				{
+					pomodoroLengthInMinutes = new Number(e.configElement.value);
+				}
+				
+				if (e.configElement.name == "sound") 
+				{
+					soundEnabled = e.configElement.value == "true";
+				}
+				
+				if (e.configElement.name == "volume") 
+				{
+					// TODO: Set volume here!
+					// something = new Number(e.configElement.value);
+				}
 			}
 			
 			private function setTimerStyle(status:String):void {
