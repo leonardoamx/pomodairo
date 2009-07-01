@@ -2,13 +2,16 @@
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" 
 	layout="absolute" height="166" width="320" showFlexChrome="false"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	initialize="beforeInit()"
 	creationComplete="init()" xmlns:views="com.views.*" xmlns:ns1="com.pomodairo.components.*"
-	backgroundColor="#292929">
+	backgroundColor="#292929"
+	closing="beforeClose()">
 	
 	<mx:Style source="style/style.css"/>
 	
     <mx:Script>
         <![CDATA[
+        	import com.pomodairo.db.Storage;
         	import mx.managers.PopUpManager;
         	import air.update.events.UpdateEvent;
         	import air.update.ApplicationUpdaterUI;
@@ -20,6 +23,17 @@
         	import mx.controls.TextInput;
         
 			private var appUpdater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
+				
+			private function beforeInit():void {
+				var setX:Number = Storage.instance.config["window.x"];
+				var setY:Number = Storage.instance.config["window.y"];
+				if (setX >= 0) {
+					this.nativeWindow.x = setX;
+				}
+				if (setY >= 0) {
+					this.nativeWindow.y = setY;
+				}
+			}
 				
         	private function init():void {
         		checkForUpdates();
@@ -83,7 +97,10 @@
                 PopUpManager.centerPopUp(input);
             }
             
-            
+            private function beforeClose():void {
+            	Storage.instance.setConfigurationValue("window.x",""+this.nativeWindow.x);
+            	Storage.instance.setConfigurationValue("window.y",""+this.nativeWindow.y);
+            }
         ]]>
     </mx:Script>
 

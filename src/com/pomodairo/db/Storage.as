@@ -283,7 +283,6 @@ package com.pomodairo.db
 		    {
 		    	for each (var cfg:ConfigProperty in result.data) 
 		    	{
-		    		trace("Read config: "+cfg.name+" -> "+cfg.value);
 		    		config[cfg.name] = cfg.value;	
 		    	}
 		    }
