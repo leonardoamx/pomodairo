@@ -26,13 +26,17 @@
 			private var appUpdater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
 				
 			private function beforeInit():void {
-				var setX:Number = Storage.instance.config["window.x"];
-				var setY:Number = Storage.instance.config["window.y"];
-				if (setX >= 0) {
-					this.nativeWindow.x = setX;
-				}
-				if (setY >= 0) {
-					this.nativeWindow.y = setY;
+				var remember:Boolean = Storage.instance.config[ConfigPanel.REMEMBER_POSITION] == "true";
+				if (remember)
+				{
+					var setX:Number = Storage.instance.config["window.x"];
+					var setY:Number = Storage.instance.config["window.y"];
+					if (setX >= 0) {
+						this.nativeWindow.x = setX;
+					}
+					if (setY >= 0) {
+						this.nativeWindow.y = setY;
+					}
 				}
 				
 				// Fugly hack... loads and presets all configuration values

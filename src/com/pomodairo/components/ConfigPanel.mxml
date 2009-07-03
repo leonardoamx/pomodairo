@@ -9,10 +9,12 @@
         	import com.pomodairo.PomodoroEventDispatcher;
         	import com.pomodairo.db.Storage;
         	
+        	public static var REMEMBER_POSITION:String = "window.rememberPosition";
+        	
         	var soundEnabled:Boolean = new Boolean(true);
         	var volume:Number = new Number(100);
         	var pomodoroLength:Number = new Number(25);  
-        	
+        	var rememberPosition:Boolean = new Boolean(true);
         	
         	private function init():void
         	{
@@ -38,6 +40,11 @@
         			pomodoroLength = props["pomodoroLength"];
         		}
         		
+        		if (props[REMEMBER_POSITION] != null) 
+        		{
+        			rememberPosition = props[REMEMBER_POSITION] == "true";
+        		}
+        		
         	}
         	
         	private function applyGuiValues():void
@@ -45,6 +52,7 @@
         		volumeSlider.value = volume;
         		soundCheckbox.selected = soundEnabled;
         		lengthSlider.value = pomodoroLength;
+        		positionCheckbox.selected = rememberPosition;
             }
         	
             private function exit():void
@@ -57,10 +65,12 @@
             	volume = volumeSlider.value;
             	soundEnabled = soundCheckbox.selected;
             	pomodoroLength = lengthSlider.value;
+            	rememberPosition = positionCheckbox.selected;
             	
             	Storage.instance.setConfigurationValue("volume", ""+volume);
             	Storage.instance.setConfigurationValue("sound", ""+soundEnabled);
             	Storage.instance.setConfigurationValue("pomodoroLength", ""+pomodoroLength);
+            	Storage.instance.setConfigurationValue(REMEMBER_POSITION, ""+rememberPosition);
             	exit();
             	
             	notifyConfiguration();
@@ -72,6 +82,7 @@
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, "volume", ""+volume));
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, "sound", ""+soundEnabled));
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, "pomodoroLength", ""+pomodoroLength));
+            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, REMEMBER_POSITION, ""+rememberPosition));
             }
 			            
         ]]>
@@ -82,7 +93,8 @@
 	<mx:Button x="225" y="87" label="Cancel" click="exit()"/>
 	<mx:HSlider id="volumeSlider" x="10" y="12" minimum="0" maximum="100" snapInterval="5"/>
 	<mx:Label x="10" y="4" text="Volume" color="#A9A9A9"/>
-	<mx:HSlider id="lengthSlider" x="10" y="56" snapInterval="1" minimum="1" maximum="60"/>
+	<mx:HSlider id="lengthSlider" x="10" y="50" snapInterval="1" minimum="1" maximum="60"/>
 	<mx:Label x="10" y="39" text="Pomodoro length (minutes)" color="#A9A9A9"/>
+	<mx:CheckBox x="10" y="77.5" label="Remember position" id="positionCheckbox" selected="true"/>
 	
 </mx:Canvas>
