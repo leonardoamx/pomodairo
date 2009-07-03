@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <update xmlns="http://ns.adobe.com/air/framework/update/description/1.0">
-	<version>1.3</version>
+	<version>1.4</version>
 	<url>http://pomodairo.googlecode.com/files/pomodairo-1.3.air</url>
 	<description>
-		* Pomodairo 1.3 Release notes
-		- Fixed a bug where the break timer would not stop 
-		- Added blinking of the counter when it reaches 00:00
-		- Some minor design enhancement
+		* Pomodairo 1.4 Release notes
+		- Added persisted configuration for sound, volume and timer per pomodoro
+		- The application now remember the position on the screen between restarts
+		- Fixed flashing tool tip on 'Done' button  
 	</description>
 </update>
