@@ -82,8 +82,8 @@
 				
 				if (e.configElement.name == "volume") 
 				{
-					// TODO: Set volume here!
-					// something = new Number(e.configElement.value);
+					var volume:Number = new Number(e.configElement.value)/100;
+					SoundMixer.soundTransform = new SoundTransform(volume);
 				}
 			}
 			
@@ -163,7 +163,7 @@
             	setTimerStyle(DEFAULT);
                 baseTimer = getTimer();
                 baseTimer += pomodoroLengthInMinutes*60*1000+1000;
-                // baseTimer += 6*1000;
+                //baseTimer += 6*1000;
                 pomodoroTimer.start();
                 showStopButton();
                 
