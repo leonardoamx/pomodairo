@@ -190,7 +190,7 @@
         		stopBreakButton.visible = false;
         		newTaskButton.visible = false;
         		
-        		counter.text = pomodoroLengthInMinutes+":00";
+        		counter.text = toTwoDigitString(pomodoroLengthInMinutes)+":00";
         		pomodoroLabel.text = pomodoro.name;
         		setTimerStyle(DEFAULT);
             }
@@ -207,7 +207,7 @@
             	stopTimerButton.visible = false;
             	stopBreakButton.visible = false;
             	newTaskButton.visible = true; 
-            	counter.text = pomodoroLengthInMinutes+":00";           	
+            	counter.text = toTwoDigitString(pomodoroLengthInMinutes)+":00";           	
             }            
 
             private function stopTimer(event:Event=null):void {
