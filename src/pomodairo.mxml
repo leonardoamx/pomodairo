@@ -11,6 +11,7 @@
 	
     <mx:Script>
         <![CDATA[
+        	import com.pomodairo.events.ConfigurationUpdatedEvent;
         	import com.pomodairo.components.ConfigPanel;
         	import com.pomodairo.db.Storage;
         	import mx.managers.PopUpManager;
@@ -26,6 +27,7 @@
 			private var appUpdater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
 				
 			private function beforeInit():void {
+				alwaysInFront = Storage.instance.config[ConfigPanel.ALWAYS_ON_TOP] == "true";
 				var remember:Boolean = Storage.instance.config[ConfigPanel.REMEMBER_POSITION] == "true";
 				if (remember)
 				{
@@ -50,6 +52,7 @@
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.START_POMODORO, closeTaskList);
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, onPomodoroSelected);
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.TIME_OUT, onPomodoroTimeout);
+        		PomodoroEventDispatcher.getInstance().addEventListener(ConfigurationUpdatedEvent.UPDATED, onConfigurationChange);
         	}
         	
         	private function checkForUpdates():void {
@@ -62,6 +65,14 @@
 				
 			private function updaterInitialised(event:UpdateEvent):void {
 				appUpdater.checkNow();
+			}
+        	
+        	private function onConfigurationChange(e:ConfigurationUpdatedEvent):void {
+        		trace("Configuration change: "+e.configElement.name +" -> "+e.configElement.value);
+				if (e.configElement.name == ConfigPanel.ALWAYS_ON_TOP) 
+				{
+					this.alwaysInFront = e.configElement.value == "true";
+				}
 			}
         	
         	private function onPomodoroTimeout(event:PomodoroEvent):void {
