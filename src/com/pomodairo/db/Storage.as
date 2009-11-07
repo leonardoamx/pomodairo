@@ -193,7 +193,10 @@ package com.pomodairo.db
 		
 		public function markDone(pom:Pomodoro):void
 		{
-			var sqlMarkDone:String = "update Pomodoro set done = "+pom.done+" where id='"+pom.id+"';";
+			var sqlMarkDone:String = "update Pomodoro set done = "+pom.done+", closed=:closed where id='"+pom.id+"';";
+			
+			dbStatement.parameters[":closed"] = pom.closed;
+			
 			dbStatement.text = sqlMarkDone;
 			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
 			dbStatement.execute();

@@ -42,6 +42,11 @@
 	        	db.getAllItems();
 	        } 
 	        
+	        private function refresh(event:MouseEvent):void
+	        {
+	        	db.getAllItems();
+	        }
+	        
 	        private function cleanup(event:MouseEvent):void
 	        {
 	        	for each (var pom:Pomodoro in db.dataset)
@@ -82,6 +87,7 @@
 		<mx:ControlBar>
 			<mx:Button id="removeButton" label="Remove Item" click="onRemovePomodoroClicked(event)"/>
 			<mx:Button id="cleanupButton" label="Cleanup" click="cleanup(event)" toolTip="Permanently removes all interruptions and done items"/>
+			<mx:Button id="refreshButton" label="Refresh" click="refresh(event)" toolTip="Refresh the results" />
 		</mx:ControlBar>
 	</mx:Panel>
 	
