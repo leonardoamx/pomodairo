@@ -51,6 +51,8 @@
             private var blinkTimer:Timer = new Timer(300, 0);
             
             private var soundEnabled:Boolean = true;
+            
+            private var currentTimeText:String;
 
             private function init():void {
                 pomodoroTimer = new Timer(TIMER_INTERVAL);
@@ -127,6 +129,12 @@
 	                	setTimerStyle(TIME_OUT);
 	                }
 	            }
+	            
+	            if (currentTimeText != counter.text)
+	            {
+		            sendTimerTickUpdate(counter.text);
+					currentTimeText = counter.text;
+	            }
             }
             
             private function startBreakTimer(evt:TimerEvent):void
@@ -136,6 +144,8 @@
             	setTimerStyle(BREAK);
             	showBreakButton();
             	pomodoroLabel.text = "On Break";
+            	
+            	sendTimerTickUpdate("");
             }
             
             private function updateBreakTimer(evt:TimerEvent):void 
@@ -253,6 +263,14 @@
 	        public function toggleText( event:TimerEvent ):void
 	        {
 	        	counter.visible = !counter.visible;
+	        }
+	        
+	        private function sendTimerTickUpdate(time:String):void
+	        {
+	        	var tickEvent:PomodoroEvent = new PomodoroEvent(PomodoroEvent.TIMER_TICK);
+				tickEvent.pomodoro = pomodoro;
+				tickEvent.value = time;
+				PomodoroEventDispatcher.getInstance().dispatchEvent(tickEvent);
 	        }
 
         ]]>

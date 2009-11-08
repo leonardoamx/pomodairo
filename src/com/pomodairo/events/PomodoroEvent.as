@@ -13,10 +13,13 @@ package com.pomodairo.events
 		public static var NEW_UNPLANNED:String = "unplanned created";
 		public static var NEW_INTERRUPTION:String = "interruption created";
 		public static var DONE:String = "pomodoro done";
+		public static var TIMER_TICK:String = "timer tick";
 		
 		public var pomodoro:Pomodoro;
 		
 		public var other:Pomodoro;
+		
+		public var value:String;
 		
 		public function PomodoroEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
