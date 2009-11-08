@@ -25,9 +25,12 @@
         	import mx.controls.TextInput;
         
 			private var appUpdater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
+			
+			private var updateTaskbar:Boolean = true;
 				
 			private function beforeInit():void {
 				alwaysInFront = Storage.instance.config[ConfigPanel.ALWAYS_ON_TOP] == "true";
+				updateTaskbar = Storage.instance.config[ConfigPanel.UPDATE_TASKBAR] == "true";
 				var remember:Boolean = Storage.instance.config[ConfigPanel.REMEMBER_POSITION] == "true";
 				if (remember)
 				{
@@ -52,21 +55,25 @@
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.START_POMODORO, closeTaskList);
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, onPomodoroSelected);
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.TIME_OUT, onPomodoroTimeout);
-        		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.TIMER_TICK, onTimerTick);
         		PomodoroEventDispatcher.getInstance().addEventListener(ConfigurationUpdatedEvent.UPDATED, onConfigurationChange);
+        		
+        		// Task bar updates
+        		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.STOP_POMODORO, setDefaultTaskbarName);
+        		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.START_BREAK, onBreakStart);
+        		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.STOP_BREAK, setDefaultTaskbarName);
+        		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.TIMER_TICK, onTimerTick);
         	}
         	
         	private function checkForUpdates():void {
 				appUpdater.configurationFile = new File("app:/updateConfig.xml");
 				appUpdater.isCheckForUpdateVisible = false;
-				appUpdater.addEventListener(UpdateEvent.INITIALIZED,
-				updaterInitialised);
+				appUpdater.addEventListener(UpdateEvent.INITIALIZED, updaterInitialised);
 				appUpdater.initialize();
 			}
 				
-			private function updaterInitialised(event:UpdateEvent):void {
-				appUpdater.checkNow();
-			}
+			 private function updaterInitialised(event:UpdateEvent):void {
+			 	appUpdater.checkNow();
+			 }
         	
         	private function onConfigurationChange(e:ConfigurationUpdatedEvent):void {
         		trace("Configuration change: "+e.configElement.name +" -> "+e.configElement.value);
@@ -74,24 +81,53 @@
 				{
 					this.alwaysInFront = e.configElement.value == "true";
 				}
+				
+				if (e.configElement.name == ConfigPanel.UPDATE_TASKBAR) 
+				{
+					this.updateTaskbar = e.configElement.value == "true";
+					if (!updateTaskbar) {
+						setDefaultTaskbarName(null);
+					}
+				}
 			}
         	
+        	/*
+        	 * TASKBAR UPDATING FUNCTIONS
+        	 */
+        	
         	private function onTimerTick(event:PomodoroEvent):void {
-        		var name:String = "Pomodairo";
-        		if (event.pomodoro != null && event.value != null && event.value != "") {
-        			var pomo:String = event.pomodoro.name;
-        			if (pomo.length > 9) {
-        				trace("Pomodoro must be truncated");
-        				pomo = pomo.substr(0,8)+"...";
-        			}
-        			
-	        		// TODO Parse default title etc !!!
-	        		nativeWindow.title = pomo+"  "+event.value;
+        		if (updateTaskbar) {
+	        		nativeWindow.title = getTruncatedPomodoroName(event.pomodoro)+event.value;
         		}
         	}
         	
+        	private function setDefaultTaskbarName(event:PomodoroEvent):void {
+    			nativeWindow.title = "Pomodairo";
+        	}
+        	
+        	private function onBreakStart(event:PomodoroEvent):void {
+        		if (updateTaskbar) {
+	        		nativeWindow.title = getTruncatedPomodoroName(event.pomodoro)+"*break*";
+        		}
+        	}
+        	
+        	private function getTruncatedPomodoroName(pomodoro:Pomodoro):String {
+        		var name:String = "Pomodairo";
+        		if (pomodoro != null && pomodoro.name != null) {
+        			name = pomodoro.name;
+        			if (name.length > 10) {
+        				name = name.substr(0,8)+"...  ";
+        			}
+        		}
+        		return name;
+        	}
+        	
+        	/*
+        	 * END OF TASKBAR UPDATING FUNCTIONS
+        	 */
+        	 
         	private function onPomodoroTimeout(event:PomodoroEvent):void {
-        		nativeWindow.notifyUser(NotificationType.INFORMATIONAL);
+        		nativeWindow.notifyUser(NotificationType.CRITICAL);
         		nativeWindow.orderToFront();
         	}
         	

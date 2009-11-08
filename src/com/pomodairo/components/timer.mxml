@@ -132,7 +132,7 @@
 	            
 	            if (currentTimeText != counter.text)
 	            {
-		            sendTimerTickUpdate(counter.text);
+		            sendEvent(PomodoroEvent.TIMER_TICK, counter.text);
 					currentTimeText = counter.text;
 	            }
             }
@@ -144,8 +144,7 @@
             	setTimerStyle(BREAK);
             	showBreakButton();
             	pomodoroLabel.text = "On Break";
-            	
-            	sendTimerTickUpdate("");
+            	sendEvent(PomodoroEvent.START_BREAK, "");
             }
             
             private function updateBreakTimer(evt:TimerEvent):void 
@@ -167,6 +166,7 @@
             {
             	breakTimer.stop();
             	showStartButton();
+            	sendEvent(PomodoroEvent.STOP_BREAK, null);
             }
 
             private function startTimer(event:Event = null):void {
@@ -178,9 +178,7 @@
                 showStopButton();
                 
                 // Dispatch event
-				var startEvent:PomodoroEvent = new PomodoroEvent(PomodoroEvent.START_POMODORO);
-				startEvent.pomodoro = pomodoro;
-				PomodoroEventDispatcher.getInstance().dispatchEvent(startEvent);
+				sendEvent(PomodoroEvent.START_POMODORO, null);
                 
                 // Play sound
             	var tick:Sound = new tickClass() as Sound;
@@ -223,6 +221,14 @@
             private function stopTimer(event:Event=null):void {
                 pomodoroTimer.stop();
                 showStartButton();
+				sendEvent(PomodoroEvent.STOP_POMODORO, null);
+            }
+            
+            private function sendEvent(type:String, value:String):void {
+            	var event:PomodoroEvent = new PomodoroEvent(type);
+				event.pomodoro = pomodoro;
+				event.value = value;
+				PomodoroEventDispatcher.getInstance().dispatchEvent(event);
             }
             
             private function createPomodoro():void {
@@ -265,14 +271,6 @@
 	        	counter.visible = !counter.visible;
 	        }
 	        
-	        private function sendTimerTickUpdate(time:String):void
-	        {
-	        	var tickEvent:PomodoroEvent = new PomodoroEvent(PomodoroEvent.TIMER_TICK);
-				tickEvent.pomodoro = pomodoro;
-				tickEvent.value = time;
-				PomodoroEventDispatcher.getInstance().dispatchEvent(tickEvent);
-	        }
-
         ]]>
     </mx:Script>
     

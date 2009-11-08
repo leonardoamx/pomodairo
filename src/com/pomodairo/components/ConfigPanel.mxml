@@ -5,19 +5,20 @@
 
 <mx:Script>
         <![CDATA[
-        	import flash.trace.Trace;
         	import com.pomodairo.events.ConfigurationUpdatedEvent;
         	import com.pomodairo.PomodoroEventDispatcher;
         	import com.pomodairo.db.Storage;
         	
         	public static var REMEMBER_POSITION:String = "window.rememberPosition";
         	public static var ALWAYS_ON_TOP:String = "window.alwaysOnTop";
+        	public static var UPDATE_TASKBAR:String = "window.updateTaskbar";
         	
-        	var soundEnabled:Boolean = new Boolean(true);
-        	var volume:Number = new Number(100);
-        	var pomodoroLength:Number = new Number(25);  
-        	var rememberPosition:Boolean = new Boolean(true);
-        	var alwaysOnTop:Boolean = new Boolean(true);
+        	private var soundEnabled:Boolean = new Boolean(true);
+        	private var volume:Number = new Number(100);
+        	private var pomodoroLength:Number = new Number(25);  
+        	private var rememberPosition:Boolean = new Boolean(true);
+        	private var alwaysOnTop:Boolean = new Boolean(true);
+        	private var updateTaskbar:Boolean = new Boolean(true);
         	
         	private function init():void
         	{
@@ -53,6 +54,11 @@
         			alwaysOnTop = props[ALWAYS_ON_TOP] == "true";
         		}
         		
+        		if (props[UPDATE_TASKBAR] != null) 
+        		{
+        			updateTaskbar = props[UPDATE_TASKBAR] == "true";
+        		}
+        		
         	}
         	
         	private function applyGuiValues():void
@@ -62,6 +68,7 @@
         		lengthSlider.value = pomodoroLength;
         		positionCheckbox.selected = rememberPosition;
         		alwaysOnTopCheckbox.selected = alwaysOnTop;
+        		updateTaskbarCheckbox.selected = updateTaskbar;
             }
         	
             private function exit():void
@@ -76,12 +83,14 @@
             	pomodoroLength = lengthSlider.value;
             	rememberPosition = positionCheckbox.selected;
             	alwaysOnTop = alwaysOnTopCheckbox.selected;
+            	updateTaskbar = updateTaskbarCheckbox.selected;
             	
             	Storage.instance.setConfigurationValue("volume", ""+volume);
             	Storage.instance.setConfigurationValue("sound", ""+soundEnabled);
             	Storage.instance.setConfigurationValue("pomodoroLength", ""+pomodoroLength);
             	Storage.instance.setConfigurationValue(REMEMBER_POSITION, ""+rememberPosition);
             	Storage.instance.setConfigurationValue(ALWAYS_ON_TOP, ""+alwaysOnTop);
+            	Storage.instance.setConfigurationValue(UPDATE_TASKBAR, ""+updateTaskbar);
             	exit();
             	
             	notifyConfiguration();
@@ -95,12 +104,13 @@
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, "pomodoroLength", ""+pomodoroLength));
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, REMEMBER_POSITION, ""+rememberPosition));
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, ALWAYS_ON_TOP, ""+alwaysOnTop));
+            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, UPDATE_TASKBAR, ""+updateTaskbar));
             }
 			            
         ]]>
     </mx:Script>
 
-	<mx:CheckBox id="soundCheckbox" x="184" y="10" label="Sound enabled"/>
+	<mx:CheckBox id="soundCheckbox" x="184" y="1" label="Sound enabled"/>
 	<mx:Button x="164" y="87" label="Save" click="save()"/>
 	<mx:Button x="225" y="87" label="Cancel" click="exit()"/>
 	<mx:HSlider id="volumeSlider" x="10" y="12" minimum="0" maximum="100" snapInterval="5"/>
@@ -108,5 +118,8 @@
 	<mx:HSlider id="lengthSlider" x="10" y="50" snapInterval="1" minimum="1" maximum="60"/>
 	<mx:Label x="10" y="39" text="Pomodoro length (minutes)" color="#A9A9A9"/>
 	<mx:CheckBox x="10" y="77.5" label="Remember position" id="positionCheckbox" selected="true"/>
-	<mx:CheckBox x="185" y="31.5" label="Always on top" id="alwaysOnTopCheckbox" />
+	<mx:CheckBox x="184" y="20.5" label="Always on top" id="alwaysOnTopCheckbox" />
+	<mx:CheckBox x="184" y="41" label="Update taskbar" id="updateTaskbarCheckbox"  selected="true">
+		<mx:toolTip>Should the taskbar icon be updated with the current pomodoro and time remaining?</mx:toolTip>
+	</mx:CheckBox>
 </mx:Canvas>
