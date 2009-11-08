@@ -52,6 +52,7 @@
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.START_POMODORO, closeTaskList);
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, onPomodoroSelected);
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.TIME_OUT, onPomodoroTimeout);
+        		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.TIMER_TICK, onTimerTick);
         		PomodoroEventDispatcher.getInstance().addEventListener(ConfigurationUpdatedEvent.UPDATED, onConfigurationChange);
         	}
         	
@@ -74,6 +75,20 @@
 					this.alwaysInFront = e.configElement.value == "true";
 				}
 			}
+        	
+        	private function onTimerTick(event:PomodoroEvent):void {
+        		var name:String = "Pomodairo";
+        		if (event.pomodoro != null && event.value != null && event.value != "") {
+        			var pomo:String = event.pomodoro.name;
+        			if (pomo.length > 9) {
+        				trace("Pomodoro must be truncated");
+        				pomo = pomo.substr(0,8)+"...";
+        			}
+        			
+	        		// TODO Parse default title etc !!!
+	        		nativeWindow.title = pomo+"  "+event.value;
+        		}
+        	}
         	
         	private function onPomodoroTimeout(event:PomodoroEvent):void {
         		nativeWindow.notifyUser(NotificationType.INFORMATIONAL);
