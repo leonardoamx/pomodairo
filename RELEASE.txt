@@ -4,7 +4,7 @@
 
 * Update version in pomodairo-app.xml.
 
-* Update version in update.xml (and filename if applicable). Add release notes.
+* Update version and filename in update.xml. Add release notes.
 
 * Build the pomodairo application into an .air file. 
 
