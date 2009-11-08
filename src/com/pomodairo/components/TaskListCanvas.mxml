@@ -102,9 +102,11 @@
 		   			}
 				}
 	        }	
-	        
 	       		        
-	        
+	        private function onTextInput(event:TextEvent=null):void
+	        {
+	        	trace("Text input: "+event.text);
+	        }
               
 			
 		]]>
@@ -138,7 +140,7 @@
 		<mx:Button label="Done" id="closePomoButton" width="70" height="24" enabled="{pomodorosDataGrid.selectedItem}" click="onDonePomodoroClicked()" toolTip="Mark as done"/>
 		<mx:Button label="Copy" id="copyButton" width="70" height="24"  enabled="{pomodorosDataGrid.selectedItem}" click="copyTask()" toolTip="Copy to the clipboard" />
 	</mx:ControlBar>
-	<mx:TextInput id="nameInput" color="#FFFFFF" width="139" x="10" y="242" backgroundColor="#FFF8F8"/>
+	<mx:TextInput id="nameInput" color="#FFFFFF" width="139" x="10" y="242" backgroundColor="#FFF8F8" textInput="onTextInput()"/>
 	<mx:Button id="addPomoButton" label="Add New" click="onAddPomodoroClicked()" width="95" height="24" x="157" y="241"/>
 	
 
