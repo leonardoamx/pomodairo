@@ -32,13 +32,13 @@ package com.pomodairo.db
 		private var dbCfgStatement:SQLStatement;
 		
 		public function Storage() {
-			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.START_POMODORO, startPomodoro);
+			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.TIME_OUT, pomodoroEnded);
 			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.NEW_INTERRUPTION, addInterruption);
 			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.NEW_UNPLANNED, addUnplanned);
 			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.NEW_POMODORO, addNewPomodoro);
 		}
 		
-		private function startPomodoro(e:PomodoroEvent) {
+		private function pomodoroEnded(e:PomodoroEvent) {
 			increasePomodoroCount(e.pomodoro);
 		}
 		

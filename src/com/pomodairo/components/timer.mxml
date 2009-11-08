@@ -62,6 +62,7 @@
                 breakTimer.addEventListener(TimerEvent.TIMER, updateBreakTimer);    
 
                 PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, onPomodoroSelected);
+                PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.DELETED, onPomodoroDeleted);
                 PomodoroEventDispatcher.getInstance().addEventListener(ConfigurationUpdatedEvent.UPDATED, onConfigurationChange);   	   	
             }
 
@@ -69,6 +70,22 @@
 				pomodoro = e.pomodoro;
 				stopBreakTimer();
 				showStartButton();
+			}
+			
+			/**
+			 * If the current pomodoro is deleted, then stop any ongoing timers
+			 * and clear the pomodoro.
+			 */
+			private function onPomodoroDeleted(e:PomodoroEvent):void {
+				if (pomodoro != null && pomodoro.id == e.pomodoro.id) {
+					if (pomodoroTimer.running) {
+					stopTimer(null);
+					} 
+					if (breakTimer.running) {
+						stopBreakTimer();
+					}
+					pomodoro = null;
+				}
 			}
 			
 			private function onConfigurationChange(e:ConfigurationUpdatedEvent):void {
@@ -115,7 +132,11 @@
 	            		var alarm:Sound = new alarmClass() as Sound;
 	            		alarm.play();
             		}
-            		PomodoroEventDispatcher.getInstance().dispatchEvent(new PomodoroEvent(PomodoroEvent.TIME_OUT));
+            		
+            		var event:PomodoroEvent = new PomodoroEvent(PomodoroEvent.TIME_OUT)
+            		event.pomodoro = pomodoro;
+            		PomodoroEventDispatcher.getInstance().dispatchEvent(event);
+            		
             		pomodoroTimer.stop();
             		setTimerStyle(TIME_OUT);
             		scheduleBreakTimerStart();

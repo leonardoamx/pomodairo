@@ -97,7 +97,7 @@
         	
         	private function onTimerTick(event:PomodoroEvent):void {
         		if (updateTaskbar) {
-	        		nativeWindow.title = getTruncatedPomodoroName(event.pomodoro)+event.value;
+	        		nativeWindow.title = getTruncatedPomodoroName(event.pomodoro)+" - "+event.value;
         		}
         	}
         	
@@ -107,7 +107,7 @@
         	
         	private function onBreakStart(event:PomodoroEvent):void {
         		if (updateTaskbar) {
-	        		nativeWindow.title = getTruncatedPomodoroName(event.pomodoro)+"*break*";
+	        		nativeWindow.title = getTruncatedPomodoroName(event.pomodoro)+"  *break*";
         		}
         	}
         	
@@ -116,7 +116,7 @@
         		if (pomodoro != null && pomodoro.name != null) {
         			name = pomodoro.name;
         			if (name.length > 10) {
-        				name = name.substr(0,8)+"...  ";
+        				name = name.substr(0,8)+"...";
         			}
         		}
         		return name;

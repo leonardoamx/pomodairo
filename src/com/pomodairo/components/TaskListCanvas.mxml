@@ -46,7 +46,12 @@
 	        
 	        private function onRemovePomodoroClicked(event:MouseEvent):void
 	        {
-	        	db.remove(pomodorosDataGrid.selectedItem as Pomodoro);
+	        	var pom:Pomodoro = pomodorosDataGrid.selectedItem as Pomodoro;
+	        	db.remove(pom);
+	        	
+	        	var evt:PomodoroEvent = new PomodoroEvent(PomodoroEvent.DELETED);
+	        	evt.pomodoro = pom;
+	        	PomodoroEventDispatcher.getInstance().dispatchEvent(evt);
 	        }
 	        
 	        function checkSubmit(event:KeyboardEvent):void
