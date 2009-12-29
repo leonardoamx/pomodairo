@@ -4,69 +4,49 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import mx.events.MenuEvent;
-			
 			import com.pomodairo.events.PomodoroEvent;
 			import com.pomodairo.components.CustomRenderer;
 			import com.pomodairo.PomodoroEventDispatcher;
 			import com.pomodairo.Pomodoro;
+			import com.pomodairo.TableUtils;
 			import com.pomodairo.db.Storage;
 			
-			import flash.desktop.Clipboard;
-			import flash.desktop.ClipboardFormats;
-
-			import mx.controls.Alert;
-
+			//import org.osflash.thunderbolt.Logger;
 			
 			private var db:Storage = Storage.instance;
 			
-
-
 			private function init():void {
 				db.initAndOpenDatabase();
 				nameInput.addEventListener(KeyboardEvent.KEY_DOWN,checkSubmit);
+				estimatedInput.addEventListener(KeyboardEvent.KEY_DOWN,checkSubmit);
 			}
 			
-			
-			
-			private function copyTask(event:Event=null){
-				var selPom = pomodorosDataGrid.selectedItem as Pomodoro;
-				
-				var textToCopy:String = selPom.name + "\n";
-					Clipboard.generalClipboard.clear();
-					Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, textToCopy, false);		
-				 		
-			}
-			
-			
-			private function onUsersDataGridChanged(event:Event):void{
-				
-			
-			}
+			private function onUsersDataGridChanged(event:Event):void{}
 	        
 	        private function onRemovePomodoroClicked(event:MouseEvent):void
 	        {
-	        	var pom:Pomodoro = pomodorosDataGrid.selectedItem as Pomodoro;
-	        	db.remove(pom);
-	        	
-	        	var evt:PomodoroEvent = new PomodoroEvent(PomodoroEvent.DELETED);
-	        	evt.pomodoro = pom;
-	        	PomodoroEventDispatcher.getInstance().dispatchEvent(evt);
+	        	db.remove(pomodorosDataGrid.selectedItem as Pomodoro);
 	        }
 	        
 	        function checkSubmit(event:KeyboardEvent):void
             {
-                if(event.charCode == 13)
-                       onAddPomodoroClicked();
+                if(event.charCode == 13) {
+                    onAddPomodoroClicked();
+                	nameInput.setFocus();
+                }
             }
             
 			private function onAddPomodoroClicked(event:Event=null):void
 	        {
 	        	var pom:Pomodoro = new Pomodoro();
 	        	pom.name = nameInput.text;
+	        	if(estimatedInput.text != null && estimatedInput.text != "") {
+	        		pom.estimated = int(estimatedInput.text);
+	        	}
 	        	pom.type = Pomodoro.TYPE_POMODORO;
 	        	db.addPomodoro(pom);
 	        	nameInput.text = "";
+	        	estimatedInput.text = "";
 	        } 
 	        
 	        private function onStartPomodoroClicked(event:Event=null):void
@@ -82,12 +62,16 @@
 	        	if (!pomodorosDataGrid.selectedItem) return;
 	        		
 	        	var pom:Pomodoro = pomodorosDataGrid.selectedItem as Pomodoro;
-	        	pom.done = !pom.done;
-	        	pom.closed = new Date();
-	        	if(!pom.done){
+	        	if(pom.done) {
 	        		pom.closed = null;
-	        	} 
-	        	db.markDone(pom);
+	        	}
+	        	else {
+	        		pom.closed = new Date();
+	        	}
+	        	pom.done = !pom.done;
+	        	// Following is done by event listener in db object.
+	        	// db.markDone(pom);
+	        	// Dispatch event.
 	        	var evt:PomodoroEvent = new PomodoroEvent(PomodoroEvent.DONE);
 	        	evt.pomodoro = pom;
 	        	PomodoroEventDispatcher.getInstance().dispatchEvent(evt);
@@ -102,33 +86,29 @@
 		   			}
 				}
 	        }	
-	       		        
-	        private function onTextInput(event:TextEvent=null):void
-	        {
-	        	trace("Text input: "+event.text);
-	        }
-              
+	        
+	       public function copyTableToClipboard(title:String, data:Array):void
+           {
+			  var tmpString:String = new TableUtils().getPomodorosTableAsCsv(data);
+              System.setClipboard(tmpString);
+           }
 			
 		]]>
 	</mx:Script>
-	<mx:XML id="menuData">
-    <root>
-        <menuitem label="copy" eventName="copy"/>
-    </root>
-	</mx:XML>
-
+	
 	<mx:DataGrid id="pomodorosDataGrid"
 		dataProvider="{db.dataset}" 
 		height="241"
 		editable="false"
 		itemClick="onStartPomodoroClicked(event)"
-		change="onUsersDataGridChanged(event)" width="100%"
-		>
+		change="onUsersDataGridChanged(event)" width="100%" >
 		<mx:columns>
-			<mx:DataGridColumn width="150" headerText="Name" dataField="name" itemRenderer="com.pomodairo.components.CustomRenderer" />
-			<mx:DataGridColumn width="30" headerText="P" dataField="pomodoros" dataTipField="pomodorosDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
-			<mx:DataGridColumn width="30" headerText="U" dataField="unplanned" dataTipField="unplannedDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
-			<mx:DataGridColumn width="30" headerText="I" dataField="interruptions" dataTipField="interruptionsDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
+			<mx:DataGridColumn width="125" headerText="Name" dataField="name" itemRenderer="com.pomodairo.components.CustomRenderer" />
+			<mx:DataGridColumn width="28" headerText="E" dataField="estimated" dataTipField="estimatedDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
+			<mx:DataGridColumn width="28" headerText="P" dataField="pomodoros" dataTipField="pomodorosDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
+			<mx:DataGridColumn width="28" headerText="U" dataField="unplanned" dataTipField="unplannedDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
+			<mx:DataGridColumn width="28" headerText="I" dataField="interruptions" dataTipField="interruptionsDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
+			<mx:DataGridColumn width="28" headerText="x" dataField="done" itemRenderer="com.pomodairo.components.CustomRenderer" />
 		</mx:columns>
 	</mx:DataGrid>
 	
@@ -138,10 +118,11 @@
 			click="onRemovePomodoroClicked(event)" width="83" height="24" toolTip="Remove this pomodoro from the list"/>
 		<mx:Button label="Clean" id="clearButton" click="onClosePomodoroClicked(event)" toolTip="Removes all 'done' items"/>
 		<mx:Button label="Done" id="closePomoButton" width="70" height="24" enabled="{pomodorosDataGrid.selectedItem}" click="onDonePomodoroClicked()" toolTip="Mark as done"/>
-		<mx:Button label="Copy" id="copyButton" width="70" height="24"  enabled="{pomodorosDataGrid.selectedItem}" click="copyTask()" toolTip="Copy to the clipboard" />
+		<mx:Button label="Copy" id="copyToClipboard" width="65" height="24" click="copyTableToClipboard('Task list', db.dataset)" toolTip="Copy table to clipboard"/>
 	</mx:ControlBar>
-	<mx:TextInput id="nameInput" color="#FFFFFF" width="139" x="10" y="242" backgroundColor="#FFF8F8" textInput="onTextInput()"/>
-	<mx:Button id="addPomoButton" label="Add New" click="onAddPomodoroClicked()" width="95" height="24" x="157" y="241"/>
+	<mx:TextInput id="nameInput" color="#FFFFFF" width="170" x="10" y="242" backgroundColor="#FFF8F8"/>
+	<mx:TextInput id="estimatedInput" color="#FFFFFF" width="30" x="180" y="242" backgroundColor="#FFF8F8" maxChars="1" restrict="0-7"/>
+	<mx:Button id="addPomoButton" label="Add New" click="onAddPomodoroClicked()" width="91" height="24" x="219" y="241"/>
 	
 
 </mx:Canvas>

@@ -526,10 +526,13 @@ Label
 */
 LinkButton
 {
-	rollOverColor: #222222;
-	selectionColor: #000000;
+	rollOverColor: #333333;
+	selectionColor: #333333;
 	focusAlpha: 0.1;
 	cornerRadius: 0;
+	paddingLeft: 0;
+	paddingRight: 0;
+	textDecoration: normal;
 }
 
 

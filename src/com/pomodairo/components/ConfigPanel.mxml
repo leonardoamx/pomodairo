@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="298" height="120" backgroundColor="#313131"
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" x="10" y="5" width="298" height="154" backgroundColor="#313131"
 	creationComplete="init()">
 
 
@@ -19,6 +19,7 @@
         	private var rememberPosition:Boolean = new Boolean(true);
         	private var alwaysOnTop:Boolean = new Boolean(true);
         	private var updateTaskbar:Boolean = new Boolean(true);
+        	private var urlToOpen:String = "";
         	
         	private function init():void
         	{
@@ -59,6 +60,11 @@
         			updateTaskbar = props[UPDATE_TASKBAR] == "true";
         		}
         		
+        		if (props["urlToOpen"] != null) 
+        		{
+        			urlToOpen = props["urlToOpen"];
+        		}
+        		
         	}
         	
         	private function applyGuiValues():void
@@ -69,6 +75,7 @@
         		positionCheckbox.selected = rememberPosition;
         		alwaysOnTopCheckbox.selected = alwaysOnTop;
         		updateTaskbarCheckbox.selected = updateTaskbar;
+        		urlToOpenInput.text = urlToOpen;
             }
         	
             private function exit():void
@@ -84,6 +91,7 @@
             	rememberPosition = positionCheckbox.selected;
             	alwaysOnTop = alwaysOnTopCheckbox.selected;
             	updateTaskbar = updateTaskbarCheckbox.selected;
+            	urlToOpen = urlToOpenInput.text;
             	
             	Storage.instance.setConfigurationValue("volume", ""+volume);
             	Storage.instance.setConfigurationValue("sound", ""+soundEnabled);
@@ -91,6 +99,7 @@
             	Storage.instance.setConfigurationValue(REMEMBER_POSITION, ""+rememberPosition);
             	Storage.instance.setConfigurationValue(ALWAYS_ON_TOP, ""+alwaysOnTop);
             	Storage.instance.setConfigurationValue(UPDATE_TASKBAR, ""+updateTaskbar);
+            	Storage.instance.setConfigurationValue("urlToOpen", urlToOpen);
             	exit();
             	
             	notifyConfiguration();
@@ -105,21 +114,27 @@
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, REMEMBER_POSITION, ""+rememberPosition));
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, ALWAYS_ON_TOP, ""+alwaysOnTop));
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, UPDATE_TASKBAR, ""+updateTaskbar));
+            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, "urlToOpen", urlToOpen));
             }
 			            
         ]]>
     </mx:Script>
 
-	<mx:CheckBox id="soundCheckbox" x="184" y="1" label="Sound enabled"/>
-	<mx:Button x="164" y="87" label="Save" click="save()"/>
-	<mx:Button x="225" y="87" label="Cancel" click="exit()"/>
+	<mx:CheckBox id="soundCheckbox" x="184" y="10" label="Sound enabled"/>
+	<mx:CheckBox x="184" y="30.5" label="Always on top" id="alwaysOnTopCheckbox" />
+	<mx:CheckBox x="184" y="51" label="Update taskbar" id="updateTaskbarCheckbox"  selected="true">
+		<mx:toolTip>Should the taskbar icon be updated with the current pomodoro and time remaining?</mx:toolTip>
+	</mx:CheckBox>
+	<mx:Button x="221" y="90" label="Save" click="save()" width="63"/>
+	<mx:Button x="221" y="121" label="Cancel" click="exit()"/>
 	<mx:HSlider id="volumeSlider" x="10" y="12" minimum="0" maximum="100" snapInterval="5"/>
 	<mx:Label x="10" y="4" text="Volume" color="#A9A9A9"/>
 	<mx:HSlider id="lengthSlider" x="10" y="50" snapInterval="1" minimum="1" maximum="60"/>
 	<mx:Label x="10" y="39" text="Pomodoro length (minutes)" color="#A9A9A9"/>
 	<mx:CheckBox x="10" y="77.5" label="Remember position" id="positionCheckbox" selected="true"/>
-	<mx:CheckBox x="184" y="20.5" label="Always on top" id="alwaysOnTopCheckbox" />
-	<mx:CheckBox x="184" y="41" label="Update taskbar" id="updateTaskbarCheckbox"  selected="true">
-		<mx:toolTip>Should the taskbar icon be updated with the current pomodoro and time remaining?</mx:toolTip>
-	</mx:CheckBox>
+	<mx:Label x="10" y="107" color="#A9A9A9" text="URL to open (e.g. to Bugtracker):"/>
+	<mx:TextInput id="urlToOpenInput" x="10" y="122" width="203">
+		<mx:toolTip>URL to open, when clicking on the active task label that contains a hash number (e.g. task name 'Write unit tests #123' could open URL 'bugtracker.mycompany.com?id=123').</mx:toolTip>
+	</mx:TextInput>
+	
 </mx:Canvas>

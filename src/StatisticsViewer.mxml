@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" xmlns:ns1="com.pomodairo.components.*">
+	
+	<mx:Style source="style/style.css"/>
+	
+	<ns1:StatisticsWindow x="0" y="0" width="100%" height="100%">
+	</ns1:StatisticsWindow>
+	
+</mx:WindowedApplication>

@@ -8,6 +8,10 @@
 	
 	    <mx:Script>
         <![CDATA[
+        	import com.pomodairo.RegexUtils;
+        	import mx.controls.LinkButton;
+        	import com.pomodairo.TaskManager;
+        	import mx.collections.ArrayCollection;
         	import com.pomodairo.events.ConfigurationUpdatedEvent;
         	import com.pomodairo.ConfigProperty;
         	import com.pomodairo.db.Storage;
@@ -27,14 +31,17 @@
 		    private static var TIME_OUT:String = "timeout";
 		    private static var BREAK:String = "break";
 		    
+		    [Bindable]
+		    public var taskManager:TaskManager = TaskManager.instance;
+		    
         	[Embed(source="alarm.mp3")]
         	public var alarmClass:Class;
         	
         	[Embed(source="ticking.mp3")]
         	public var tickClass:Class;
-
+						
 			[Bindable]
-			public var pomodoro:Pomodoro;
+			public var appTitle:String = "pomodairo";
 
             private const MIN_MASK:String = "00";
             private const SEC_MASK:String = "00";
@@ -43,6 +50,8 @@
 
 			[Bindable]
 			public var pomodoroLengthInMinutes:Number = 25;
+			
+			private var urlToOpen:String = "";
 
             private var baseTimer:int;
             private var pomodoroTimer:Timer;
@@ -51,41 +60,24 @@
             private var blinkTimer:Timer = new Timer(300, 0);
             
             private var soundEnabled:Boolean = true;
-            
-            private var currentTimeText:String;
 
             private function init():void {
                 pomodoroTimer = new Timer(TIMER_INTERVAL);
                 pomodoroTimer.addEventListener(TimerEvent.TIMER, updateTimer);
+                pomodoroTimer.addEventListener(TimerEvent.TIMER, updateAppTitle);
                 
 				breakTimer = new Timer(TIMER_INTERVAL);
-                breakTimer.addEventListener(TimerEvent.TIMER, updateBreakTimer);    
+                breakTimer.addEventListener(TimerEvent.TIMER, updateBreakTimer);   
+                breakTimer.addEventListener(TimerEvent.TIMER, updateAppTitle); 
 
                 PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, onPomodoroSelected);
-                PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.DELETED, onPomodoroDeleted);
                 PomodoroEventDispatcher.getInstance().addEventListener(ConfigurationUpdatedEvent.UPDATED, onConfigurationChange);   	   	
             }
-
+			
 			private function onPomodoroSelected(e:PomodoroEvent):void {
-				pomodoro = e.pomodoro;
+				taskManager.setActive(e.pomodoro);
 				stopBreakTimer();
 				showStartButton();
-			}
-			
-			/**
-			 * If the current pomodoro is deleted, then stop any ongoing timers
-			 * and clear the pomodoro.
-			 */
-			private function onPomodoroDeleted(e:PomodoroEvent):void {
-				if (pomodoro != null && pomodoro.id == e.pomodoro.id) {
-					if (pomodoroTimer.running) {
-					stopTimer(null);
-					} 
-					if (breakTimer.running) {
-						stopBreakTimer();
-					}
-					pomodoro = null;
-				}
 			}
 			
 			private function onConfigurationChange(e:ConfigurationUpdatedEvent):void {
@@ -103,6 +95,11 @@
 				{
 					var volume:Number = new Number(e.configElement.value)/100;
 					SoundMixer.soundTransform = new SoundTransform(volume);
+				}
+				
+				if (e.configElement.name == "urlToOpen") 
+				{
+					urlToOpen = e.configElement.value;
 				}
 			}
 			
@@ -132,11 +129,9 @@
 	            		var alarm:Sound = new alarmClass() as Sound;
 	            		alarm.play();
             		}
-            		
-            		var event:PomodoroEvent = new PomodoroEvent(PomodoroEvent.TIME_OUT)
-            		event.pomodoro = pomodoro;
-            		PomodoroEventDispatcher.getInstance().dispatchEvent(event);
-            		
+            		var timeoutEvent:PomodoroEvent = new PomodoroEvent(PomodoroEvent.TIME_OUT);
+					timeoutEvent.pomodoro = taskManager.activeTask;
+            		PomodoroEventDispatcher.getInstance().dispatchEvent(timeoutEvent);
             		pomodoroTimer.stop();
             		setTimerStyle(TIME_OUT);
             		scheduleBreakTimerStart();
@@ -150,12 +145,6 @@
 	                	setTimerStyle(TIME_OUT);
 	                }
 	            }
-	            
-	            if (currentTimeText != counter.text)
-	            {
-		            sendEvent(PomodoroEvent.TIMER_TICK, counter.text);
-					currentTimeText = counter.text;
-	            }
             }
             
             private function startBreakTimer(evt:TimerEvent):void
@@ -164,8 +153,7 @@
             	breakTimer.start();
             	setTimerStyle(BREAK);
             	showBreakButton();
-            	pomodoroLabel.text = "On Break";
-            	sendEvent(PomodoroEvent.START_BREAK, "");
+            	pomodoroLabel.label = "On Break";
             }
             
             private function updateBreakTimer(evt:TimerEvent):void 
@@ -187,7 +175,6 @@
             {
             	breakTimer.stop();
             	showStartButton();
-            	sendEvent(PomodoroEvent.STOP_BREAK, null);
             }
 
             private function startTimer(event:Event = null):void {
@@ -197,12 +184,31 @@
                 //baseTimer += 6*1000;
                 pomodoroTimer.start();
                 showStopButton();
+                hideCloseNextButton();
                 
                 // Dispatch event
-				sendEvent(PomodoroEvent.START_POMODORO, null);
+				var startEvent:PomodoroEvent = new PomodoroEvent(PomodoroEvent.START_POMODORO);
+				startEvent.pomodoro = taskManager.activeTask;
+				PomodoroEventDispatcher.getInstance().dispatchEvent(startEvent);
                 
                 // Play sound
             	var tick:Sound = new tickClass() as Sound;
+            	//tick.play();
+            }
+            
+            private function updateAppTitle(evt:TimerEvent):void
+            {
+            	var timer:Timer = evt.target as Timer;
+            	var d:Date = new Date(getTimer() - baseTimer);
+	           	var remaining:String = String(d.minutes)+"'";
+            	if(timer == pomodoroTimer) {            		
+            		d = new Date(baseTimer - getTimer());
+            		remaining = String(d.minutes)+"'";
+		           	if(d.minutes == 0) {
+		           		remaining = String(d.seconds)+"''";
+		           	}
+            	}
+            	appTitle = remaining+" "+pomodoroLabel.label;
             }
             
             private function showBreakButton():void
@@ -220,14 +226,17 @@
         		newTaskButton.visible = false;
         		
         		counter.text = toTwoDigitString(pomodoroLengthInMinutes)+":00";
-        		pomodoroLabel.text = pomodoro.name;
+        		var pomodoro:Pomodoro = taskManager.activeTask;
+        		pomodoroLabel.label = pomodoro.shortDescription;
+        		appTitle = "pomodairo";
         		setTimerStyle(DEFAULT);
             }
             
             private function showStopButton():void
             {
             	startTimerButton.visible = false;
-            	stopTimerButton.visible = true;            	
+            	stopTimerButton.visible = true;    
+            	hideCloseNextButton();        	
             }
             
             private function showNewTaskButton():void
@@ -238,18 +247,28 @@
             	newTaskButton.visible = true; 
             	counter.text = toTwoDigitString(pomodoroLengthInMinutes)+":00";           	
             }            
+            
+            private function showNextTaskButton():void 
+            {
+            	closePomodoroButton.visible = false;
+            	nextTaskButton.visible = true;
+            }
+            
+            private function showClosePomoButton():void 
+            {
+            	closePomodoroButton.visible = true;
+            	nextTaskButton.visible = false;
+            }
+            
+            private function hideCloseNextButton():void
+            {
+            	closePomodoroButton.visible = false;
+            	nextTaskButton.visible = false;
+            }
 
             private function stopTimer(event:Event=null):void {
                 pomodoroTimer.stop();
                 showStartButton();
-				sendEvent(PomodoroEvent.STOP_POMODORO, null);
-            }
-            
-            private function sendEvent(type:String, value:String):void {
-            	var event:PomodoroEvent = new PomodoroEvent(type);
-				event.pomodoro = pomodoro;
-				event.value = value;
-				PomodoroEventDispatcher.getInstance().dispatchEvent(event);
             }
             
             private function createPomodoro():void {
@@ -258,6 +277,10 @@
             	input.selectAfterCreate = true;
             	PopUpManager.addPopUp(input, this, true);
                 PopUpManager.centerPopUp(input);
+            }
+            
+            private function setDoneSelectNextPomodoro():void {
+				trace("Done / Next pomodoro.");
             }
             
             private function toTwoDigitString(number:int):String
@@ -272,9 +295,8 @@
             private function showSettingsDialog():void {
             	var dialog:ConfigPanel = new ConfigPanel();
             	PopUpManager.addPopUp(dialog, this, true);
-                PopUpManager.centerPopUp(dialog);
+                PopUpManager.bringToFront(dialog);
             }
-            
             
             public function startBlink():void
 	        {
@@ -292,16 +314,67 @@
 	        	counter.visible = !counter.visible;
 	        }
 	        
+	        public function onClosePomoClicked(event:Event = null):void 
+	        {
+	        	// Mark done.
+	        	var pomodoro:Pomodoro = taskManager.activeTask;
+	        	pomodoro.done = true;     
+	        	pomodoro.closed = new Date(); 	
+	        	
+	        	// Dispatch event.
+	        	var doneEvent:PomodoroEvent = new PomodoroEvent(PomodoroEvent.DONE);
+				doneEvent.pomodoro = pomodoro;
+				PomodoroEventDispatcher.getInstance().dispatchEvent(doneEvent);
+				
+				if(taskManager.hasMoreTasks()) {
+					taskManager.nextTask();
+	        		showNextTaskButton();
+	   			}
+	        }
+
+	        public function onNextTaskClicked(event:Event = null):void 
+	        {
+	        	trace("Next task clicked...");
+	        	var result:Boolean = taskManager.nextTask();
+	        	if(!result) {
+	        		trace("There is no next task!");
+	        	}
+	        }
+	        
+	        public function openBugtracker():void {
+	        	var ticketId:int = new RegexUtils().extractHashNumber(taskManager.activeTask.name);
+	        	if(ticketId > 0) {	        		
+		        	var url:String = urlToOpen + ticketId;
+		        	trace("Opening ticket #"+ticketId+" in browser...");
+		        	navigateToURL(new URLRequest(url), 'quote');
+	        	}
+	        }
+	        
+	        private function showStatisticsPanel():void
+	        {
+	        	trace("Trace: Showing statistics panel...");
+            	var myWindow:StatisticsWindow = new StatisticsWindow();
+		      	myWindow.systemChrome = NativeWindowSystemChrome.STANDARD;
+		      	myWindow.type = NativeWindowType.NORMAL;
+		      	myWindow.open( true );
+	        }   
+
+
         ]]>
     </mx:Script>
     
 	<mx:Button id="startTimerButton" label="Start Timer" click="startTimer()"   x="192" y="10" height="40" width="90" visible="false"/>
-	<mx:Button id="stopTimerButton" label="Stop Timer" click="stopTimer()"      x="192" y="10" height="40" width="90" visible="false"/>
-	<mx:Button id="stopBreakButton" label="Stop Break" click="stopBreakTimer()" x="192" y="10" height="40" width="90" visible="false"/>
+	<mx:Button id="stopTimerButton" label="Stop Timer" click="stopTimer();showNextTaskButton();"      x="192" y="10" height="40" width="90" visible="false"/>
+	<mx:Button id="stopBreakButton" label="Stop Break" click="stopBreakTimer();showClosePomoButton();" x="192" y="10" height="40" width="90" visible="false"/>
 	<mx:Button id="newTaskButton" label="New Task" click="createPomodoro()"     x="192" y="10" height="40" width="90" />
 	
 	<mx:Label id="counter" fontSize="60"  text="{toTwoDigitString(pomodoroLengthInMinutes)}:00" color="#FFFF00" x="0" y="-7" height="69"/>
-	<mx:Label id="pomodoroLabel" x="10" y="65" text="{pomodoro.name}" width="90%" height="17"/>
+	<mx:LinkButton id="pomodoroLabel" y="65" label="{taskManager.activeTask.shortDescription}" width="90%" height="17" click="openBugtracker()" textAlign="left" x="10" toolTip="{taskManager.activeTask.longDescription}"/>
     <mx:Image id="settingsButton" x="292" y="10" source="assets/appicons/settings.png" mouseDown="showSettingsDialog()" toolTip="Edit settings" 
     	useHandCursor="true" buttonMode="true" mouseChildren="false" />
+    <mx:Image id="statisticsButton" x="291" y="29" source="assets/appicons/statistics.png" mouseDown="showStatisticsPanel()" toolTip="Show statistics" 
+    	useHandCursor="true" buttonMode="true" mouseChildren="false" />
+
+	<mx:Button id="closePomodoroButton" label="Done" click="onClosePomoClicked()" x="222" y="55" height="25" width="60" visible="false"/>
+	<mx:Button id="nextTaskButton" label="Next" click="onNextTaskClicked()"   x="222" y="55" height="25" width="60" visible="false"/>
 </mx:Canvas>

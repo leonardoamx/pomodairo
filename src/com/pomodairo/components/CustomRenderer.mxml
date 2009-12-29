@@ -38,7 +38,10 @@
 	          //This row is not selected reset stuff
 	          strikethrough = false;
 	        }     	
-			
+	            	
+	        this.setStyle('color',0xCCCCCC);
+	        this.setStyle('fontStyle', 'normal');
+	        this.setStyle('fontWeight', 'normal');
 			
             super.updateDisplayList (unscaledWidth, unscaledHeight);
            
@@ -46,7 +49,21 @@
             if (this._strikethrough) {
                 this.graphics.lineStyle(1, this.getStyle("color"));
                 this.graphics.moveTo(0, unscaledHeight/2);
-                this.graphics.lineTo(unscaledWidth, unscaledHeight/2);
+                this.graphics.lineTo(unscaledWidth, unscaledHeight/2);                
+            }
+            else {
+	            if (data.estimated == 0) {
+	                this.setStyle('color',0x777777);
+	            }
+	            if (data.estimated < data.pomodoros) {
+	            	this.setStyle('color',0xCC0000);
+	            }
+	            if (data.created.day != new Date().day ) {
+	            	this.setStyle('fontStyle', 'italic');
+	            }
+	            if (data.pomodoros > 0 ) {
+	            	this.setStyle('fontWeight', 'bold');
+	            }
             }
         }
       
