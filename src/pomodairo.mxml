@@ -30,6 +30,7 @@
 			private var taskManager:TaskManager = TaskManager.instance;
 				
 			private function beforeInit():void {
+				alwaysInFront = Storage.instance.config[ConfigPanel.ALWAYS_ON_TOP] == "true";
 				var remember:Boolean = Storage.instance.config[ConfigPanel.REMEMBER_POSITION] == "true";
 				if (remember)
 				{
