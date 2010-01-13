@@ -10,6 +10,7 @@ package com.pomodairo.db
 	import flash.data.SQLMode;
 	import flash.data.SQLResult;
 	import flash.data.SQLStatement;
+	import flash.errors.SQLError;
 	import flash.events.SQLErrorEvent;
 	import flash.events.SQLEvent;
 	import flash.filesystem.File;
@@ -113,6 +114,7 @@ package com.pomodairo.db
 		
 		private function onSQLConnectionOpened(event:SQLEvent):void {
 		if (event.type == "open") {
+				migrateFrom15to16();
 				getAllPomodoros();
 			}
 		}
@@ -128,7 +130,6 @@ package com.pomodairo.db
 		 				"name TEXT, " +
 		 				"type TEXT, " +
 		 				"pomodoros INTEGER, " +
-		 				"estimated INTEGER, " +
 		 				"unplanned INTEGER, " +
 		 				"interruptions INTEGER, " +
 		 				"created DATETIME, " +
@@ -136,7 +137,8 @@ package com.pomodairo.db
 		 				"parent INTEGER, " +
 		 				"visible BOOLEAN, " +
 		 				"ordinal INTEGER, " +
-		 				"done BOOLEAN )";
+		 				"done BOOLEAN, " +
+		 				"estimated INTEGER )";
 		 					
 		 	q.text = sql;
 		 	q.addEventListener( SQLErrorEvent.ERROR, createError );
@@ -568,6 +570,31 @@ package com.pomodairo.db
 		/* ----------------------------------------------------
 			        END OF CONFIGURATION TABLE STUFF
 		   ---------------------------------------------------- */
+		   
+   	    /* ----------------------------------------------------
+		        	MIGRATION STUFF
+	   	  ---------------------------------------------------- */
+   
+		public function migrateFrom15to16():void {
+			var statement:SQLStatement = new SQLStatement();
+			statement.itemClass = ConfigProperty;
+			statement.sqlConnection = sqlConnection;
+			var migrateSQL:String = "ALTER TABLE pomodoro ADD estimated INTEGER";
+			statement.text = migrateSQL;
+			try {
+				statement.execute();
+			} catch (err:SQLError) {
+			  // Ignore migration errors
+			  // Alert.show("Migration reported error: "+err);
+			}
+
+		}
+
+		/* ----------------------------------------------------
+		        	END OF MIGRATION STUFF
+	   	  ---------------------------------------------------- */
+	   	  
+	   	  
 	}
 	
 }

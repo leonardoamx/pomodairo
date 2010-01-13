@@ -108,7 +108,6 @@
 			<mx:DataGridColumn width="28" headerText="P" dataField="pomodoros" dataTipField="pomodorosDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
 			<mx:DataGridColumn width="28" headerText="U" dataField="unplanned" dataTipField="unplannedDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
 			<mx:DataGridColumn width="28" headerText="I" dataField="interruptions" dataTipField="interruptionsDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
-			<mx:DataGridColumn width="28" headerText="x" dataField="done" itemRenderer="com.pomodairo.components.CustomRenderer" />
 		</mx:columns>
 	</mx:DataGrid>
 	
