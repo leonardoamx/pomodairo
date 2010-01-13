@@ -4,10 +4,13 @@
 	height="80"  
 	backgroundAlpha="0.0"
 	initialize="init()"
+	creationComplete="created()"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off">
 	
 	    <mx:Script>
         <![CDATA[
+        	import mx.utils.ColorUtil;
+        	import mx.controls.ColorPicker;
         	import com.pomodairo.RegexUtils;
         	import mx.controls.LinkButton;
         	import com.pomodairo.TaskManager;
@@ -60,7 +63,7 @@
             private var blinkTimer:Timer = new Timer(300, 0);
             
             private var soundEnabled:Boolean = true;
-
+            
             private function init():void {
                 pomodoroTimer = new Timer(TIMER_INTERVAL);
                 pomodoroTimer.addEventListener(TimerEvent.TIMER, updateTimer);
@@ -73,6 +76,10 @@
                 PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, onPomodoroSelected);
                 PomodoroEventDispatcher.getInstance().addEventListener(ConfigurationUpdatedEvent.UPDATED, onConfigurationChange);   	   	
             }
+			
+			private function created():void {
+				counter.filters = [glow];
+			}
 			
 			private function onPomodoroSelected(e:PomodoroEvent):void {
 				taskManager.setActive(e.pomodoro);
@@ -107,16 +114,22 @@
 				switch (status) {
 					case DEFAULT:
 						counter.setStyle("color", "Yellow");
+						glow.color = 16776960;
+						counter.filters = [glow];
 						stopBlink();
 						counter.visible = true;
 						break;
 						
 					case TIME_OUT:
 						counter.setStyle("color", "Red");
+						glow.color = 16711680;
+						counter.filters = [glow];
 						break;
 						
 					case BREAK:
 						counter.setStyle("color", "Green");
+						glow.color = 26112;
+						counter.filters = [glow];
 						stopBlink();
 						counter.visible = true;
 						break;	
@@ -208,7 +221,10 @@
 		           		remaining = String(d.seconds)+"''";
 		           	}
             	}
-            	appTitle = remaining+" "+pomodoroLabel.label;
+            	var title:String = remaining+" "+pomodoroLabel.label; 
+            	if (appTitle != title) {
+            		appTitle = title;
+            	}
             }
             
             private function showBreakButton():void
@@ -363,12 +379,35 @@
         ]]>
     </mx:Script>
     
+    <mx:Style>
+        @font-face 
+        {
+            font-family: Digital;
+            src: url("assets/digital-7mono.ttf");
+        }
+
+        .ClockText 
+        { 
+            font-family: Digital; 
+            font-size: 80pt;    
+        }
+
+    </mx:Style>
+	
+	<!--
+	Glass effect wanted! =)
+	<mx:Canvas id="clockBG" backgroundColor="#000000" x="4" y="4" height="80" width="190"/>
+    -->
+    
 	<mx:Button id="startTimerButton" label="Start Timer" click="startTimer()"   x="192" y="10" height="40" width="90" visible="false"/>
 	<mx:Button id="stopTimerButton" label="Stop Timer" click="stopTimer();showNextTaskButton();"      x="192" y="10" height="40" width="90" visible="false"/>
 	<mx:Button id="stopBreakButton" label="Stop Break" click="stopBreakTimer();showClosePomoButton();" x="192" y="10" height="40" width="90" visible="false"/>
 	<mx:Button id="newTaskButton" label="New Task" click="createPomodoro()"     x="192" y="10" height="40" width="90" />
 	
-	<mx:Label id="counter" fontSize="60"  text="{toTwoDigitString(pomodoroLengthInMinutes)}:00" color="#FFFF00" x="0" y="-7" height="69"/>
+	<!-- Clock Counter -->
+	<mx:Label id="counter" styleName="ClockText" text="{toTwoDigitString(pomodoroLengthInMinutes)}:00" color="#FFFF00" x="2" y="-5" height="69"/>
+	<mx:GlowFilter id="glow" color="#FFFF00" alpha="1" blurX="8" blurY="8" strength="1"/>
+	
 	<mx:LinkButton id="pomodoroLabel" y="65" label="{taskManager.activeTask.shortDescription}" width="90%" height="17" click="openBugtracker()" textAlign="left" x="10" toolTip="{taskManager.activeTask.longDescription}"/>
     <mx:Image id="settingsButton" x="292" y="10" source="assets/appicons/settings.png" mouseDown="showSettingsDialog()" toolTip="Edit settings" 
     	useHandCursor="true" buttonMode="true" mouseChildren="false" />
@@ -378,3 +417,5 @@
 	<mx:Button id="closePomodoroButton" label="Done" click="onClosePomoClicked()" x="222" y="55" height="25" width="60" visible="false"/>
 	<mx:Button id="nextTaskButton" label="Next" click="onNextTaskClicked()"   x="222" y="55" height="25" width="60" visible="false"/>
 </mx:Canvas>
+
+
