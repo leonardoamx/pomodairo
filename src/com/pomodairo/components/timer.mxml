@@ -82,9 +82,11 @@
 			}
 			
 			private function onPomodoroSelected(e:PomodoroEvent):void {
-				taskManager.setActive(e.pomodoro);
-				stopBreakTimer();
-				showStartButton();
+				if (!e.pomodoro.done) {
+					taskManager.setActive(e.pomodoro);
+					stopBreakTimer();
+					showStartButton();
+				}
 			}
 			
 			private function onConfigurationChange(e:ConfigurationUpdatedEvent):void {
@@ -243,7 +245,7 @@
         		
         		counter.text = toTwoDigitString(pomodoroLengthInMinutes)+":00";
         		var pomodoro:Pomodoro = taskManager.activeTask;
-        		pomodoroLabel.label = pomodoro.shortDescription;
+    			pomodoroLabel.label = pomodoro.shortDescription;
         		appTitle = "pomodairo";
         		setTimerStyle(DEFAULT);
             }

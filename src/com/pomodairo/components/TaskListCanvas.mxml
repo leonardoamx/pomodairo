@@ -4,6 +4,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.Alert;
 			import com.pomodairo.events.PomodoroEvent;
 			import com.pomodairo.components.CustomRenderer;
 			import com.pomodairo.PomodoroEventDispatcher;
@@ -38,6 +39,11 @@
             
 			private function onAddPomodoroClicked(event:Event=null):void
 	        {
+	        	if (nameInput.text == null || nameInput.text == "")
+	        	{
+	        		Alert.show("Enter description and estimate");
+	        		return;
+	        	}
 	        	var pom:Pomodoro = new Pomodoro();
 	        	pom.name = nameInput.text;
 	        	if(estimatedInput.text != null && estimatedInput.text != "") {
