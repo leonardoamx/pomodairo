@@ -17,7 +17,7 @@
         	private var volume:Number = new Number(100);
         	private var pomodoroLength:Number = new Number(25);  
         	private var rememberPosition:Boolean = new Boolean(true);
-        	private var alwaysOnTop:Boolean = new Boolean(true);
+        	private var alwaysOnTop:Boolean = new Boolean(false);
         	private var updateTaskbar:Boolean = new Boolean(true);
         	private var urlToOpen:String = "";
         	
