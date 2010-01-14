@@ -64,6 +64,8 @@
             
             private var soundEnabled:Boolean = true;
             
+            private var updateTaskbar:Boolean = true;
+            
             private function init():void {
                 pomodoroTimer = new Timer(TIMER_INTERVAL);
                 pomodoroTimer.addEventListener(TimerEvent.TIMER, updateTimer);
@@ -109,6 +111,14 @@
 				if (e.configElement.name == "urlToOpen") 
 				{
 					urlToOpen = e.configElement.value;
+				}
+				
+				if (e.configElement.name == ConfigPanel.UPDATE_TASKBAR) 
+				{
+					this.updateTaskbar = e.configElement.value == "true";
+					if (!updateTaskbar) {
+						appTitle = "Pomodairo";
+					}
 				}
 			}
 			
@@ -213,19 +223,21 @@
             
             private function updateAppTitle(evt:TimerEvent):void
             {
-            	var timer:Timer = evt.target as Timer;
-            	var d:Date = new Date(getTimer() - baseTimer);
-	           	var remaining:String = String(d.minutes)+"'";
-            	if(timer == pomodoroTimer) {            		
-            		d = new Date(baseTimer - getTimer());
-            		remaining = String(d.minutes)+"'";
-		           	if(d.minutes == 0) {
-		           		remaining = String(d.seconds)+"''";
-		           	}
-            	}
-            	var title:String = remaining+" "+pomodoroLabel.label; 
-            	if (appTitle != title) {
-            		appTitle = title;
+            	if (updateTaskbar) {
+	            	var timer:Timer = evt.target as Timer;
+	            	var d:Date = new Date(getTimer() - baseTimer);
+		           	var remaining:String = String(d.minutes)+"'";
+	            	if(timer == pomodoroTimer) {            		
+	            		d = new Date(baseTimer - getTimer());
+	            		remaining = String(d.minutes)+"'";
+			           	if(d.minutes == 0) {
+			           		remaining = String(d.seconds)+"''";
+			           	}
+	            	}
+	            	var title:String = remaining+" "+taskManager.activeTask.name; 
+	            	if (appTitle != title) {
+	            		appTitle = title;
+	            	}
             	}
             }
             
