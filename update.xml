@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <update xmlns="http://ns.adobe.com/air/framework/update/description/1.0">
-	<version>1.5</version>
-	<url>http://pomodairo.googlecode.com/files/pomodairo-1.5.air</url>
+	<version>1.6</version>
+	<url>http://pomodairo.googlecode.com/files/pomodairo-1.6.air</url>
 	<description>
-		* Pomodairo 1.5 Release notes
-		 - Added a refresh database button to the DatabaseViewer to see changes to the data
-		 - On setting a task as done, the the close date is now set as well as reset if clicking done again (making the task not finished)
-		 - Added the ability to copy the name of the pomodoro to export it to a different file
-		 - Pomodoro and timer are now shown in taskbar. This can be turned off in the configuration.
-		 - Pomodoros are only counted when timer completes.
-		 - Configuration option to keep window on top.
-		 - If you delete an active pomodoro the timer will be stopped and cleared.
-		 - Made visual notification for time out more distinct.
+		* Pomodairo 1.6 Release notes
+		 - Added statistics, contributed by Jochen
+		 - Added direct done and next button, contributed by Jochen
+		 - Added URL mapping of tasks with hashcode (#), contributed by Jochen
+		 - Fixed bug when resolution is changed (issue #30)
+		 - Minor graphical and UI updates
 	</description>
 </update>
