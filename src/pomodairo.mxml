@@ -36,10 +36,10 @@
 				{
 					var setX:Number = Storage.instance.config["window.x"];
 					var setY:Number = Storage.instance.config["window.y"];
-					if (setX >= 0) {
+					if (setX >= 0 && setX < Capabilities.screenResolutionX) {
 						this.nativeWindow.x = setX;
 					}
-					if (setY >= 0) {
+					if (setY >= 0 && setY < Capabilities.screenResolutionY) {
 						this.nativeWindow.y = setY;
 					}
 				}
