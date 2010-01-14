@@ -679,7 +679,7 @@ Panel
 	borderStyle: solid;
 	borderThickness:2;
 	
-	headerHeight: 28;
+	headerHeight: 20;
 	titleBackgroundSkin: Embed(source="kingnarestyle.swf", symbol="Panel_titleBackgroundSkin");
 	backgroundImage: Embed(source="kingnarestyle.swf", symbol="Panel_backgroundImage");
 	/* Panel_SpBackgroundImage */

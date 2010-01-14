@@ -12,6 +12,9 @@
 	
     <mx:Script>
         <![CDATA[
+        	import mx.events.MenuEvent;
+        	import mx.controls.Alert;
+        	import com.pomodairo.components.StatisticsWindow;
         	import com.pomodairo.events.ConfigurationUpdatedEvent;
         	import com.pomodairo.TaskManager;
         	import com.pomodairo.components.ConfigPanel;
@@ -29,7 +32,7 @@
 			private var appUpdater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
 			
 			private var taskManager:TaskManager = TaskManager.instance;
-				
+			
 			private function beforeInit():void {
 				PomodoroEventDispatcher.getInstance().addEventListener(ConfigurationUpdatedEvent.UPDATED, onConfigurationChange);
 				
@@ -126,14 +129,48 @@
             	Storage.instance.setConfigurationValue("window.x",""+this.nativeWindow.x);
             	Storage.instance.setConfigurationValue("window.y",""+this.nativeWindow.y);
             }
+            
+            
+    		/* ----------------------------------------------------
+        		MENU STUFF
+	   	  	---------------------------------------------------- */
+	   	  
+            private function menuClick(event:MenuEvent):void {
+                if (event.item.@action == 'config') {
+                	showSettingsDialog();
+                } else if (event.item.@action == 'statistics') {
+                	showStatisticsPanel();
+                } 
+            }
+            
+            private function showSettingsDialog():void {
+            	var dialog:ConfigPanel = new ConfigPanel();
+            	PopUpManager.addPopUp(dialog, this, true);
+                PopUpManager.bringToFront(dialog);
+            }
+            
+            private function showStatisticsPanel():void
+	        {
+            	var myWindow:StatisticsWindow = new StatisticsWindow();
+		      	myWindow.systemChrome = NativeWindowSystemChrome.STANDARD;
+		      	myWindow.type = NativeWindowType.NORMAL;
+		      	myWindow.open( true );
+	        }   
+	        
+			/* ----------------------------------------------------
+    			END OF MENU STUFF
+	   	  	---------------------------------------------------- */
+	        
         ]]>
     </mx:Script>
+
+
 
 	<mx:Fade id="fadein" />
 	<mx:Fade id="fadeout" />
 
 	
-	<mx:Panel title="Pomodairo" x="0" y="0" height="164" width="320" layout="absolute" mouseDown="{nativeWindow.startMove()}">				
+	<mx:Panel x="0" y="0" height="164" width="320" layout="absolute" mouseDown="{nativeWindow.startMove()}">				
 		<ns1:timer id="timerCanvas" x="0" y="0" pomodoroLengthInMinutes="25">
 		</ns1:timer>
 		<mx:ControlBar id="controls" height="42" y="88">
@@ -143,11 +180,20 @@
 		</mx:ControlBar>
 	</mx:Panel>
 	
-	<mx:Label text="x" click="close()" color="#FFFFFF" x="300" y="6"/>
-	<mx:Label text="_" click="minimize()" color="#FFFFFF" x="280" y="6"/>
+	<mx:Label text="x" click="close()" color="#FFFFFF" x="300" y="2"/>
+	<mx:Label text="_" click="minimize()" color="#FFFFFF" x="280" y="2"/>
 	
 	<mx:Canvas id="taskListPanel" x="0" y="166" height="300" width="320" visible="false" showEffect="fadein" hideEffect="fadeout">				
 		<ns1:TaskListCanvas x="0" y="0" height="100%" width="100%">
 		</ns1:TaskListCanvas>
 	</mx:Canvas>
+	
+	<mx:MenuBar id="myMenuBar" labelField="@label" itemClick="menuClick(event)">
+        <mx:XMLList>
+            <menuitem label="Menu">
+                <menuitem label="Configuration" action="config"/>
+                <menuitem label="Statistics" action="statistics"/>
+            </menuitem>
+        </mx:XMLList>
+    </mx:MenuBar>
 </mx:WindowedApplication>

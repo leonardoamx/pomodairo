@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
 	width="312" 
-	height="80"  
+	height="94"  
 	backgroundAlpha="0.0"
 	initialize="init()"
 	creationComplete="created()"
@@ -322,12 +322,6 @@
             	return ""+number;
             }
             
-            private function showSettingsDialog():void {
-            	var dialog:ConfigPanel = new ConfigPanel();
-            	PopUpManager.addPopUp(dialog, this, true);
-                PopUpManager.bringToFront(dialog);
-            }
-            
             public function startBlink():void
 	        {
 	            blinkTimer.addEventListener(TimerEvent.TIMER, toggleText );
@@ -379,16 +373,6 @@
 		        	navigateToURL(new URLRequest(url), 'quote');
 	        	}
 	        }
-	        
-	        private function showStatisticsPanel():void
-	        {
-	        	trace("Trace: Showing statistics panel...");
-            	var myWindow:StatisticsWindow = new StatisticsWindow();
-		      	myWindow.systemChrome = NativeWindowSystemChrome.STANDARD;
-		      	myWindow.type = NativeWindowType.NORMAL;
-		      	myWindow.open( true );
-	        }   
-
 
         ]]>
     </mx:Script>
@@ -413,23 +397,20 @@
 	<mx:Canvas id="clockBG" backgroundColor="#000000" x="4" y="4" height="80" width="190"/>
     -->
     
-	<mx:Button id="startTimerButton" label="Start Timer" click="startTimer()"   x="192" y="10" height="40" width="90" visible="false"/>
-	<mx:Button id="stopTimerButton" label="Stop Timer" click="stopTimer();showNextTaskButton();"      x="192" y="10" height="40" width="90" visible="false"/>
-	<mx:Button id="stopBreakButton" label="Stop Break" click="stopBreakTimer();showClosePomoButton();" x="192" y="10" height="40" width="90" visible="false"/>
-	<mx:Button id="newTaskButton" label="New Task" click="createPomodoro()"     x="192" y="10" height="40" width="90" />
+	<mx:Button id="startTimerButton" 	x="216" y="10" height="50" width="90" visible="false" 	label="Start Timer" click="startTimer()" />
+	<mx:Button id="stopTimerButton" 	x="216" y="10" height="50" width="90" visible="false" 	label="Stop Timer" click="stopTimer();showNextTaskButton();" />
+	<mx:Button id="stopBreakButton" 	x="216" y="10" height="50" width="90" visible="false" 	label="Stop Break" click="stopBreakTimer();showClosePomoButton();"	/>
+	<mx:Button id="newTaskButton" 		x="216" y="10" height="50" width="90" 					label="New Task" click="createPomodoro()" />
 	
 	<!-- Clock Counter -->
-	<mx:Label id="counter" styleName="ClockText" text="{toTwoDigitString(pomodoroLengthInMinutes)}:00" color="#FFFF00" x="2" y="-5" height="69"/>
+	<mx:Label id="counter" x="6" y="0" height="69" styleName="ClockText" text="{toTwoDigitString(pomodoroLengthInMinutes)}:00" color="#FFFF00" />
 	<mx:GlowFilter id="glow" color="#FFFF00" alpha="1" blurX="8" blurY="8" strength="1"/>
-	
-	<mx:LinkButton id="pomodoroLabel" y="65" label="{taskManager.activeTask.shortDescription}" width="90%" height="17" click="openBugtracker()" textAlign="left" x="10" toolTip="{taskManager.activeTask.longDescription}"/>
-    <mx:Image id="settingsButton" x="292" y="10" source="assets/appicons/settings.png" mouseDown="showSettingsDialog()" toolTip="Edit settings" 
-    	useHandCursor="true" buttonMode="true" mouseChildren="false" />
-    <mx:Image id="statisticsButton" x="291" y="29" source="assets/appicons/statistics.png" mouseDown="showStatisticsPanel()" toolTip="Show statistics" 
-    	useHandCursor="true" buttonMode="true" mouseChildren="false" />
 
-	<mx:Button id="closePomodoroButton" label="Done" click="onClosePomoClicked()" x="222" y="55" height="25" width="60" visible="false"/>
-	<mx:Button id="nextTaskButton" label="Next" click="onNextTaskClicked()"   x="222" y="55" height="25" width="60" visible="false"/>
+	<mx:LinkButton id="pomodoroLabel" y="78" label="{taskManager.activeTask.shortDescription}" width="90%" height="17" click="openBugtracker()" textAlign="left" x="10" toolTip="{taskManager.activeTask.longDescription}"/>
+	
+	<mx:Button id="closePomodoroButton" x="216" y="70" height="25" width="90" visible="false" label="Done" click="onClosePomoClicked()" />
+	<mx:Button id="nextTaskButton" 		x="216" y="70" height="25" width="90" visible="false" label="Next" click="onNextTaskClicked()" />
+	
 </mx:Canvas>
 
 
