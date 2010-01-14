@@ -83,7 +83,7 @@
             	this.parent.removeChild(this);
             }
             
-            private function save():void
+            public function save():void
             {
             	volume = volumeSlider.value;
             	soundEnabled = soundCheckbox.selected;

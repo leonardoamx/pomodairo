@@ -31,7 +31,8 @@
 			private var taskManager:TaskManager = TaskManager.instance;
 				
 			private function beforeInit():void {
-				alwaysInFront = Storage.instance.config[ConfigPanel.ALWAYS_ON_TOP] == "true";
+				PomodoroEventDispatcher.getInstance().addEventListener(ConfigurationUpdatedEvent.UPDATED, onConfigurationChange);
+				
 				var remember:Boolean = Storage.instance.config[ConfigPanel.REMEMBER_POSITION] == "true";
 				if (remember)
 				{
@@ -56,7 +57,6 @@
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.START_POMODORO, closeTaskList);
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, onPomodoroSelected);
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.TIME_OUT, onPomodoroTimeout);
-        		PomodoroEventDispatcher.getInstance().addEventListener(ConfigurationUpdatedEvent.UPDATED, onConfigurationChange);
         	}
         	
         	private function checkForUpdates():void {
