@@ -4,6 +4,7 @@
 	
 	<mx:Script>
         <![CDATA[
+        	import mx.controls.Alert;
         	import com.pomodairo.db.Storage;
         	import com.pomodairo.Pomodoro;
         	import com.pomodairo.events.PomodoroEvent;
@@ -12,6 +13,12 @@
         	public var type:String = Pomodoro.TYPE_POMODORO;
         	public var reference:Pomodoro;
         	public var selectAfterCreate:Boolean = false;
+        	
+        	public var descriptionInstructions:String = "Enter description (press escape to cancel)";
+        	public var estimateInstructions:String = "Enter estimate (press escape to cancel)";
+        	
+        	[Bindable]
+        	public var currentText:String = descriptionInstructions;
         	
         	private function init():void {
 				if(type == Pomodoro.TYPE_INTERRUPTION) {
@@ -105,14 +112,24 @@
 	        	}
 	        } 
 	        
+	        private function descriptionFocus(event:Event=null):void
+            {
+            	currentText = descriptionInstructions;
+            }
+            
+            private function estimateFocus(event:Event=null):void
+            {
+            	currentText = estimateInstructions;
+            }
+            
         ]]>
     </mx:Script>
     
     <mx:Fade id="fadein" duration="1000" alphaFrom="0" alphaTo="1.0"/>
 	<mx:Fade id="fadeout" duration="1000"  alphaFrom="1.0" alphaTo="0.0"/>
 	
-	<mx:TextInput id="estimatedInput" width="36" x="208" y="16" backgroundColor="#000000" color="#FFFFFF" fontSize="14" height="28" showEffect="fadein" hideEffect="fadeout" maxChars="1" restrict="0-7"/>
-	<mx:TextInput id="input" width="236" x="10" y="16" backgroundColor="#000000" color="#FFFFFF" fontSize="14" height="28" showEffect="fadein" hideEffect="fadeout"/>
-	<mx:Label x="10" y="0" text="Enter description (press escape to cancel)" color="#8A8A8A"/>
+	<mx:TextInput id="input" width="236" x="10" y="16" focusIn="descriptionFocus(event);" backgroundColor="#000000" color="#FFFFFF" fontSize="14" height="28" showEffect="fadein" hideEffect="fadeout"/>
+	<mx:TextInput id="estimatedInput" width="36" x="208" y="16" focusIn="estimateFocus(event);" backgroundColor="#000000" color="#FFFFFF" fontSize="14" height="28" showEffect="fadein" hideEffect="fadeout" maxChars="1" restrict="0-7"/>
+	<mx:Label id="instruction" x="10" y="0" text="{currentText}" color="#8A8A8A"/>
 	
 </mx:Canvas>

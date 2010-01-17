@@ -611,6 +611,36 @@ MenuBar
 
 /*
 //------------------------------
+//  Native Menu
+//------------------------------
+*/
+NativeMenu
+{
+	branchIcon: Embed(source="kingnarestyle.swf",symbol="Menu_branchIcon");
+	branchDisabledIcon: Embed(source="kingnarestyle.swf",symbol="Menu_branchDisabledIcon");
+	checkIcon: Embed(source="kingnarestyle.swf",symbol="Menu_checkIcon");
+	checkDisabledIcon: Embed(source="kingnarestyle.swf",symbol="Menu_checkDisabledIcon");
+	radioIcon: Embed(source="kingnarestyle.swf",symbol="Menu_radioIcon");
+	radioDisabledIcon: Embed(source="kingnarestyle.swf",symbol="Menu_radioDisabledIcon");
+	separatorSkin: Embed(source="kingnarestyle.swf",symbol="Menu_separatorSkin");
+	backgroundImage: Embed(source="kingnarestyle.swf", symbol="BackgroundSkin"); 
+	backgroundSize: "100%";  
+	backgroundColor: #111111;
+	backgroundAlpha: 1.0;
+	borderStyle: solid;
+	borderThickness: 1;
+	borderColor: #000000;
+	roundedCorners:0;
+	color: #CCCCCC;
+	textRollOverColor: #ffffff;
+	textSelectedColor:#dddddd;
+	rollOverColor: #333333;
+	selectionColor: #444444;
+	shadowDistance: 0;
+}
+
+/*
+//------------------------------
 //  NumericStepper
 //------------------------------
 */
