@@ -76,6 +76,7 @@
                 breakTimer.addEventListener(TimerEvent.TIMER, updateAppTitle); 
 
                 PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, onPomodoroSelected);
+                PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.START_BREAK, setBreakTitle);
                 PomodoroEventDispatcher.getInstance().addEventListener(ConfigurationUpdatedEvent.UPDATED, onConfigurationChange);   	   	
             }
 			
@@ -179,6 +180,7 @@
             	setTimerStyle(BREAK);
             	showBreakButton();
             	pomodoroLabel.label = "On Break";
+				sendEvent(PomodoroEvent.START_BREAK, "");
             }
             
             private function updateBreakTimer(evt:TimerEvent):void 
@@ -200,6 +202,7 @@
             {
             	breakTimer.stop();
             	showStartButton();
+            	sendEvent(PomodoroEvent.STOP_BREAK, null);
             }
 
             private function startTimer(event:Event = null):void {
@@ -212,9 +215,7 @@
                 hideCloseNextButton();
                 
                 // Dispatch event
-				var startEvent:PomodoroEvent = new PomodoroEvent(PomodoroEvent.START_POMODORO);
-				startEvent.pomodoro = taskManager.activeTask;
-				PomodoroEventDispatcher.getInstance().dispatchEvent(startEvent);
+                sendEvent(PomodoroEvent.START_POMODORO, null);
                 
                 // Play sound
             	var tick:Sound = new tickClass() as Sound;
@@ -239,6 +240,23 @@
 	            		appTitle = title;
 	            	}
             	}
+            }
+            
+            private function setBreakTitle(evt:Event=null):void
+            {
+            	if (updateTaskbar) {
+	            	var title:String = "*break* "+taskManager.activeTask.name; 
+	            	if (appTitle != title) {
+	            		appTitle = title;
+	            	}
+            	}
+            }
+            
+             private function sendEvent(type:String, value:String):void {
+            	var event:PomodoroEvent = new PomodoroEvent(type);
+				event.pomodoro = taskManager.activeTask;
+				event.value = value;
+				PomodoroEventDispatcher.getInstance().dispatchEvent(event);
             }
             
             private function showBreakButton():void
@@ -299,6 +317,7 @@
             private function stopTimer(event:Event=null):void {
                 pomodoroTimer.stop();
                 showStartButton();
+                sendEvent(PomodoroEvent.STOP_POMODORO, null);
             }
             
             private function createPomodoro():void {
