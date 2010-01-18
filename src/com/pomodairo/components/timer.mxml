@@ -9,6 +9,7 @@
 	
 	    <mx:Script>
         <![CDATA[
+        	import mx.effects.effectClasses.SoundEffectInstance;
         	import mx.utils.ColorUtil;
         	import mx.controls.ColorPicker;
         	import com.pomodairo.RegexUtils;
@@ -29,6 +30,8 @@
 		    import flash.display.Sprite;
 		    import flash.media.Sound;
 		    import flash.media.SoundChannel;
+		    import mx.effects.easing.Linear;
+		    import mx.effects.SoundEffect;
 		    
 		    private static var DEFAULT:String = "default";
 		    private static var TIME_OUT:String = "timeout";
@@ -215,9 +218,15 @@
                 // Dispatch event
                 sendEvent(PomodoroEvent.START_POMODORO, null);
                 
-                // Play sound
-            	var tick:Sound = new tickClass() as Sound;
-            	//tick.play();
+                // Play beautiful ticking sound, but fade it out so that Fredrik doesn't go crazy.
+            	var tick:SoundEffect = new SoundEffect(new tickClass() as Sound); // Weird stuff, need to send sound into constructor...
+            	tick.volumeFrom = 0.7;
+            	tick.volumeTo = 0.0;
+            	tick.volumeEasingFunction = mx.effects.easing.Linear.easeOut;
+            	tick.duration = 3000;
+            	tick.useDuration = true;
+            	tick.source = tickClass; // ..and set it here.
+            	tick.play();
             }
             
             private function updateAppTitle(evt:TimerEvent):void
@@ -413,7 +422,6 @@
 	Glass effect wanted! =)
 	<mx:Canvas id="clockBG" backgroundColor="#000000" x="4" y="4" height="80" width="190"/>
     -->
-    
 	<mx:Button id="startTimerButton" 	x="216" y="10" height="50" width="90" visible="false" 	label="Start Timer" click="startTimer()" />
 	<mx:Button id="stopTimerButton" 	x="216" y="10" height="50" width="90" visible="false" 	label="Stop Timer" click="stopTimer();showNextTaskButton();" />
 	<mx:Button id="stopBreakButton" 	x="216" y="10" height="50" width="90" visible="false" 	label="Stop Break" click="stopBreakTimer();showClosePomoButton();"	/>
