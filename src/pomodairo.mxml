@@ -12,6 +12,8 @@
 	
     <mx:Script>
         <![CDATA[
+        	import com.pomodairo.twitter.TwitterManager;
+        	import com.pomodairo.components.TwitterConfigPanel;
         	import mx.events.MenuEvent;
         	import mx.controls.Alert;
         	import com.pomodairo.components.StatisticsWindow;
@@ -32,6 +34,8 @@
 			private var appUpdater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
 			
 			private var taskManager:TaskManager = TaskManager.instance;
+			
+			private var twitterManager:TwitterManager = new TwitterManager();
 			
 			private function beforeInit():void {
 				PomodoroEventDispatcher.getInstance().addEventListener(ConfigurationUpdatedEvent.UPDATED, onConfigurationChange);
@@ -140,11 +144,19 @@
                 	showSettingsDialog();
                 } else if (event.item.@action == 'statistics') {
                 	showStatisticsPanel();
+                }  else if (event.item.@action == 'twitter') {
+                	showTwitterConfigPanel();
                 } 
             }
             
             private function showSettingsDialog():void {
             	var dialog:ConfigPanel = new ConfigPanel();
+            	PopUpManager.addPopUp(dialog, this, true);
+                PopUpManager.bringToFront(dialog);
+            }
+            
+            private function showTwitterConfigPanel():void {
+            	var dialog:TwitterConfigPanel = new TwitterConfigPanel();
             	PopUpManager.addPopUp(dialog, this, true);
                 PopUpManager.bringToFront(dialog);
             }
@@ -193,6 +205,7 @@
             <menuitem label="Menu">
                 <menuitem label="Configuration" action="config"/>
                 <menuitem label="Statistics" action="statistics"/>
+                <menuitem label="Twitter (experimental)" action="twitter"/>
             </menuitem>
         </mx:XMLList>
     </mx:MenuBar>

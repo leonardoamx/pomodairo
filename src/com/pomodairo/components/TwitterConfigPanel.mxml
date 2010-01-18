@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" x="10" y="5" width="298" height="154" backgroundColor="#313131"
+	creationComplete="init()">
+
+
+<mx:Script>
+        <![CDATA[
+        	import mx.controls.Alert;
+        	import com.pomodairo.events.ConfigurationUpdatedEvent;
+        	import com.pomodairo.PomodoroEventDispatcher;
+        	import com.pomodairo.db.Storage;
+        	
+        	public static var ENABLED:String = "twitter.enabled";
+        	public static var POST_POMODOROS:String = "twitter.doPost";
+        	public static var USERNAME:String = "twitter.username";
+        	public static var PASSWORD:String = "twitter.password";
+        	
+        	private var twitterEnabled:Boolean = new Boolean(false);
+        	private var doPost:Boolean = new Boolean(false);
+        	private var username:String = new String();
+        	private var password:String = new String();
+        	
+        	private function init():void
+        	{
+        		populate();
+        		applyGuiValues();	
+        		Alert.show("NOTE: If you use twitter all your work will be publically posted on Twitter for everyone to read.");
+        	}
+        	
+        	public function populate():void
+        	{
+        		var props:Dictionary = Storage.instance.config;
+        		
+        		if (props[ENABLED] != null) 
+        		{
+        			twitterEnabled = props[ENABLED] == "true";
+        		}
+        		
+        		if (props[POST_POMODOROS] != null) 
+        		{
+        			doPost = props[POST_POMODOROS] == "true";
+        		}
+        		
+        		if (props[USERNAME] != null) 
+        		{
+        			username = props[USERNAME];
+        		}
+        		
+        		if (props[PASSWORD] != null) 
+        		{
+        			password = props[PASSWORD];
+        		}
+        		
+        	}
+        	
+        	private function applyGuiValues():void
+            {
+        		enabledCheckbox.selected = twitterEnabled;
+        		postCheckbox.selected = doPost;
+        		usernameField.text = username;
+        		passwordField.text = password;
+            }
+        	
+            private function exit():void
+            {
+            	this.parent.removeChild(this);
+            }
+            
+            public function save():void
+            {
+            	twitterEnabled = enabledCheckbox.selected;
+            	doPost = postCheckbox.selected;
+            	username = usernameField.text;
+            	password = passwordField.text;
+            	
+            	Storage.instance.setConfigurationValue(ENABLED, ""+twitterEnabled);
+            	Storage.instance.setConfigurationValue(POST_POMODOROS, ""+doPost);
+            	Storage.instance.setConfigurationValue(USERNAME, ""+username);
+            	Storage.instance.setConfigurationValue(PASSWORD, ""+password);
+            	exit();
+            	
+            	notifyConfiguration();
+            }
+            
+            public function notifyConfiguration():void
+            {
+            	// Notify the world 
+            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, ENABLED, ""+twitterEnabled));
+            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, POST_POMODOROS, ""+doPost));
+            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, USERNAME, ""+username));
+            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, PASSWORD, ""+password));
+            }
+			            
+        ]]>
+    </mx:Script>
+
+	<mx:CheckBox id="enabledCheckbox" x="10" y="10" label="Use Twitter (experimental)"/>
+	<mx:CheckBox x="10" y="122" label="Post status updates" id="postCheckbox" />
+	<mx:Button x="221" y="90" label="Save" click="save()" width="63"/>
+	<mx:Button x="221" y="121" label="Cancel" click="exit()"/>
+	<mx:Label x="10" y="34" color="#A9A9A9" text="Username"/>
+	<mx:TextInput id="usernameField" x="10" y="50" width="173">
+		<mx:toolTip>Enter your Twitter username here.</mx:toolTip>
+	</mx:TextInput>
+	<mx:Label x="10" y="76" color="#A9A9A9" text="Password (needed for updates)"/>
+	<mx:TextInput id="passwordField" x="10" y="92" width="173">
+		<mx:toolTip>Enter your Twitter password here. NOTE: It will stored in a non-safe way on your computer!</mx:toolTip>
+	</mx:TextInput>
+	
+</mx:Canvas>

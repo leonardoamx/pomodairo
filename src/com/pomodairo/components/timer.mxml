@@ -155,9 +155,7 @@
 	            		var alarm:Sound = new alarmClass() as Sound;
 	            		alarm.play();
             		}
-            		var timeoutEvent:PomodoroEvent = new PomodoroEvent(PomodoroEvent.TIME_OUT);
-					timeoutEvent.pomodoro = taskManager.activeTask;
-            		PomodoroEventDispatcher.getInstance().dispatchEvent(timeoutEvent);
+            		sendEvent(PomodoroEvent.TIME_OUT, null);
             		pomodoroTimer.stop();
             		setTimerStyle(TIME_OUT);
             		scheduleBreakTimerStart();
