@@ -6,7 +6,8 @@
 	creationComplete="init()" xmlns:views="com.views.*" xmlns:ns1="com.pomodairo.components.*"
 	backgroundColor="#292929"
 	closing="beforeClose()"
-	title="{timerCanvas.appTitle}">
+	title="{timerCanvas.appTitle}"
+	close="shutdown()">
 	
 	<mx:Style source="style/style.css"/>
 	
@@ -57,6 +58,10 @@
 				var cfg:ConfigPanel = new ConfigPanel();
 				cfg.populate();
 				cfg.notifyConfiguration();
+				
+				var tcfg:TwitterConfigPanel = new TwitterConfigPanel();
+				tcfg.populate();
+				tcfg.notifyConfiguration();
 			}
 				
         	private function init():void {
@@ -84,6 +89,11 @@
 				{
 					this.alwaysInFront = e.configElement.value == "true";
 				}
+			}
+			
+			private function shutdown():void
+			{
+				twitterManager.stop();
 			}
         	
         	private function onPomodoroTimeout(event:PomodoroEvent):void {

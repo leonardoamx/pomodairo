@@ -24,7 +24,9 @@ package com.pomodairo.twitter
 		
 		private var t:Twitter = new Twitter();
 			
-		private var username:String = "pomodoroTest"; 
+		private var username:String;
+		 
+		private var password:String; 
 		
 		private var lastTweetId:Number = new Number(-1);
 		
@@ -36,7 +38,9 @@ package com.pomodairo.twitter
 		
 		private var postUpdate:Boolean = false;
 		
-		private var groupUsername:String = "Fred";
+		private var groupUsername:String;
+		
+		private var twitterEnabled:Boolean = false;
 		
 		public function TwitterManager()
 		{
@@ -48,38 +52,72 @@ package com.pomodairo.twitter
 		}
 		
 		private function onConfigurationChange(e:ConfigurationUpdatedEvent):void {
+			
 			if (e.configElement.name == TwitterConfigPanel.ENABLED) 
 			{
-				var twitterEnabled:Boolean = e.configElement.value == "true";
+				twitterEnabled = e.configElement.value == "true";
 				
-				if (!running && twitterEnabled) {
-					running = true;
-					start();
+				if (twitterEnabled) {
+					checkStart();
 				}
 				
 				if (running && !twitterEnabled) {
-					running = false;
 					stop();
 				}
+				
+				trace("TWITTER CONFIG - Enabled: "+twitterEnabled);
 			}
 			
 			if (e.configElement.name == TwitterConfigPanel.POST_POMODOROS) 
 			{
 				postUpdate = e.configElement.value == "true";
+				trace("TWITTER CONFIG - Post: "+postUpdate);
+			}
+			
+			if (e.configElement.name == TwitterConfigPanel.USERNAME) 
+			{
+				username = e.configElement.value;
+				resetCredentials();
+				checkStart();
+				trace("TWITTER CONFIG - Username: "+username);
+			}
+			
+			if (e.configElement.name == TwitterConfigPanel.PASSWORD) 
+			{
+				password = e.configElement.value;
+				resetCredentials();
+				checkStart();
+			}
+			
+			if (e.configElement.name == TwitterConfigPanel.GROUP_USERNAME) 
+			{
+				groupUsername = e.configElement.value;
+				checkStart();
 			}
 		}
 		
-		public function start():void
+		public function checkStart():void
 		{
-			t = new Twitter();  
-			t.setAuthenticationCredentials("pomodoroTest", "pomodoro");
-			reloadTimer.start();
-			reloadTweets();
+			if (!running && twitterEnabled && username != null && password != null && groupUsername != null) 
+			{
+				running = true;
+				t.setAuthenticationCredentials(username, password);
+				postLogin();
+				reloadTimer.start();
+				reloadTweets();
+			}
 		}
 		
 		public function stop():void
 		{
+			running = false;
 			reloadTimer.stop();
+			postLogoff();
+		}
+		
+		private function resetCredentials():void
+		{
+			t.setAuthenticationCredentials(username, password);
 		}
 		
 		private function reloadTweets(e:TimerEvent=null):void {
@@ -139,7 +177,8 @@ package com.pomodairo.twitter
 	   	  	private function postLogin():void {
 				if (postUpdate) 
 				{
-					t.setStatus(groupUsername+" "+STATUS_LOGIN);
+					// trace("Twitter - Post Login");
+					// t.setStatus(groupUsername+" "+STATUS_LOGIN);
 				}
 				
 			}
@@ -147,6 +186,7 @@ package com.pomodairo.twitter
 			private function postLogoff():void {
 				if (postUpdate) 
 				{
+					trace("Twitter - Post Logoff");
 					t.setStatus(groupUsername+" "+STATUS_LOGOFF);
 				}
 				
@@ -155,6 +195,7 @@ package com.pomodairo.twitter
 	   	  	private function postBusy():void {
 				if (postUpdate) 
 				{
+					trace("Twitter - Post Busy");
 					t.setStatus(groupUsername+" "+STATUS_WORKING+" '"+TaskManager.instance.activeTask.name+"'");
 				}
 				
@@ -163,7 +204,8 @@ package com.pomodairo.twitter
 			private function postFree():void {
 				if (postUpdate) 
 				{
-					t.setStatus(groupUsername+" "+STATUS_FREE);
+					// trace("Twitter - Post Free");
+					// t.setStatus(groupUsername+" "+STATUS_FREE);
 				}
 				
 			}
@@ -171,6 +213,7 @@ package com.pomodairo.twitter
 			private function postOnBreak():void {
 				if (postUpdate) 
 				{
+					trace("Twitter - Post Break");
 					t.setStatus(groupUsername+" "+STATUS_BREAK);
 				}
 				
@@ -188,17 +231,17 @@ package com.pomodairo.twitter
 	   	  	---------------------------------------------------- */
 	   	  		
 			private function onStartPomodoro(e:PomodoroEvent):void {
-				trace("Twitter - Start Pomodoro");
+				trace("Twitter * Start Pomodoro");
 				postBusy();
 			}
 			
 			private function onDonePomodoro(e:PomodoroEvent):void {
-				trace("Twitter - Done Pomodoro");
+				trace("Twitter * Done Pomodoro");
 				postFree();
 			}
 			
 			private function onStartBreak(e:PomodoroEvent):void {
-				trace("Twitter - Start Break");
+				trace("Twitter * Start Break");
 				postOnBreak();
 			}
 			
