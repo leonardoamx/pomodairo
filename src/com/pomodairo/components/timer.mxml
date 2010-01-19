@@ -219,14 +219,16 @@
                 sendEvent(PomodoroEvent.START_POMODORO, null);
                 
                 // Play beautiful ticking sound, but fade it out so that Fredrik doesn't go crazy.
-            	var tick:SoundEffect = new SoundEffect(new tickClass() as Sound); // Weird stuff, need to send sound into constructor...
-            	tick.volumeFrom = 0.7;
-            	tick.volumeTo = 0.0;
-            	tick.volumeEasingFunction = mx.effects.easing.Linear.easeOut;
-            	tick.duration = 3000;
-            	tick.useDuration = true;
-            	tick.source = tickClass; // ..and set it here.
-            	tick.play();
+                if (soundEnabled) {
+	            	var tick:SoundEffect = new SoundEffect(new tickClass() as Sound); // Weird stuff, need to send sound into constructor...
+	            	tick.volumeFrom = 0.7;
+	            	tick.volumeTo = 0.0;
+	            	tick.volumeEasingFunction = mx.effects.easing.Linear.easeOut;
+	            	tick.duration = 3000;
+	            	tick.useDuration = true;
+	            	tick.source = tickClass; // ..and set it here.
+	            	tick.play();
+                }
             }
             
             private function updateAppTitle(evt:TimerEvent):void
