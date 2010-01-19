@@ -122,8 +122,8 @@ package com.pomodairo.twitter
 		
 		private function reloadTweets(e:TimerEvent=null):void {
 				trace("Reload Twitter messages...");
-				t.loadUserTimeline(username);  
-				t.addEventListener(TwitterEvent.ON_USER_TIMELINE_RESULT, populateTweets);
+				// t.loadUserTimeline(username);  
+				// t.addEventListener(TwitterEvent.ON_USER_TIMELINE_RESULT, populateTweets);
 				/*				
 				var query:TwitterSearch = new TwitterSearch();
 				query.fromUser=username;
