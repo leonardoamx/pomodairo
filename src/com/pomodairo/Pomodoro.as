@@ -10,6 +10,7 @@ package com.pomodairo
 		public static var TYPE_POMODORO:String = "Pomodoro";
 		public static var TYPE_INTERRUPTION:String = "Interruption";
 		public static var TYPE_UNPLANNED:String = "Unplanned";
+		public static var TYPE_EDIT:String = "Edit";
 		
 		public var id:int;
 		public var name:String;

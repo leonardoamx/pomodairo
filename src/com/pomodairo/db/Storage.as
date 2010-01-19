@@ -57,6 +57,7 @@ package com.pomodairo.db
 			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.NEW_UNPLANNED, addUnplanned);
 			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.NEW_POMODORO, addNewPomodoro);
 			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.DONE, closePomodoro);
+			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.EDITED, editPomodoro);
 		}
 		
 		private function startPomodoro(e:PomodoroEvent):void {
@@ -76,6 +77,10 @@ package com.pomodairo.db
 			addPomodoro(e.other);
 			increaseUnplannedCount(e.pomodoro);
 		}
+		
+		private function editPomodoro(e:PomodoroEvent):void {
+			updatePomodoro(e.other, e.pomodoro);
+		}		
 		
 		private function addNewPomodoro(e:PomodoroEvent):void {
 			addPomodoro(e.other);
@@ -406,6 +411,21 @@ package com.pomodairo.db
 			dbStatement.removeEventListener(SQLEvent.RESULT, onDBStatementSelectResult);
 			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
 			dbStatement.execute();
+        }
+        
+        public function updatePomodoro(updated:Pomodoro, old:Pomodoro):void
+        {
+			dbStatement = new SQLStatement();
+			dbStatement.itemClass = Pomodoro;
+			dbStatement.sqlConnection = sqlConnection;
+			var sqlUpdate:String = "update Pomodoro set name= '" + updated.name + "', estimated=" + updated.estimated + " where id='" + old.id + "';";
+			dbStatement.text = sqlUpdate;
+			
+			// Don't know why we are doing this?
+			dbStatement.removeEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
+			dbStatement.addEventListener(SQLEvent.RESULT, onDBStatementInsertResult);
+			
+			dbStatement.execute();        	
         }
 	
 	

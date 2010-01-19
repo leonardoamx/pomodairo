@@ -31,6 +31,10 @@
      			menuitem.addEventListener(Event.SELECT, showName);
 				taskMenu.addItem(menuitem);
 				
+				var edit:NativeMenuItem = new NativeMenuItem("Edit");
+     			edit.addEventListener(Event.SELECT, onEditPomodoroClicked);
+				taskMenu.addItem(edit);				
+				
 				var done:NativeMenuItem = new NativeMenuItem("Mark/unmark done");
      			done.addEventListener(Event.SELECT, onDonePomodoroClicked);
 				taskMenu.addItem(done);
@@ -67,6 +71,17 @@
             	PopUpManager.addPopUp(input, this, true);
                 PopUpManager.centerPopUp(input);
 	        } 
+	        
+			private function onEditPomodoroClicked(event:Event=null):void
+	        {
+	        	var pom:Pomodoro = pomodorosDataGrid.selectedItem as Pomodoro;
+	        	var input:PomoItemInput = new PomoItemInput();
+            	input.type = Pomodoro.TYPE_EDIT;
+            	input.selectAfterCreate = true;
+            	input.reference = pom;
+            	PopUpManager.addPopUp(input, this, true);
+                PopUpManager.centerPopUp(input);
+	        }	        
 	        
 	        private function onStartPomodoroClicked(event:Event=null):void
 	        {

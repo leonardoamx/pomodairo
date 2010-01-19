@@ -15,6 +15,7 @@ package com.pomodairo.events
 		public static var NEW_UNPLANNED:String = "unplanned created";
 		public static var NEW_INTERRUPTION:String = "interruption created";
 		public static var DONE:String = "pomodoro done";
+		public static var EDITED:String = "pomodoro edited";
 		public static var TIMER_TICK:String = "timer tick";
 		public static var START_BREAK:String = "break started";
 		public static var STOP_BREAK:String = "break stopped";

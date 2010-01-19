@@ -75,6 +75,7 @@
 				<mx:DataGridColumn width="100" headerText="Name" dataField="name"/>
 				<mx:DataGridColumn width="70" headerText="Type" dataField="type"/>
 				<mx:DataGridColumn width="40" headerText="Pomodoros" dataField="pomodoros"/>
+				<mx:DataGridColumn width="40" headerText="Estimated" dataField="estimated"/>
 				<mx:DataGridColumn width="40" headerText="Unplanned" dataField="unplanned"/>
 				<mx:DataGridColumn width="40" headerText="Interruptions" dataField="interruptions"/>
 				<mx:DataGridColumn width="40" headerText="Done" dataField="done"/>

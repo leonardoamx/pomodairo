@@ -29,6 +29,12 @@
 					input.width = 192;
 					estimatedInput.visible = true;
 				}
+				
+				if (type == Pomodoro.TYPE_EDIT)
+				{
+					input.text = reference.name;
+					estimatedInput.text = "" + reference.estimated as String;					
+				}
 
 				estimatedInput.addEventListener(KeyboardEvent.KEY_DOWN,checkSubmit);
 				input.addEventListener(KeyboardEvent.KEY_DOWN,checkSubmit);
@@ -59,6 +65,7 @@
 	        	
 	        	var item:Pomodoro = new Pomodoro();
 	        	item.name = input.text;
+	        	
 	        	if (reference != null) {
 	        		item.parent = reference.id;
 	        	} else {
@@ -81,8 +88,11 @@
 	        		case Pomodoro.TYPE_INTERRUPTION:
 	        			eventType = PomodoroEvent.NEW_INTERRUPTION;
 	        			break;
+	        			
+	        		case Pomodoro.TYPE_EDIT:
+	        			eventType = PomodoroEvent.EDITED;
+	        			break;
 	        	}
-	        	
 	        	
 	        	var evt:PomodoroEvent = new PomodoroEvent(eventType)
 	        	evt.pomodoro = reference;
