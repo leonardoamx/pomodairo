@@ -31,7 +31,7 @@
      			menuitem.addEventListener(Event.SELECT, showName);
 				taskMenu.addItem(menuitem);
 				
-				var edit:NativeMenuItem = new NativeMenuItem("Edit");
+				var edit:NativeMenuItem = new NativeMenuItem("Edit...");
      			edit.addEventListener(Event.SELECT, onEditPomodoroClicked);
 				taskMenu.addItem(edit);				
 				
