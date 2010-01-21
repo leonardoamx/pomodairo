@@ -13,6 +13,8 @@ package com.pomodairo.twitter
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	
+	import mx.formatters.DateFormatter;
+	
 	public class TwitterManager
 	{
 		public static const STATUS_LOGIN:String = "logged in";
@@ -21,9 +23,9 @@ package com.pomodairo.twitter
 		public static const STATUS_FREE:String = "is free";
 		public static const STATUS_BREAK:String = "is on a break";
 		
-		
-		private var t:Twitter = new Twitter();
-			
+		// public static const SHORT_DATE_MASK:String	= "YYMMDD H:NN:SS";
+		public static const SHORT_DATE_MASK:String	= "H:NN:SS";
+
 		private var username:String;
 		 
 		private var password:String; 
@@ -34,7 +36,7 @@ package com.pomodairo.twitter
 		
 		private var reloadTimer:Timer = new Timer(5000);
 		
-		private var running:Boolean = false;
+		private var twitterRunning:Boolean = false;
 		
 		private var postUpdate:Boolean = false;
 		
@@ -48,6 +50,7 @@ package com.pomodairo.twitter
 			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.START_POMODORO, onStartPomodoro);
 			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.TIME_OUT, onDonePomodoro);
 			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.START_BREAK, onStartBreak);
+			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.STOP_POMODORO, onStopPomodoro);
             reloadTimer.addEventListener(TimerEvent.TIMER, reloadTweets);
 		}
 		
@@ -61,31 +64,25 @@ package com.pomodairo.twitter
 					checkStart();
 				}
 				
-				if (running && !twitterEnabled) {
+				if (twitterRunning && !twitterEnabled) {
 					stop();
 				}
-				
-				trace("TWITTER CONFIG - Enabled: "+twitterEnabled);
 			}
 			
 			if (e.configElement.name == TwitterConfigPanel.POST_POMODOROS) 
 			{
 				postUpdate = e.configElement.value == "true";
-				trace("TWITTER CONFIG - Post: "+postUpdate);
 			}
 			
 			if (e.configElement.name == TwitterConfigPanel.USERNAME) 
 			{
 				username = e.configElement.value;
-				resetCredentials();
 				checkStart();
-				trace("TWITTER CONFIG - Username: "+username);
 			}
 			
 			if (e.configElement.name == TwitterConfigPanel.PASSWORD) 
 			{
 				password = e.configElement.value;
-				resetCredentials();
 				checkStart();
 			}
 			
@@ -98,11 +95,9 @@ package com.pomodairo.twitter
 		
 		public function checkStart():void
 		{
-			if (!running && twitterEnabled && username != null && password != null && groupUsername != null) 
+			if (!twitterRunning && twitterEnabled) 
 			{
-				running = true;
-				t.setAuthenticationCredentials(username, password);
-				postLogin();
+				twitterRunning = true;
 				reloadTimer.start();
 				reloadTweets();
 			}
@@ -110,18 +105,14 @@ package com.pomodairo.twitter
 		
 		public function stop():void
 		{
-			running = false;
+			trace("Stop Twitter update");
+			twitterRunning = false;
 			reloadTimer.stop();
 			postLogoff();
 		}
 		
-		private function resetCredentials():void
-		{
-			t.setAuthenticationCredentials(username, password);
-		}
-		
 		private function reloadTweets(e:TimerEvent=null):void {
-				trace("Reload Twitter messages...");
+				//trace("Reload Twitter messages...");
 				// t.loadUserTimeline(username);  
 				// t.addEventListener(TwitterEvent.ON_USER_TIMELINE_RESULT, populateTweets);
 				/*				
@@ -170,6 +161,22 @@ package com.pomodairo.twitter
 			}  
 			
 			
+			private function getTwitterClient(authenticated:Boolean=false):Twitter 
+			{
+				var t:Twitter = new Twitter();
+				if (authenticated) 
+				{
+					t.setAuthenticationCredentials(username, password);
+				}
+				return t;
+			}
+			
+			public static function dateFormat(date:Date):String {
+				var formatter:DateFormatter = new DateFormatter();
+				formatter.formatString = SHORT_DATE_MASK;
+				return formatter.format(date);
+			}
+			
 			/* ----------------------------------------------------
         			TWITTER POST UPDATE METHODS
 	   	  	---------------------------------------------------- */
@@ -177,8 +184,8 @@ package com.pomodairo.twitter
 	   	  	private function postLogin():void {
 				if (postUpdate) 
 				{
-					// trace("Twitter - Post Login");
-					// t.setStatus(groupUsername+" "+STATUS_LOGIN);
+					trace("Twitter - Post Login");
+					getTwitterClient(true).setStatus(getPrefix()+STATUS_LOGIN);
 				}
 				
 			}
@@ -187,7 +194,7 @@ package com.pomodairo.twitter
 				if (postUpdate) 
 				{
 					trace("Twitter - Post Logoff");
-					t.setStatus(groupUsername+" "+STATUS_LOGOFF);
+					getTwitterClient(true).setStatus(getPrefix()+STATUS_LOGOFF);
 				}
 				
 			}
@@ -196,7 +203,7 @@ package com.pomodairo.twitter
 				if (postUpdate) 
 				{
 					trace("Twitter - Post Busy");
-					t.setStatus(groupUsername+" "+STATUS_WORKING+" '"+TaskManager.instance.activeTask.name+"'");
+					getTwitterClient(true).setStatus(getPrefix()+STATUS_WORKING+" '"+TaskManager.instance.activeTask.shortDescription+"'");
 				}
 				
 			}
@@ -204,8 +211,8 @@ package com.pomodairo.twitter
 			private function postFree():void {
 				if (postUpdate) 
 				{
-					// trace("Twitter - Post Free");
-					// t.setStatus(groupUsername+" "+STATUS_FREE);
+					trace("Twitter - Post Free");
+					getTwitterClient(true).setStatus(groupUsername+" "+STATUS_FREE);
 				}
 				
 			}
@@ -214,11 +221,17 @@ package com.pomodairo.twitter
 				if (postUpdate) 
 				{
 					trace("Twitter - Post Break");
-					t.setStatus(groupUsername+" "+STATUS_BREAK);
+					getTwitterClient(true).setStatus(getPrefix()+STATUS_BREAK);
 				}
 				
 			}
 	   	  	
+	   	  	private function getPrefix():String {
+	   	  		var now:Date = new Date();
+	   	  		var prefix:String = dateFormat(now)+" - "; 
+	   	  		prefix += groupUsername+" ";
+	   	  		return prefix;	
+	   	  	}
 	   	  	
 	   	  	/* ----------------------------------------------------
         			END OF TWITTER POST UPDATE METHODS
@@ -231,17 +244,18 @@ package com.pomodairo.twitter
 	   	  	---------------------------------------------------- */
 	   	  		
 			private function onStartPomodoro(e:PomodoroEvent):void {
-				trace("Twitter * Start Pomodoro");
 				postBusy();
 			}
 			
 			private function onDonePomodoro(e:PomodoroEvent):void {
-				trace("Twitter * Done Pomodoro");
+				// postFree();
+			}
+			
+			private function onStopPomodoro(e:PomodoroEvent):void {
 				postFree();
 			}
 			
 			private function onStartBreak(e:PomodoroEvent):void {
-				trace("Twitter * Start Break");
 				postOnBreak();
 			}
 			
