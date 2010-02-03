@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <update xmlns="http://ns.adobe.com/air/framework/update/description/1.0">
-	<version>1.6</version>
-	<url>http://pomodairo.googlecode.com/files/pomodairo-1.6.air</url>
+	<version>1.7</version>
+	<url>http://pomodairo.googlecode.com/files/pomodairo-1.7.air</url>
 	<description>
-		* Pomodairo 1.6 Release notes
-		 - Added statistics, contributed by Jochen
-		 - Added direct done and next button, contributed by Jochen
-		 - Added URL mapping of tasks with hashcode (#), contributed by Jochen
-		 - Fixed bug when resolution is changed (issue #30)
-		 - Minor graphical and UI updates
+		* Pomodairo 1.7 Release notes
+		 - Cleaned up GUI
+		 - Added menu
+		 - Added right-click menu in task list
+		 - Added edit task functionality
+		 - Added experimental Twitter integration
 	</description>
 </update>
