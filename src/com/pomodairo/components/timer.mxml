@@ -244,9 +244,11 @@
 			           		remaining = String(d.seconds)+"''";
 			           	}
 	            	}
-	            	var title:String = remaining+" "+taskManager.activeTask.name; 
-	            	if (appTitle != title) {
-	            		appTitle = title;
+	            	if (!breakTimer.running) {
+		            	var title:String = remaining+" "+taskManager.activeTask.name; 
+		            	if (appTitle != title) {
+		            		appTitle = title;
+		            	}
 	            	}
             	}
             }
