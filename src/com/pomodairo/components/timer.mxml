@@ -9,6 +9,7 @@
 	
 	    <mx:Script>
         <![CDATA[
+        	import mx.core.SoundAsset;
         	import mx.effects.effectClasses.SoundEffectInstance;
         	import mx.utils.ColorUtil;
         	import mx.controls.ColorPicker;
@@ -54,6 +55,8 @@
             private const TIMER_INTERVAL:int = 10;
             private const DELAY_BEFORE_BREAK_STARTS:int = 5000; // Milliseconds
 
+			private var ticToc:SoundChannel;
+
 			[Bindable]
 			public var pomodoroLengthInMinutes:Number = 25;
 			
@@ -66,6 +69,8 @@
             private var blinkTimer:Timer = new Timer(300, 0);
             
             private var soundEnabled:Boolean = true;
+            
+            private var fadeSound:Boolean = true;
             
             private var updateTaskbar:Boolean = true;
             
@@ -104,6 +109,11 @@
 				if (e.configElement.name == "sound") 
 				{
 					soundEnabled = e.configElement.value == "true";
+				}
+				
+				if (e.configElement.name == ConfigPanel.FADE_TICKING_SOUND) 
+				{
+					fadeSound = e.configElement.value == "true";
 				}
 				
 				if (e.configElement.name == "volume") 
@@ -160,6 +170,7 @@
             		}
             		sendEvent(PomodoroEvent.TIME_OUT, null);
             		pomodoroTimer.stop();
+            		stopTicTocSound();
             		setTimerStyle(TIME_OUT);
             		scheduleBreakTimerStart();
             		startBlink();
@@ -220,14 +231,21 @@
                 
                 // Play beautiful ticking sound, but fade it out so that Fredrik doesn't go crazy.
                 if (soundEnabled) {
-	            	var tick:SoundEffect = new SoundEffect(new tickClass() as Sound); // Weird stuff, need to send sound into constructor...
-	            	tick.volumeFrom = 0.7;
-	            	tick.volumeTo = 0.0;
-	            	tick.volumeEasingFunction = mx.effects.easing.Linear.easeOut;
-	            	tick.duration = 3000;
-	            	tick.useDuration = true;
-	            	tick.source = tickClass; // ..and set it here.
-	            	tick.play();
+                	
+                	if (fadeSound) {
+		            	var tick:SoundEffect = new SoundEffect(new tickClass() as Sound); // Weird stuff, need to send sound into constructor...
+		            	tick.volumeFrom = 0.7;
+		            	tick.volumeTo = 0.0;
+		            	tick.volumeEasingFunction = mx.effects.easing.Linear.easeOut;
+		            	tick.duration = 3000;
+		            	tick.useDuration = true;
+		            	tick.source = tickClass; // ..and set it here.
+		            	tick.play();
+                	} else {
+                		stopTicTocSound();
+            			var sound:SoundAsset = new tickClass() as SoundAsset;
+	            		ticToc = sound.play(0, int.MAX_VALUE);
+                	}
                 }
             }
             
@@ -327,6 +345,7 @@
 
             private function stopTimer(event:Event=null):void {
                 pomodoroTimer.stop();
+                stopTicTocSound();
                 showStartButton();
                 sendEvent(PomodoroEvent.STOP_POMODORO, null);
             }
@@ -401,6 +420,12 @@
 		        	var url:String = urlToOpen + ticketId;
 		        	trace("Opening ticket #"+ticketId+" in browser...");
 		        	navigateToURL(new URLRequest(url), 'quote');
+	        	}
+	        }
+	        
+	        private function stopTicTocSound():void {
+	        	if (ticToc != null) {
+	        		ticToc.stop();
 	        	}
 	        }
 

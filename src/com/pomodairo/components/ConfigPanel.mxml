@@ -13,12 +13,15 @@
         	public static var ALWAYS_ON_TOP:String = "window.alwaysOnTop";
         	public static var UPDATE_TASKBAR:String = "window.updateTaskbar";
         	
+        	public static var FADE_TICKING_SOUND:String = "sound.fadeTicking";
+        	
         	private var soundEnabled:Boolean = new Boolean(true);
         	private var volume:Number = new Number(100);
         	private var pomodoroLength:Number = new Number(25);  
         	private var rememberPosition:Boolean = new Boolean(true);
         	private var alwaysOnTop:Boolean = new Boolean(false);
         	private var updateTaskbar:Boolean = new Boolean(true);
+        	private var fadeTicking:Boolean = new Boolean(true);
         	private var urlToOpen:String = "";
         	
         	private function init():void
@@ -65,6 +68,11 @@
         			urlToOpen = props["urlToOpen"];
         		}
         		
+        		if (props[FADE_TICKING_SOUND] != null) 
+        		{
+        			fadeTicking = props[FADE_TICKING_SOUND] == "true";
+        		}
+        		
         	}
         	
         	private function applyGuiValues():void
@@ -76,6 +84,7 @@
         		alwaysOnTopCheckbox.selected = alwaysOnTop;
         		updateTaskbarCheckbox.selected = updateTaskbar;
         		urlToOpenInput.text = urlToOpen;
+        		fadeTickingCheckbox.selected = fadeTicking;
             }
         	
             private function exit():void
@@ -92,6 +101,7 @@
             	alwaysOnTop = alwaysOnTopCheckbox.selected;
             	updateTaskbar = updateTaskbarCheckbox.selected;
             	urlToOpen = urlToOpenInput.text;
+            	fadeTicking = fadeTickingCheckbox.selected;
             	
             	Storage.instance.setConfigurationValue("volume", ""+volume);
             	Storage.instance.setConfigurationValue("sound", ""+soundEnabled);
@@ -100,6 +110,7 @@
             	Storage.instance.setConfigurationValue(ALWAYS_ON_TOP, ""+alwaysOnTop);
             	Storage.instance.setConfigurationValue(UPDATE_TASKBAR, ""+updateTaskbar);
             	Storage.instance.setConfigurationValue("urlToOpen", urlToOpen);
+            	Storage.instance.setConfigurationValue(FADE_TICKING_SOUND, ""+fadeTicking);
             	exit();
             	
             	notifyConfiguration();
@@ -115,14 +126,16 @@
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, ALWAYS_ON_TOP, ""+alwaysOnTop));
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, UPDATE_TASKBAR, ""+updateTaskbar));
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, "urlToOpen", urlToOpen));
+            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, FADE_TICKING_SOUND, ""+fadeTicking));
             }
 			            
         ]]>
     </mx:Script>
 
 	<mx:CheckBox id="soundCheckbox" x="184" y="10" label="Sound enabled"/>
-	<mx:CheckBox x="184" y="30.5" label="Always on top" id="alwaysOnTopCheckbox" />
-	<mx:CheckBox x="184" y="51" label="Update taskbar" id="updateTaskbarCheckbox"  selected="true">
+	<mx:CheckBox x="184" y="44.5" label="Always on top" id="alwaysOnTopCheckbox" />
+	<mx:CheckBox id="fadeTickingCheckbox" x="184" y="27" label="Fade ticking"/>
+	<mx:CheckBox x="184" y="62" label="Update taskbar" id="updateTaskbarCheckbox"  selected="true">
 		<mx:toolTip>Should the taskbar icon be updated with the current pomodoro and time remaining?</mx:toolTip>
 	</mx:CheckBox>
 	<mx:Button x="221" y="90" label="Save" click="save()" width="63"/>
