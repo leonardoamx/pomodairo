@@ -165,8 +165,8 @@
             		startBlink();
             	} else {
 	                var d:Date = new Date(baseTimer - getTimer());
-	                var min:String = (MIN_MASK + d.minutes).substr(-MIN_MASK.length);
-	                var sec:String = (SEC_MASK + d.seconds).substr(-SEC_MASK.length);
+	                var min:String = (MIN_MASK + d.minutesUTC).substr(-MIN_MASK.length);
+	                var sec:String = (SEC_MASK + d.secondsUTC).substr(-SEC_MASK.length);
 	                counter.text = String(min + ":" + sec);
 	                if (min == "00") {
 	                	setTimerStyle(TIME_OUT);
@@ -236,10 +236,10 @@
             	if (updateTaskbar) {
 	            	var timer:Timer = evt.target as Timer;
 	            	var d:Date = new Date(getTimer() - baseTimer);
-		           	var remaining:String = String(d.minutes)+"'";
+		           	var remaining:String = String(d.minutesUTC)+"'";
 	            	if(timer == pomodoroTimer) {            		
 	            		d = new Date(baseTimer - getTimer());
-	            		remaining = String(d.minutes)+"'";
+	            		remaining = String(d.minutesUTC)+"'";
 			           	if(d.minutes == 0) {
 			           		remaining = String(d.seconds)+"''";
 			           	}
