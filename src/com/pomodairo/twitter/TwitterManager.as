@@ -5,7 +5,7 @@ package com.pomodairo.twitter
 	import com.iggy.at.api.events.TwitterEvent;
 	import com.pomodairo.PomodoroEventDispatcher;
 	import com.pomodairo.TaskManager;
-	import com.pomodairo.components.TwitterConfigPanel;
+	import com.pomodairo.components.config.TwitterConfigPanel;
 	import com.pomodairo.events.ConfigurationUpdatedEvent;
 	import com.pomodairo.events.PomodoroEvent;
 	import com.pomodairo.events.TwitterPomodoroEvent;

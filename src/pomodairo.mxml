@@ -14,13 +14,14 @@
     <mx:Script>
         <![CDATA[
         	import com.pomodairo.twitter.TwitterManager;
-        	import com.pomodairo.components.TwitterConfigPanel;
+        	import com.pomodairo.components.config.AdvancedConfigPanel;
+        	import com.pomodairo.components.config.TwitterConfigPanel;
+        	import com.pomodairo.components.config.ConfigPanel;
         	import mx.events.MenuEvent;
         	import mx.controls.Alert;
         	import com.pomodairo.components.StatisticsWindow;
         	import com.pomodairo.events.ConfigurationUpdatedEvent;
         	import com.pomodairo.TaskManager;
-        	import com.pomodairo.components.ConfigPanel;
         	import com.pomodairo.db.Storage;
         	import mx.managers.PopUpManager;
         	import air.update.events.UpdateEvent;
@@ -62,6 +63,10 @@
 				var tcfg:TwitterConfigPanel = new TwitterConfigPanel();
 				tcfg.populate();
 				tcfg.notifyConfiguration();
+				
+				var advancedConfig:AdvancedConfigPanel = new AdvancedConfigPanel();
+				advancedConfig.populate();
+				advancedConfig.notifyConfiguration();
 			}
 				
         	private function init():void {
@@ -156,6 +161,8 @@
                 	showStatisticsPanel();
                 }  else if (event.item.@action == 'twitter') {
                 	showTwitterConfigPanel();
+                }  else if (event.item.@action == 'advancedConfig') {
+                	showAdvancedSettingsDialog();
                 } 
             }
             
@@ -178,6 +185,12 @@
 		      	myWindow.type = NativeWindowType.NORMAL;
 		      	myWindow.open( true );
 	        }   
+	        
+	        private function showAdvancedSettingsDialog():void {
+            	var dialog:AdvancedConfigPanel = new AdvancedConfigPanel();
+            	PopUpManager.addPopUp(dialog, this, true);
+                PopUpManager.bringToFront(dialog);
+            }
 	        
 			/* ----------------------------------------------------
     			END OF MENU STUFF
@@ -216,6 +229,7 @@
                 <menuitem label="Configuration" action="config"/>
                 <menuitem label="Statistics" action="statistics"/>
                 <menuitem label="Twitter (experimental)" action="twitter"/>
+                <menuitem label="Advanced Configuration" action="advancedConfig"/>
             </menuitem>
         </mx:XMLList>
     </mx:MenuBar>

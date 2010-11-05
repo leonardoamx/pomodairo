@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" x="10" y="5" width="298" height="154" backgroundColor="#313131"
+	creationComplete="init()">
+
+
+<mx:Script>
+        <![CDATA[
+        	import mx.controls.Alert;
+        	import com.pomodairo.events.ConfigurationUpdatedEvent;
+        	import com.pomodairo.PomodoroEventDispatcher;
+        	import com.pomodairo.db.Storage;
+        	
+        	public static var DATABASE_LOCATION:String = "db.location";
+        	
+        	public var dataFileLocation:String = "";
+        	
+        	private var dataFileFolder:File = new File();
+        	
+        	public static function getDatabaseLocation():String {
+        		return getDBLocation();
+        	}
+        	
+        	private function init():void
+        	{
+        		populate();
+        		applyGuiValues();	
+        	}
+        	
+        	public function populate():void
+        	{
+        		dataFileLocation = getDatabaseLocation();
+        		
+        		var props:Dictionary = Storage.instance.config;
+				        		
+        	}
+        	
+        	private function applyGuiValues():void
+            {
+
+        		dataFileLocationInput.text = dataFileLocation;
+            }
+        	
+            private function exit():void
+            {
+            	this.parent.removeChild(this);
+            }
+            
+            public function save():void
+            {
+
+            	dataFileLocation = dataFileLocationInput.text;
+            	storeDBLocation(dataFileLocation);
+            	exit();
+            	notifyConfiguration();
+            }
+            
+            public function notifyConfiguration():void
+            {
+            	// Notify the world 
+            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, DATABASE_LOCATION, dataFileLocation));
+            }
+            
+			private function selectFile():void {
+				dataFileFolder.addEventListener(Event.SELECT, selectHandler);
+				dataFileFolder.browseForDirectory("Select Directory");
+			}
+			 
+			private function selectHandler(event:Event):void {
+				dataFileLocationInput.text = dataFileFolder.nativePath;
+				dataFileLocation = dataFileFolder.nativePath;
+			}      
+			
+			
+			// Store database location in local store
+			private static function storeDBLocation(value:String):void {
+			    var data:ByteArray = new ByteArray();
+			    data.writeUTFBytes(value);
+			    EncryptedLocalStore.setItem(DATABASE_LOCATION, data);
+			}
+			
+			// read database location from local store
+			private static function getDBLocation():String {
+			    var bytes:ByteArray = EncryptedLocalStore.getItem(DATABASE_LOCATION);
+			    if (bytes) {
+			        return bytes.readUTFBytes(bytes.bytesAvailable);
+			    } else {
+			    	return null;
+			    }
+			}   
+
+			            
+        ]]>
+    </mx:Script>
+
+	<mx:Label x="10" y="10" color="#A9A9A9" text="Database location:"/>
+	<mx:TextInput id="dataFileLocationInput" x="10" y="26" width="203">
+		<mx:toolTip>Folder that will hold the pomodairo database file. Leave empty for default. NOTE: If you change this you will lose your current data!</mx:toolTip>
+	</mx:TextInput>
+	<mx:Button x="221" y="25" label="Browse" click="selectFile()"/>
+	
+	<mx:Button x="221" y="90" label="Save" click="save()" width="63"/>
+	<mx:Button x="221" y="121" label="Cancel" click="exit()"/>
+	
+</mx:Canvas>

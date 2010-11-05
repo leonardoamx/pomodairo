@@ -9,6 +9,7 @@
 	
 	    <mx:Script>
         <![CDATA[
+        	import com.pomodairo.components.config.ConfigPanel;
         	import mx.core.SoundAsset;
         	import mx.effects.effectClasses.SoundEffectInstance;
         	import mx.utils.ColorUtil;

@@ -4,6 +4,8 @@ package com.pomodairo.db
 	import com.pomodairo.Pomodoro;
 	import com.pomodairo.PomodoroEventDispatcher;
 	import com.pomodairo.RegexUtils;
+	import com.pomodairo.components.config.AdvancedConfigPanel;
+	import com.pomodairo.events.ConfigurationUpdatedEvent;
 	import com.pomodairo.events.PomodoroEvent;
 	
 	import flash.data.SQLConnection;
@@ -44,6 +46,8 @@ package com.pomodairo.db
 		
 		[Bindable]
 		public var config:Dictionary = new Dictionary();
+		
+		private var databaseFolderLocation:String;
 			
 		private var sqlConnectionFile:File;
 		private var sqlConnection:SQLConnection;
@@ -51,6 +55,7 @@ package com.pomodairo.db
 		private var dbCfgStatement:SQLStatement;
 		
 		public function Storage() {
+			databaseFolderLocation = AdvancedConfigPanel.getDatabaseLocation();
 			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.START_POMODORO, startPomodoro);
 			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.TIME_OUT, completeCurrentPomodoro);
 			PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.NEW_INTERRUPTION, addInterruption);
@@ -90,8 +95,13 @@ package com.pomodairo.db
 			markDone(e.pomodoro);
 		}
 		
-		public function initAndOpenDatabase():void {       		
-			sqlConnectionFile = File.userDirectory.resolvePath(DATABASE_FILE);
+		public function initAndOpenDatabase():void {
+			if (databaseFolderLocation == null) {       		
+				sqlConnectionFile = File.userDirectory.resolvePath(DATABASE_FILE);
+			} else {
+				sqlConnectionFile = new File(databaseFolderLocation+File.separator+DATABASE_FILE);
+			}
+			
 			sqlConnection = new SQLConnection();
 			
 			if(!sqlConnectionFile.exists) {
