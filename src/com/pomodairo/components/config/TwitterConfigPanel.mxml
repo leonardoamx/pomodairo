@@ -5,15 +5,14 @@
 
 <mx:Script>
         <![CDATA[
-        	import mx.controls.Alert;
-        	import com.pomodairo.events.ConfigurationUpdatedEvent;
         	import com.pomodairo.PomodoroEventDispatcher;
         	import com.pomodairo.db.Storage;
+        	import com.pomodairo.events.ConfigurationUpdatedEvent;
+        	
+        	import mx.controls.Alert;
         	
         	public static var ENABLED:String = "twitter.enabled";
         	public static var POST_POMODOROS:String = "twitter.doPost";
-        	public static var USERNAME:String = "twitter.username";
-        	public static var PASSWORD:String = "twitter.password";
         	public static var GROUP_USERNAME:String = "twitter.groupUsername";
         	
         	private var twitterEnabled:Boolean = new Boolean(false);
@@ -42,16 +41,6 @@
         			doPost = props[POST_POMODOROS] == "true";
         		}
         		
-        		if (props[USERNAME] != null) 
-        		{
-        			username = props[USERNAME];
-        		}
-        		
-        		if (props[PASSWORD] != null) 
-        		{
-        			password = props[PASSWORD];
-        		}
-        		
         		if (props[GROUP_USERNAME] != null) 
         		{
         			groupUsername = props[GROUP_USERNAME];
@@ -63,8 +52,6 @@
             {
         		enabledCheckbox.selected = twitterEnabled;
         		postCheckbox.selected = doPost;
-        		usernameField.text = username;
-        		passwordField.text = password;
         		groupUsernameField.text = groupUsername;
             }
         	
@@ -77,14 +64,10 @@
             {
             	twitterEnabled = enabledCheckbox.selected;
             	doPost = postCheckbox.selected;
-            	username = usernameField.text;
-            	password = passwordField.text;
             	groupUsername = groupUsernameField.text;
             	
             	Storage.instance.setConfigurationValue(ENABLED, ""+twitterEnabled);
             	Storage.instance.setConfigurationValue(POST_POMODOROS, ""+doPost);
-            	Storage.instance.setConfigurationValue(USERNAME, ""+username);
-            	Storage.instance.setConfigurationValue(PASSWORD, ""+password);
             	Storage.instance.setConfigurationValue(GROUP_USERNAME, ""+groupUsername);
             	exit();
             	
@@ -96,8 +79,6 @@
             	// Notify the world 
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, ENABLED, ""+twitterEnabled));
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, POST_POMODOROS, ""+doPost));
-            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, USERNAME, ""+username));
-            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, PASSWORD, ""+password));
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, GROUP_USERNAME, ""+groupUsername));
             }
             
@@ -114,14 +95,6 @@
 	<mx:CheckBox x="10" y="122" label="Post status updates" id="postCheckbox" />
 	<mx:Button x="221" y="90" label="Save" click="save()" width="63"/>
 	<mx:Button x="221" y="121" label="Cancel" click="exit()"/>
-	<mx:Label x="10" y="34" color="#A9A9A9" text="Twitter Username"/>
-	<mx:TextInput id="usernameField" x="10" y="50" width="130">
-		<mx:toolTip>Enter your Twitter username here.</mx:toolTip>
-	</mx:TextInput>
-	<mx:Label x="149" y="34" color="#A9A9A9" text="Twitter Password" width="104"/>
-	<mx:TextInput id="passwordField" x="149" y="50" width="135">
-		<mx:toolTip>Enter your Twitter password here. NOTE: It will stored in a non-safe way on your computer!</mx:toolTip>
-	</mx:TextInput>
 	<mx:Label x="10" y="78" color="#A9A9A9" text="Group Username"/>
 	<mx:TextInput id="groupUsernameField" x="10" y="94" width="130">
 		<mx:toolTip>Enter any username to be used for updates here.</mx:toolTip>

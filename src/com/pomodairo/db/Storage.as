@@ -595,7 +595,12 @@ package com.pomodairo.db
 			dbCfgStatement.execute();
 		}
 		
-
+		public function removeConfiguration(key:String):void
+		{
+			var sqlRemoveConfig:String = "DELETE FROM Config WHERE name='"+key+"';";
+			dbCfgStatement.text = sqlRemoveConfig;
+			dbCfgStatement.execute();
+		}
 		   
 		/* ----------------------------------------------------
 			        END OF CONFIGURATION TABLE STUFF

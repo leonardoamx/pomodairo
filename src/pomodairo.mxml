@@ -60,10 +60,6 @@
 				cfg.populate();
 				cfg.notifyConfiguration();
 				
-				var tcfg:TwitterConfigPanel = new TwitterConfigPanel();
-				tcfg.populate();
-				tcfg.notifyConfiguration();
-				
 				var advancedConfig:AdvancedConfigPanel = new AdvancedConfigPanel();
 				advancedConfig.populate();
 				advancedConfig.notifyConfiguration();
@@ -74,6 +70,12 @@
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.START_POMODORO, closeTaskList);
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, onPomodoroSelected);
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.TIME_OUT, onPomodoroTimeout);
+				
+				
+				// Dispatch Twitter config after initialization to avoid locking up in a fugly graphic mode
+				var tcfg:TwitterConfigPanel = new TwitterConfigPanel();
+				tcfg.populate();
+				tcfg.notifyConfiguration();
         	}
         	
         	private function checkForUpdates():void {
