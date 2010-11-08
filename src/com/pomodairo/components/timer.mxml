@@ -89,12 +89,45 @@
                 PomodoroEventDispatcher.getInstance().addEventListener(ConfigurationUpdatedEvent.UPDATED, onConfigurationChange);   	   	
             }
 			
+			
+			/**
+			 * This is the main function, will be called for every frame.
+			 * Check if time is up and perform other timer-related tasks.
+			 * 
+			 */
+			private function updateTimer(evt:TimerEvent):void {
+            	if (getTimer() >= baseTimer) {
+            		if (soundEnabled) {
+	            		var alarm:Sound = new alarmClass() as Sound;
+	            		alarm.play();
+            		}
+            		sendEvent(PomodoroEvent.TIME_OUT, null);
+            		pomodoroTimer.stop();
+            		stopTicTocSound();
+            		setTimerStyle(TIME_OUT);
+            		scheduleBreakTimerStart();
+            		startBlink();
+            	} else {
+	                var d:Date = new Date(baseTimer - getTimer());
+	                var min:String = (MIN_MASK + d.minutesUTC).substr(-MIN_MASK.length);
+	                var sec:String = (SEC_MASK + d.secondsUTC).substr(-SEC_MASK.length);
+	                counter.text = String(min + ":" + sec);
+	                if (min == "00") {
+	                	setTimerStyle(TIME_OUT);
+	                }
+	            }
+            }
+            
 			private function created():void {
 				counter.filters = [glow];
 			}
 			
+			/**
+			 * This is triggered by an event that flags that a task has been selected.
+			 * This can originate from multiple locations.
+			 */
 			private function onPomodoroSelected(e:PomodoroEvent):void {
-				if (!e.pomodoro.done) {
+				if (!e.pomodoro.done && !pomodoroTimer.running) {
 					taskManager.setActive(e.pomodoro);
 					stopBreakTimer();
 					showStartButton();
@@ -163,28 +196,7 @@
 				}
 			}
 
-            private function updateTimer(evt:TimerEvent):void {
-            	if (getTimer() >= baseTimer) {
-            		if (soundEnabled) {
-	            		var alarm:Sound = new alarmClass() as Sound;
-	            		alarm.play();
-            		}
-            		sendEvent(PomodoroEvent.TIME_OUT, null);
-            		pomodoroTimer.stop();
-            		stopTicTocSound();
-            		setTimerStyle(TIME_OUT);
-            		scheduleBreakTimerStart();
-            		startBlink();
-            	} else {
-	                var d:Date = new Date(baseTimer - getTimer());
-	                var min:String = (MIN_MASK + d.minutesUTC).substr(-MIN_MASK.length);
-	                var sec:String = (SEC_MASK + d.secondsUTC).substr(-SEC_MASK.length);
-	                counter.text = String(min + ":" + sec);
-	                if (min == "00") {
-	                	setTimerStyle(TIME_OUT);
-	                }
-	            }
-            }
+            
             
             private function startBreakTimer(evt:TimerEvent):void
             {
@@ -221,8 +233,8 @@
             private function startTimer(event:Event = null):void {
             	setTimerStyle(DEFAULT);
                 baseTimer = getTimer();
-                baseTimer += pomodoroLengthInMinutes*60*1000+1000;
-                //baseTimer += 6*1000;
+                // baseTimer += pomodoroLengthInMinutes*60*1000+1000;
+                baseTimer += 6*1000;
                 pomodoroTimer.start();
                 showStopButton();
                 hideCloseNextButton();
@@ -344,6 +356,9 @@
             	nextTaskButton.visible = false;
             }
 
+			/**
+			 * Stop the Timer
+			 */
             private function stopTimer(event:Event=null):void {
                 pomodoroTimer.stop();
                 stopTicTocSound();
