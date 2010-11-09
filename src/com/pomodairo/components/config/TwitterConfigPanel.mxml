@@ -91,13 +91,16 @@
         ]]>
     </mx:Script>
 
-	<mx:CheckBox id="enabledCheckbox" x="10" y="10" label="Use Twitter (experimental)" change="onEnableTwitterChanged(event)"/>
-	<mx:CheckBox x="10" y="122" label="Post status updates" id="postCheckbox" />
-	<mx:Button x="221" y="90" label="Save" click="save()" width="63"/>
-	<mx:Button x="221" y="121" label="Cancel" click="exit()"/>
-	<mx:Label x="10" y="78" color="#A9A9A9" text="Group Username"/>
-	<mx:TextInput id="groupUsernameField" x="10" y="94" width="130">
+	<mx:CheckBox id="enabledCheckbox" x="10" y="10" label="Use Twitter (still experimental)" change="onEnableTwitterChanged(event)"/>
+	
+	<mx:Label x="10" y="40" color="#A9A9A9" text="Group Username"/>
+	<mx:TextInput id="groupUsernameField" x="10" y="56" width="130">
 		<mx:toolTip>Enter any username to be used for updates here.</mx:toolTip>
 	</mx:TextInput>
+	
+	<mx:CheckBox x="10" y="88" label="Post status updates" id="postCheckbox" />
+	
+	<mx:Button x="221" y="90" label="Save" click="save()" width="63"/>
+	<mx:Button x="221" y="121" label="Cancel" click="exit()"/>
 	
 </mx:Canvas>

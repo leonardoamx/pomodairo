@@ -230,8 +230,8 @@
             <menuitem label="Menu">
                 <menuitem label="Configuration" action="config"/>
                 <menuitem label="Statistics" action="statistics"/>
-                <menuitem label="Twitter (experimental)" action="twitter"/>
-                <menuitem label="Advanced Configuration" action="advancedConfig"/>
+                <menuitem label="Twitter" action="twitter"/>
+                <menuitem label="Advanced" action="advancedConfig"/>
             </menuitem>
         </mx:XMLList>
     </mx:MenuBar>

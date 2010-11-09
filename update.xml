@@ -3,11 +3,10 @@
 	<version>1.7</version>
 	<url>http://pomodairo.googlecode.com/files/pomodairo-1.7.air</url>
 	<description>
-		* Pomodairo 1.7 Release notes
-		 - Cleaned up GUI
-		 - Added menu
-		 - Added right-click menu in task list
-		 - Added edit task functionality
-		 - Added experimental Twitter integration
+		* Pomodairo 1.8 Release notes
+		 - Added config for continuous ticking sound
+		 - Fixed Twitter OAuth authentication
+		 - Set location of database, enables computer synchronization
+		 - Fix for duration when in timezones with +-xx:30
 	</description>
 </update>
