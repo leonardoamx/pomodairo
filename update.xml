@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <update xmlns="http://ns.adobe.com/air/framework/update/description/1.0">
-	<version>1.7</version>
-	<url>http://pomodairo.googlecode.com/files/pomodairo-1.7.air</url>
+	<version>1.8</version>
+	<url>http://pomodairo.googlecode.com/files/pomodairo-1.8.air</url>
 	<description>
 		* Pomodairo 1.8 Release notes
 		 - Added config for continuous ticking sound
 		 - Fixed Twitter OAuth authentication
 		 - Set location of database, enables computer synchronization
 		 - Fix for duration when in timezones with +-xx:30
+		 - Added miniview that can be toggled on/off
 	</description>
 </update>
