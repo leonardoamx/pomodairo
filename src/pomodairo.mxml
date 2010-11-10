@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" 
-	layout="absolute" height="166" width="320" showFlexChrome="false"
+	layout="absolute" height="165" width="320" showFlexChrome="false"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	initialize="beforeInit()"
 	creationComplete="init()" xmlns:views="com.views.*" xmlns:ns1="com.pomodairo.components.*"
@@ -13,25 +13,28 @@
 	
     <mx:Script>
         <![CDATA[
-        	import com.pomodairo.twitter.TwitterManager;
-        	import com.pomodairo.components.config.AdvancedConfigPanel;
-        	import com.pomodairo.components.config.TwitterConfigPanel;
-        	import com.pomodairo.components.config.ConfigPanel;
-        	import mx.events.MenuEvent;
-        	import mx.controls.Alert;
-        	import com.pomodairo.components.StatisticsWindow;
-        	import com.pomodairo.events.ConfigurationUpdatedEvent;
-        	import com.pomodairo.TaskManager;
-        	import com.pomodairo.db.Storage;
-        	import mx.managers.PopUpManager;
-        	import air.update.events.UpdateEvent;
-        	import air.update.ApplicationUpdaterUI;
-        	import com.pomodairo.events.PomodoroEvent;
-        	import com.pomodairo.PomodoroEventDispatcher;
-        	import com.pomodairo.components.timer;
-        	import com.pomodairo.Pomodoro;
-        	import com.pomodairo.components.PomoItemInput;
-        	import mx.controls.TextInput;
+			import air.update.ApplicationUpdaterUI;
+			import air.update.events.UpdateEvent;
+			
+			import com.pomodairo.Pomodoro;
+			import com.pomodairo.PomodoroEventDispatcher;
+			import com.pomodairo.TaskManager;
+			import com.pomodairo.components.PomoItemInput;
+			import com.pomodairo.components.StatisticsWindow;
+			import com.pomodairo.components.config.AdvancedConfigPanel;
+			import com.pomodairo.components.config.ConfigPanel;
+			import com.pomodairo.components.config.TwitterConfigPanel;
+			import com.pomodairo.components.timer;
+			import com.pomodairo.db.Storage;
+			import com.pomodairo.events.ConfigurationUpdatedEvent;
+			import com.pomodairo.events.GuiChangeEvent;
+			import com.pomodairo.events.PomodoroEvent;
+			import com.pomodairo.twitter.TwitterManager;
+			
+			import mx.controls.Alert;
+			import mx.controls.TextInput;
+			import mx.events.MenuEvent;
+			import mx.managers.PopUpManager;
         
 			private var appUpdater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
 			
@@ -70,7 +73,7 @@
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.START_POMODORO, closeTaskList);
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.SELECTED, onPomodoroSelected);
         		PomodoroEventDispatcher.getInstance().addEventListener(PomodoroEvent.TIME_OUT, onPomodoroTimeout);
-				
+				PomodoroEventDispatcher.getInstance().addEventListener(GuiChangeEvent.UPDATED, onGuiChange);
 				
 				// Dispatch Twitter config after initialization to avoid locking up in a fugly graphic mode
 				var tcfg:TwitterConfigPanel = new TwitterConfigPanel();
@@ -124,12 +127,11 @@
             }
             
             private function closeTaskList(event:PomodoroEvent=null):void {
-            	this.height = 166;
+            	this.height = 165;
             	taskListPanel.visible = false;
             }
 
             private function newInterruption():void {
-            	trace("Add interruption");
             	var input:PomoItemInput = new PomoItemInput();
             	input.type = Pomodoro.TYPE_INTERRUPTION;
             	input.reference = taskManager.activeTask;
@@ -138,7 +140,6 @@
             }
             
              private function newUnplanned():void {
-            	trace("Add unplanned");
             	var input:PomoItemInput = new PomoItemInput();
             	input.type = Pomodoro.TYPE_UNPLANNED;
             	input.reference = taskManager.activeTask;
@@ -151,7 +152,23 @@
             	Storage.instance.setConfigurationValue("window.y",""+this.nativeWindow.y);
             }
             
+			private function onGuiChange(event:GuiChangeEvent):void {
+				if (event.miniView) {
+					trace("Switch application to mini view");
+					myMenuBar.enabled = false;
+					closeTaskList();
+					this.height = 52;
+				} else {
+					trace("Switch application to regular view");
+					myMenuBar.enabled = true;
+					this.height = 165;
+				}			
+			}
             
+			private function toggleViewState():void {
+				timerCanvas.toggleMiniView();
+			}
+			
     		/* ----------------------------------------------------
         		MENU STUFF
 	   	  	---------------------------------------------------- */
@@ -210,6 +227,7 @@
 	<mx:Panel x="0" y="0" height="164" width="320" layout="absolute" mouseDown="{nativeWindow.startMove()}">				
 		<ns1:timer id="timerCanvas" x="0" y="0" pomodoroLengthInMinutes="25">
 		</ns1:timer>
+		
 		<mx:ControlBar id="controls" height="42" y="88">
 			<mx:Button label="Task List" click="toggleTaskList()" toolTip="Open/close task list"/>
 			<mx:Button label="Unplanned" id="unplannedButton" click="newUnplanned()" toolTip="Add unplanned" enabled="false"/>
@@ -233,6 +251,10 @@
                 <menuitem label="Twitter" action="twitter"/>
                 <menuitem label="Advanced" action="advancedConfig"/>
             </menuitem>
+			
         </mx:XMLList>
     </mx:MenuBar>
+	
+	<mx:Button x="218" y="1" height="21" width="54" id="toggleViewButton" label="view" click="toggleViewState()"/>
+	
 </mx:WindowedApplication>

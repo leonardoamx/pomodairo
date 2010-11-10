@@ -9,31 +9,34 @@
 	
 	    <mx:Script>
         <![CDATA[
-        	import com.pomodairo.components.config.ConfigPanel;
-        	import mx.core.SoundAsset;
-        	import mx.effects.effectClasses.SoundEffectInstance;
-        	import mx.utils.ColorUtil;
-        	import mx.controls.ColorPicker;
-        	import com.pomodairo.RegexUtils;
-        	import mx.controls.LinkButton;
-        	import com.pomodairo.TaskManager;
-        	import mx.collections.ArrayCollection;
-        	import com.pomodairo.events.ConfigurationUpdatedEvent;
-        	import com.pomodairo.ConfigProperty;
-        	import com.pomodairo.db.Storage;
-        	import mx.managers.PopUpManager;
-        	import com.pomodairo.events.PomodoroEvent;
-        	import com.pomodairo.PomodoroEventDispatcher;
-        	import com.pomodairo.Pomodoro;
-        	import mx.binding.utils.BindingUtils;
-        	import flash.utils.getTimer;
-            import flash.utils.Timer;
-            import flash.events.TimerEvent;
-		    import flash.display.Sprite;
-		    import flash.media.Sound;
-		    import flash.media.SoundChannel;
-		    import mx.effects.easing.Linear;
-		    import mx.effects.SoundEffect;
+			import com.pomodairo.ConfigProperty;
+			import com.pomodairo.Pomodoro;
+			import com.pomodairo.PomodoroEventDispatcher;
+			import com.pomodairo.RegexUtils;
+			import com.pomodairo.TaskManager;
+			import com.pomodairo.components.config.ConfigPanel;
+			import com.pomodairo.db.Storage;
+			import com.pomodairo.events.ConfigurationUpdatedEvent;
+			import com.pomodairo.events.GuiChangeEvent;
+			import com.pomodairo.events.PomodoroEvent;
+			
+			import flash.display.Sprite;
+			import flash.events.TimerEvent;
+			import flash.media.Sound;
+			import flash.media.SoundChannel;
+			import flash.utils.Timer;
+			import flash.utils.getTimer;
+			
+			import mx.binding.utils.BindingUtils;
+			import mx.collections.ArrayCollection;
+			import mx.controls.ColorPicker;
+			import mx.controls.LinkButton;
+			import mx.core.SoundAsset;
+			import mx.effects.SoundEffect;
+			import mx.effects.easing.Linear;
+			import mx.effects.effectClasses.SoundEffectInstance;
+			import mx.managers.PopUpManager;
+			import mx.utils.ColorUtil;
 		    
 		    private static var DEFAULT:String = "default";
 		    private static var TIME_OUT:String = "timeout";
@@ -112,14 +115,23 @@
 	                var min:String = (MIN_MASK + d.minutesUTC).substr(-MIN_MASK.length);
 	                var sec:String = (SEC_MASK + d.secondsUTC).substr(-SEC_MASK.length);
 	                counter.text = String(min + ":" + sec);
-	                if (min == "00") {
-	                	setTimerStyle(TIME_OUT);
-	                }
+					miniCounter.text = String(min + ":" + sec);
+					
+					if (min == "00") {
+						setTimerStyle(TIME_OUT);
+					}
+					
+					if (timeProgressBar != null) {
+						var progress:Number = Number(int(min)*60+int(sec));
+						var totalTime:Number = pomodoroLengthInMinutes*60;
+						timeProgressBar.setProgress(totalTime-progress, totalTime);
+					}
 	            }
             }
             
 			private function created():void {
 				counter.filters = [glow];
+				miniCounter.filters = [glow];
 			}
 			
 			/**
@@ -174,22 +186,28 @@
 				switch (status) {
 					case DEFAULT:
 						counter.setStyle("color", "Yellow");
+						miniCounter.setStyle("color", "Yellow");
 						glow.color = 16776960;
 						counter.filters = [glow];
+						miniCounter.filters = [glow];
 						stopBlink();
 						counter.visible = true;
 						break;
 						
 					case TIME_OUT:
 						counter.setStyle("color", "Red");
+						miniCounter.setStyle("color", "Red");
 						glow.color = 16711680;
 						counter.filters = [glow];
+						miniCounter.filters = [glow];
 						break;
 						
 					case BREAK:
 						counter.setStyle("color", "Green");
+						miniCounter.setStyle("color", "Green");
 						glow.color = 26112;
 						counter.filters = [glow];
+						miniCounter.filters = [glow];
 						stopBlink();
 						counter.visible = true;
 						break;	
@@ -214,6 +232,7 @@
 	            var min:String = (MIN_MASK + d.minutes).substr(-MIN_MASK.length);
 	            var sec:String = (SEC_MASK + (d.seconds)).substr(-SEC_MASK.length);
                 counter.text = String(min + ":" + sec);
+				miniCounter.text = String(min + ":" + sec);
             }
             
             private function scheduleBreakTimerStart():void
@@ -316,6 +335,7 @@
         		newTaskButton.visible = false;
         		
         		counter.text = toTwoDigitString(pomodoroLengthInMinutes)+":00";
+				miniCounter.text = toTwoDigitString(pomodoroLengthInMinutes)+":00";
         		var pomodoro:Pomodoro = taskManager.activeTask;
     			pomodoroLabel.label = pomodoro.shortDescription;
         		appTitle = "pomodairo";
@@ -335,7 +355,8 @@
             	stopTimerButton.visible = false;
             	stopBreakButton.visible = false;
             	newTaskButton.visible = true; 
-            	counter.text = toTwoDigitString(pomodoroLengthInMinutes)+":00";           	
+            	counter.text = toTwoDigitString(pomodoroLengthInMinutes)+":00";  
+				miniCounter.text = toTwoDigitString(pomodoroLengthInMinutes)+":00";
             }            
             
             private function showNextTaskButton():void 
@@ -444,6 +465,17 @@
 	        		ticToc.stop();
 	        	}
 	        }
+			
+			public function toggleMiniView():void {
+				if (currentState == null) {
+					currentState = "minimal";
+				} else {
+					currentState = null;
+				}
+				var evt:GuiChangeEvent = new GuiChangeEvent();
+				evt.miniView = currentState == "minimal";
+				PomodoroEventDispatcher.getInstance().dispatchEvent(evt);
+			}
 
         ]]>
     </mx:Script>
@@ -460,8 +492,30 @@
             font-family: Digital; 
             font-size: 80pt;    
         }
+		
+		.MiniClockText 
+		{ 
+			font-family: Digital; 
+			font-size: 28pt;    
+		}
 
     </mx:Style>
+	    <mx:states>
+	    	    <mx:State name="minimal">
+	    	    	    <mx:RemoveChild target="{counter}"/>
+	    	    	    <mx:RemoveChild target="{newTaskButton}"/>
+	    	    	    <mx:RemoveChild target="{pomodoroLabel}"/>
+						<mx:RemoveChild target="{startTimerButton}"/>
+						<mx:RemoveChild target="{stopTimerButton}"/>
+						<mx:RemoveChild target="{stopBreakButton}"/>
+						<mx:RemoveChild target="{newTaskButton}"/>
+						<mx:SetProperty target="{miniCounter}" name="visible" value="true"/>
+						<mx:AddChild position="lastChild">
+							<mx:ProgressBar id="timeProgressBar" x="4" y="4" width="220" height="22" label="{taskManager.activeTask.shortDescription}" 
+											labelPlacement="center" mode="manual"/>
+						</mx:AddChild>
+	    	    </mx:State>
+	    </mx:states>
 	
 	<!--
 	Glass effect wanted! =)
@@ -472,14 +526,17 @@
 	<mx:Button id="stopBreakButton" 	x="216" y="10" height="50" width="90" visible="false" 	label="Stop Break" click="stopBreakTimer();showClosePomoButton();"	/>
 	<mx:Button id="newTaskButton" 		x="216" y="10" height="50" width="90" 					label="New Task" click="createPomodoro()" />
 	
-	<!-- Clock Counter -->
+	<!-- Clock Counter(s) -->
+	<!-- Regular Counter -->
 	<mx:Label id="counter" x="6" y="0" height="69" styleName="ClockText" text="{toTwoDigitString(pomodoroLengthInMinutes)}:00" color="#FFFF00" />
 	<mx:GlowFilter id="glow" color="#FFFF00" alpha="1" blurX="8" blurY="8" strength="1"/>
-
 	<mx:LinkButton id="pomodoroLabel" y="78" label="{taskManager.activeTask.shortDescription}" width="90%" height="17" click="openBugtracker()" textAlign="left" x="10" toolTip="{taskManager.activeTask.longDescription}"/>
 	
 	<mx:Button id="closePomodoroButton" x="216" y="70" height="25" width="90" visible="false" label="Done" click="onClosePomoClicked()" />
 	<mx:Button id="nextTaskButton" 		x="216" y="70" height="25" width="90" visible="false" label="Next" click="onNextTaskClicked()" />
+	
+	<!-- Mini View Objects (not visible by default) -->
+	<mx:Label id="miniCounter" x="240" y="0" styleName="MiniClockText" text="{toTwoDigitString(pomodoroLengthInMinutes)}:00" color="#FFFF00" visible="false"/>
 	
 </mx:Canvas>
 
