@@ -13,15 +13,9 @@
         	public static var ALWAYS_ON_TOP:String = "window.alwaysOnTop";
         	public static var UPDATE_TASKBAR:String = "window.updateTaskbar";
         	
-        	public static var FADE_TICKING_SOUND:String = "sound.fadeTicking";
-        	
-        	private var soundEnabled:Boolean = new Boolean(true);
-        	private var volume:Number = new Number(100);
-        	private var pomodoroLength:Number = new Number(25);  
         	private var rememberPosition:Boolean = new Boolean(true);
         	private var alwaysOnTop:Boolean = new Boolean(false);
         	private var updateTaskbar:Boolean = new Boolean(true);
-        	private var fadeTicking:Boolean = new Boolean(true);
         	private var urlToOpen:String = "";
         	
         	private function init():void
@@ -33,21 +27,6 @@
         	public function populate():void
         	{
         		var props:Dictionary = Storage.instance.config;
-        		if (props["volume"] != null) 
-        		{
-        			volume = props["volume"];
-        		}
-        		
-        		if (props["sound"] != null) 
-        		{
-        			soundEnabled = props["sound"] == "true";
-        		}
-        		
-        		if (props["pomodoroLength"] != null) 
-        		{
-        			pomodoroLength = props["pomodoroLength"];
-        		}
-        		
         		if (props[REMEMBER_POSITION] != null) 
         		{
         			rememberPosition = props[REMEMBER_POSITION] == "true";
@@ -68,23 +47,14 @@
         			urlToOpen = props["urlToOpen"];
         		}
         		
-        		if (props[FADE_TICKING_SOUND] != null) 
-        		{
-        			fadeTicking = props[FADE_TICKING_SOUND] == "true";
-        		}
-        		
         	}
         	
         	private function applyGuiValues():void
             {
-        		volumeSlider.value = volume;
-        		soundCheckbox.selected = soundEnabled;
-        		lengthSlider.value = pomodoroLength;
         		positionCheckbox.selected = rememberPosition;
         		alwaysOnTopCheckbox.selected = alwaysOnTop;
         		updateTaskbarCheckbox.selected = updateTaskbar;
         		urlToOpenInput.text = urlToOpen;
-        		fadeTickingCheckbox.selected = fadeTicking;
             }
         	
             private function exit():void
@@ -94,23 +64,15 @@
             
             public function save():void
             {
-            	volume = volumeSlider.value;
-            	soundEnabled = soundCheckbox.selected;
-            	pomodoroLength = lengthSlider.value;
             	rememberPosition = positionCheckbox.selected;
             	alwaysOnTop = alwaysOnTopCheckbox.selected;
             	updateTaskbar = updateTaskbarCheckbox.selected;
             	urlToOpen = urlToOpenInput.text;
-            	fadeTicking = fadeTickingCheckbox.selected;
             	
-            	Storage.instance.setConfigurationValue("volume", ""+volume);
-            	Storage.instance.setConfigurationValue("sound", ""+soundEnabled);
-            	Storage.instance.setConfigurationValue("pomodoroLength", ""+pomodoroLength);
             	Storage.instance.setConfigurationValue(REMEMBER_POSITION, ""+rememberPosition);
             	Storage.instance.setConfigurationValue(ALWAYS_ON_TOP, ""+alwaysOnTop);
             	Storage.instance.setConfigurationValue(UPDATE_TASKBAR, ""+updateTaskbar);
             	Storage.instance.setConfigurationValue("urlToOpen", urlToOpen);
-            	Storage.instance.setConfigurationValue(FADE_TICKING_SOUND, ""+fadeTicking);
             	exit();
             	
             	notifyConfiguration();
@@ -119,32 +81,21 @@
             public function notifyConfiguration():void
             {
             	// Notify the world 
-            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, "volume", ""+volume));
-            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, "sound", ""+soundEnabled));
-            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, "pomodoroLength", ""+pomodoroLength));
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, REMEMBER_POSITION, ""+rememberPosition));
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, ALWAYS_ON_TOP, ""+alwaysOnTop));
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, UPDATE_TASKBAR, ""+updateTaskbar));
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, "urlToOpen", urlToOpen));
-            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, FADE_TICKING_SOUND, ""+fadeTicking));
             }
 			            
         ]]>
     </mx:Script>
-
-	<mx:CheckBox id="soundCheckbox" x="184" y="10" label="Sound enabled"/>
-	<mx:CheckBox x="184" y="44.5" label="Always on top" id="alwaysOnTopCheckbox" />
-	<mx:CheckBox id="fadeTickingCheckbox" x="184" y="27" label="Fade ticking"/>
-	<mx:CheckBox x="184" y="62" label="Update taskbar" id="updateTaskbarCheckbox"  selected="true">
+	<mx:CheckBox x="10" y="10" label="Always on top" id="alwaysOnTopCheckbox" />
+	<mx:CheckBox x="10" y="40" label="Update taskbar" id="updateTaskbarCheckbox"  selected="true">
 		<mx:toolTip>Should the taskbar icon be updated with the current pomodoro and time remaining?</mx:toolTip>
 	</mx:CheckBox>
 	<mx:Button x="221" y="90" label="Save" click="save()" width="63"/>
 	<mx:Button x="221" y="121" label="Cancel" click="exit()"/>
-	<mx:HSlider id="volumeSlider" x="10" y="12" minimum="0" maximum="100" snapInterval="5"/>
-	<mx:Label x="10" y="4" text="Volume" color="#A9A9A9"/>
-	<mx:HSlider id="lengthSlider" x="10" y="50" snapInterval="1" minimum="1" maximum="60"/>
-	<mx:Label x="10" y="39" text="Pomodoro length (minutes)" color="#A9A9A9"/>
-	<mx:CheckBox x="10" y="77.5" label="Remember position" id="positionCheckbox" selected="true"/>
+	<mx:CheckBox x="10" y="70" label="Remember pos." id="positionCheckbox" selected="true"/>
 	<mx:Label x="10" y="107" color="#A9A9A9" text="URL to open (e.g. to Bugtracker):"/>
 	<mx:TextInput id="urlToOpenInput" x="10" y="122" width="203">
 		<mx:toolTip>URL to open, when clicking on the active task label that contains a hash number (e.g. task name 'Write unit tests #123' could open URL 'bugtracker.mycompany.com?id=123').</mx:toolTip>

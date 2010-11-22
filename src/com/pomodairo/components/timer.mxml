@@ -13,8 +13,11 @@
 			import com.pomodairo.Pomodoro;
 			import com.pomodairo.PomodoroEventDispatcher;
 			import com.pomodairo.RegexUtils;
+			import com.pomodairo.SoundPlayer;
 			import com.pomodairo.TaskManager;
 			import com.pomodairo.components.config.ConfigPanel;
+			import com.pomodairo.components.config.SoundConfigPanel;
+			import com.pomodairo.components.config.TimingConfigPanel;
 			import com.pomodairo.db.Storage;
 			import com.pomodairo.events.ConfigurationUpdatedEvent;
 			import com.pomodairo.events.GuiChangeEvent;
@@ -41,15 +44,10 @@
 		    private static var DEFAULT:String = "default";
 		    private static var TIME_OUT:String = "timeout";
 		    private static var BREAK:String = "break";
+			private static var BREAK_OVER:String = "break_over";
 		    
 		    [Bindable]
 		    public var taskManager:TaskManager = TaskManager.instance;
-		    
-        	[Embed(source="alarm.mp3")]
-        	public var alarmClass:Class;
-        	
-        	[Embed(source="ticking.mp3")]
-        	public var tickClass:Class;
 						
 			[Bindable]
 			public var appTitle:String = "pomodairo";
@@ -59,10 +57,19 @@
             private const TIMER_INTERVAL:int = 10;
             private const DELAY_BEFORE_BREAK_STARTS:int = 5000; // Milliseconds
 
-			private var ticToc:SoundChannel;
-
 			[Bindable]
 			public var pomodoroLengthInMinutes:Number = 25;
+			
+			[Bindable]
+			public var shortBreakLengthInMinutes:Number = 10;
+			
+			[Bindable]
+			public var longBreakLengthInMinutes:Number = 10;
+			
+			[Bindable]
+			public var longBreakInterval:Number = 4;
+			
+			private var pomodoroCounter:Number = 0;
 			
 			private var urlToOpen:String = "";
 
@@ -72,11 +79,9 @@
             
             private var blinkTimer:Timer = new Timer(300, 0);
             
-            private var soundEnabled:Boolean = true;
-            
-            private var fadeSound:Boolean = true;
-            
             private var updateTaskbar:Boolean = true;
+			
+			private var soundPlayer:SoundPlayer = new SoundPlayer();
             
             private function init():void {
                 pomodoroTimer = new Timer(TIMER_INTERVAL);
@@ -100,16 +105,17 @@
 			 */
 			private function updateTimer(evt:TimerEvent):void {
             	if (getTimer() >= baseTimer) {
-            		if (soundEnabled) {
-	            		var alarm:Sound = new alarmClass() as Sound;
-	            		alarm.play();
-            		}
+					soundPlayer.playAlarm();
             		sendEvent(PomodoroEvent.TIME_OUT, null);
+					pomodoroCounter++;
             		pomodoroTimer.stop();
             		stopTicTocSound();
             		setTimerStyle(TIME_OUT);
             		scheduleBreakTimerStart();
             		startBlink();
+					if (currentState == "minimal") {
+						toggleMiniView();
+					}
             	} else {
 	                var d:Date = new Date(baseTimer - getTimer());
 	                var min:String = (MIN_MASK + d.minutesUTC).substr(-MIN_MASK.length);
@@ -129,6 +135,33 @@
 	            }
             }
             
+			private function updateBreakTimer(evt:TimerEvent):void 
+			{
+				// Check if break time is over
+				if (pomodoroCounter % longBreakInterval == 0) {
+					// Check long break
+					if (getTimer() >= baseTimer + longBreakLengthInMinutes*60*1000) {
+						trace("Long break over. Pomodoros so far: "+pomodoroCounter);
+						startBlink();
+						soundPlayer.playAlarm();
+						breakTimer.stop();
+					}
+				} else {
+					// Check short break 
+					if (getTimer() >= baseTimer + shortBreakLengthInMinutes*60*1000) {
+						trace("Short break over. Pomodoros so far: "+pomodoroCounter);
+						startBlink();
+						soundPlayer.playAlarm();
+						breakTimer.stop();
+					}
+				}
+				var d:Date = new Date(getTimer() - baseTimer);
+				var min:String = (MIN_MASK + d.minutes).substr(-MIN_MASK.length);
+				var sec:String = (SEC_MASK + (d.seconds)).substr(-SEC_MASK.length);
+				counter.text = String(min + ":" + sec);
+				miniCounter.text = String(min + ":" + sec);
+			}
+			
 			private function created():void {
 				counter.filters = [glow];
 				miniCounter.filters = [glow];
@@ -147,34 +180,27 @@
 			}
 			
 			private function onConfigurationChange(e:ConfigurationUpdatedEvent):void {
-				if (e.configElement.name == "pomodoroLength") 
-				{
+				if (e.configElement.name == TimingConfigPanel.POMODORO_LENGTH) {
 					pomodoroLengthInMinutes = new Number(e.configElement.value);
 				}
 				
-				if (e.configElement.name == "sound") 
-				{
-					soundEnabled = e.configElement.value == "true";
+				if (e.configElement.name == TimingConfigPanel.SHORT_BREAK_LENGTH) {
+					shortBreakLengthInMinutes = new Number(e.configElement.value);
 				}
 				
-				if (e.configElement.name == ConfigPanel.FADE_TICKING_SOUND) 
-				{
-					fadeSound = e.configElement.value == "true";
+				if (e.configElement.name == TimingConfigPanel.LONG_BREAK_LENGTH) {
+					longBreakLengthInMinutes = new Number(e.configElement.value);
 				}
 				
-				if (e.configElement.name == "volume") 
-				{
-					var volume:Number = new Number(e.configElement.value)/100;
-					SoundMixer.soundTransform = new SoundTransform(volume);
+				if (e.configElement.name == TimingConfigPanel.LONG_BREAK_INTERVAL) {
+					longBreakInterval = new Number(e.configElement.value);
 				}
 				
-				if (e.configElement.name == "urlToOpen") 
-				{
+				if (e.configElement.name == "urlToOpen") {
 					urlToOpen = e.configElement.value;
 				}
 				
-				if (e.configElement.name == ConfigPanel.UPDATE_TASKBAR) 
-				{
+				if (e.configElement.name == ConfigPanel.UPDATE_TASKBAR) {
 					this.updateTaskbar = e.configElement.value == "true";
 					if (!updateTaskbar) {
 						appTitle = "Pomodairo";
@@ -211,10 +237,9 @@
 						stopBlink();
 						counter.visible = true;
 						break;	
+					
 				}
 			}
-
-            
             
             private function startBreakTimer(evt:TimerEvent):void
             {
@@ -224,15 +249,6 @@
             	showBreakButton();
             	pomodoroLabel.label = "On Break";
 				sendEvent(PomodoroEvent.START_BREAK, "");
-            }
-            
-            private function updateBreakTimer(evt:TimerEvent):void 
-            {
-			    var d:Date = new Date(getTimer() - baseTimer);
-	            var min:String = (MIN_MASK + d.minutes).substr(-MIN_MASK.length);
-	            var sec:String = (SEC_MASK + (d.seconds)).substr(-SEC_MASK.length);
-                counter.text = String(min + ":" + sec);
-				miniCounter.text = String(min + ":" + sec);
             }
             
             private function scheduleBreakTimerStart():void
@@ -252,8 +268,8 @@
             private function startTimer(event:Event = null):void {
             	setTimerStyle(DEFAULT);
                 baseTimer = getTimer();
-                baseTimer += pomodoroLengthInMinutes*60*1000+1000;
-                // baseTimer += 6*1000;
+                // baseTimer += pomodoroLengthInMinutes*60*1000+1000;
+                baseTimer += 5*1000;
                 pomodoroTimer.start();
                 showStopButton();
                 hideCloseNextButton();
@@ -261,7 +277,9 @@
                 // Dispatch event
                 sendEvent(PomodoroEvent.START_POMODORO, null);
                 
-                // Play beautiful ticking sound, but fade it out so that Fredrik doesn't go crazy.
+                // Play beautiful ticking sound
+				soundPlayer.playTicTocSound();
+				/*
                 if (soundEnabled) {
                 	
                 	if (fadeSound) {
@@ -278,7 +296,7 @@
             			var sound:SoundAsset = new tickClass() as SoundAsset;
 	            		ticToc = sound.play(0, int.MAX_VALUE);
                 	}
-                }
+                }*/
             }
             
             private function updateAppTitle(evt:TimerEvent):void
@@ -407,11 +425,14 @@
             	}
             	return ""+number;
             }
-            
+			
             public function startBlink():void
 	        {
 	            blinkTimer.addEventListener(TimerEvent.TIMER, toggleText );
 	            blinkTimer.start();
+				if (currentState == "minimal") {
+					toggleMiniView();
+				}
 	        }
 	        
 	        public function stopBlink():void
@@ -461,9 +482,7 @@
 	        }
 	        
 	        private function stopTicTocSound():void {
-	        	if (ticToc != null) {
-	        		ticToc.stop();
-	        	}
+				soundPlayer.stopTicTocSound();
 	        }
 			
 			public function toggleMiniView():void {

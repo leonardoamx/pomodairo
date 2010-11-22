@@ -23,6 +23,8 @@
 			import com.pomodairo.components.StatisticsWindow;
 			import com.pomodairo.components.config.AdvancedConfigPanel;
 			import com.pomodairo.components.config.ConfigPanel;
+			import com.pomodairo.components.config.SoundConfigPanel;
+			import com.pomodairo.components.config.TimingConfigPanel;
 			import com.pomodairo.components.config.TwitterConfigPanel;
 			import com.pomodairo.components.timer;
 			import com.pomodairo.db.Storage;
@@ -66,6 +68,14 @@
 				var advancedConfig:AdvancedConfigPanel = new AdvancedConfigPanel();
 				advancedConfig.populate();
 				advancedConfig.notifyConfiguration();
+				
+				var soundConfig:SoundConfigPanel = new SoundConfigPanel();
+				soundConfig.populate();
+				soundConfig.notifyConfiguration();
+				
+				var timingConfig:TimingConfigPanel = new TimingConfigPanel();
+				timingConfig.populate();
+				timingConfig.notifyConfiguration();
 			}
 				
         	private function init():void {
@@ -79,6 +89,9 @@
 				var tcfg:TwitterConfigPanel = new TwitterConfigPanel();
 				tcfg.populate();
 				tcfg.notifyConfiguration();
+				
+				// Display task list on startup
+				toggleTaskList();
         	}
         	
         	private function checkForUpdates():void {
@@ -178,11 +191,17 @@
                 	showSettingsDialog();
                 } else if (event.item.@action == 'statistics') {
                 	showStatisticsPanel();
-                }  else if (event.item.@action == 'twitter') {
+                } else if (event.item.@action == 'twitter') {
                 	showTwitterConfigPanel();
-                }  else if (event.item.@action == 'advancedConfig') {
+                } else if (event.item.@action == 'advancedConfig') {
                 	showAdvancedSettingsDialog();
-                } 
+                } else if (event.item.@action == 'sounds') {
+					showSoundsSettingsDialog();
+				} else if (event.item.@action == 'timing') {
+					showTimingSettingsDialog();
+				} else if (event.item.@action == 'donate') {
+					// openDonatePage();
+				}
             }
             
             private function showSettingsDialog():void {
@@ -210,6 +229,18 @@
             	PopUpManager.addPopUp(dialog, this, true);
                 PopUpManager.bringToFront(dialog);
             }
+			
+			private function showSoundsSettingsDialog():void {
+				var dialog:SoundConfigPanel = new SoundConfigPanel();
+				PopUpManager.addPopUp(dialog, this, true);
+				PopUpManager.bringToFront(dialog);
+			}
+			
+			private function showTimingSettingsDialog():void {
+				var dialog:TimingConfigPanel = new TimingConfigPanel();
+				PopUpManager.addPopUp(dialog, this, true);
+				PopUpManager.bringToFront(dialog);
+			}
 	        
 			/* ----------------------------------------------------
     			END OF MENU STUFF
@@ -246,15 +277,20 @@
 	<mx:MenuBar id="myMenuBar" labelField="@label" itemClick="menuClick(event)">
         <mx:XMLList>
             <menuitem label="Menu">
-                <menuitem label="Configuration" action="config"/>
-                <menuitem label="Statistics" action="statistics"/>
-                <menuitem label="Twitter" action="twitter"/>
-                <menuitem label="Advanced" action="advancedConfig"/>
+				<menuitem label="Config">
+					<menuitem label="Configuration" action="config"/>
+					<menuitem label="Sounds" action="sounds"/>
+					<menuitem label="Timing" action="timing"/>
+					<menuitem label="Twitter" action="twitter"/>
+					<menuitem label="Advanced" action="advancedConfig"/>
+				</menuitem>
+				<menuitem label="Statistics" action="statistics"/>
+				<menuitem label="Donate" action="donate"/>
             </menuitem>
-			
+
         </mx:XMLList>
     </mx:MenuBar>
 	
-	<mx:Button x="218" y="1" height="21" width="54" id="toggleViewButton" label="view" click="toggleViewState()"/>
+	<mx:Button x="218" y="1" height="22" width="54" id="toggleViewButton" label="view" click="toggleViewState()"/>
 	
 </mx:WindowedApplication>

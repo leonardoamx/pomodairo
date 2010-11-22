@@ -15,6 +15,7 @@
 			
 			//import org.osflash.thunderbolt.Logger;
 			
+			[Bindable]
 			private var db:Storage = Storage.instance;
 
 			[Bindable]

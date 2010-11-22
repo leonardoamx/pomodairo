@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" x="10" y="5" width="298" height="154" backgroundColor="#313131"
+	creationComplete="init()">
+
+
+<mx:Script>
+        <![CDATA[
+        	import com.pomodairo.events.ConfigurationUpdatedEvent;
+        	import com.pomodairo.PomodoroEventDispatcher;
+        	import com.pomodairo.db.Storage;
+
+        	public static var FADE_TICKING_SOUND:String = "sound.fadeTicking";
+        	
+        	private var soundEnabled:Boolean = new Boolean(true);
+        	private var volume:Number = new Number(100);
+        	
+        	private var fadeTicking:Boolean = new Boolean(true);
+
+        	
+        	private function init():void
+        	{
+        		populate();
+        		applyGuiValues();	
+        	}
+        	
+        	public function populate():void
+        	{
+        		var props:Dictionary = Storage.instance.config;
+        		if (props["volume"] != null) 
+        		{
+        			volume = props["volume"];
+        		}
+        		
+        		if (props["sound"] != null) 
+        		{
+        			soundEnabled = props["sound"] == "true";
+        		}
+        		
+        		if (props[FADE_TICKING_SOUND] != null) 
+        		{
+        			fadeTicking = props[FADE_TICKING_SOUND] == "true";
+        		}
+        		
+        	}
+        	
+        	private function applyGuiValues():void
+            {
+        		volumeSlider.value = volume;
+        		soundCheckbox.selected = soundEnabled;
+        		fadeTickingCheckbox.selected = fadeTicking;
+            }
+        	
+            private function exit():void
+            {
+            	this.parent.removeChild(this);
+            }
+            
+            public function save():void
+            {
+            	volume = volumeSlider.value;
+            	soundEnabled = soundCheckbox.selected;
+            	fadeTicking = fadeTickingCheckbox.selected;
+            	
+            	Storage.instance.setConfigurationValue("volume", ""+volume);
+            	Storage.instance.setConfigurationValue("sound", ""+soundEnabled);
+            	Storage.instance.setConfigurationValue(FADE_TICKING_SOUND, ""+fadeTicking);
+            	exit();
+            	
+            	notifyConfiguration();
+            }
+            
+            public function notifyConfiguration():void
+            {
+            	// Notify the world 
+            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, "volume", ""+volume));
+            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, "sound", ""+soundEnabled));
+            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, FADE_TICKING_SOUND, ""+fadeTicking));
+            }
+			            
+        ]]>
+    </mx:Script>
+
+	<mx:CheckBox id="soundCheckbox" x="178.8" y="15.3" label="Sound enabled"/>
+	<mx:CheckBox id="fadeTickingCheckbox" x="178.8" y="45.3" label="Fade ticking"/>
+	<mx:Button x="221" y="90" label="Save" click="save()" width="63"/>
+	<mx:Button x="221" y="121" label="Cancel" click="exit()"/>
+	<mx:HSlider id="volumeSlider" x="10" y="12" minimum="0" maximum="100" snapInterval="5"/>
+	<mx:Label x="10" y="4" text="Volume" color="#A9A9A9"/>
+	
+</mx:Canvas>

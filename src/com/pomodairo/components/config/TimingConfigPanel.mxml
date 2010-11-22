@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" x="10" y="5" width="298" height="154" backgroundColor="#313131"
+	creationComplete="init()">
+
+
+<mx:Script>
+        <![CDATA[
+        	import com.pomodairo.events.ConfigurationUpdatedEvent;
+        	import com.pomodairo.PomodoroEventDispatcher;
+        	import com.pomodairo.db.Storage;
+        	
+			public static var POMODORO_LENGTH:String = "pomodoroLength";
+			public static var SHORT_BREAK_LENGTH:String = "time.shortBreakLength";
+			public static var LONG_BREAK_LENGTH:String = "time.longBreakLength";
+			public static var LONG_BREAK_INTERVAL:String = "time.longBreakInterval";
+			
+        	private var pomodoroLength:Number = new Number(25);  
+			private var shortBreakLength:Number = new Number(5);  
+			private var longBreakLength:Number = new Number(20);  
+			private var longBreakInterval:Number = new Number(4);  
+        	
+        	private function init():void
+        	{
+        		populate();
+        		applyGuiValues();	
+        	}
+        	
+        	public function populate():void
+        	{
+        		var props:Dictionary = Storage.instance.config;
+        		
+        		if (props[POMODORO_LENGTH] != null) 
+        		{
+        			pomodoroLength = props[POMODORO_LENGTH];
+        		}
+				
+				if (props[SHORT_BREAK_LENGTH] != null) 
+				{
+					shortBreakLength = props[SHORT_BREAK_LENGTH];
+				}
+				
+				if (props[LONG_BREAK_LENGTH] != null) 
+				{
+					longBreakLength = props[LONG_BREAK_LENGTH];
+				}
+        		
+				if (props[LONG_BREAK_INTERVAL] != null) 
+				{
+					longBreakInterval = props[LONG_BREAK_INTERVAL];
+				}
+        	}
+        	
+        	private function applyGuiValues():void
+            {
+				pomodoroSlider.value = pomodoroLength;
+				shortBreakSlider.value = shortBreakLength;
+				longBreakSlider.value = longBreakLength;
+				longBreakSelect.value = longBreakInterval;
+            }
+        	
+            private function exit():void
+            {
+            	this.parent.removeChild(this);
+            }
+            
+            public function save():void
+            {
+            	pomodoroLength = pomodoroSlider.value;
+				shortBreakLength = shortBreakSlider.value;
+				longBreakLength = longBreakSlider.value;
+				longBreakInterval = longBreakSelect.value;
+            	
+            	Storage.instance.setConfigurationValue(POMODORO_LENGTH, ""+pomodoroLength);
+				Storage.instance.setConfigurationValue(SHORT_BREAK_LENGTH, ""+shortBreakLength);
+				Storage.instance.setConfigurationValue(LONG_BREAK_LENGTH, ""+longBreakLength);
+				Storage.instance.setConfigurationValue(LONG_BREAK_INTERVAL, ""+longBreakInterval);
+            	exit();
+            	
+            	notifyConfiguration();
+            }
+            
+            public function notifyConfiguration():void
+            {
+            	// Notify the world 
+            	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, POMODORO_LENGTH, ""+pomodoroLength));
+				PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, SHORT_BREAK_LENGTH, ""+shortBreakLength));
+				PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, LONG_BREAK_LENGTH, ""+longBreakLength));
+				PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, LONG_BREAK_INTERVAL, ""+longBreakInterval));
+            }
+			            
+        ]]>
+    </mx:Script>
+	<mx:Button x="221" y="90" label="Save" click="save()" width="63"/>
+	<mx:Button x="221" y="121" label="Cancel" click="exit()"/>
+	
+	<mx:Label x="10" y="6" text="Pomodoro length" color="#A9A9A9"/>
+	<mx:HSlider id="pomodoroSlider" x="10" y="15" snapInterval="1" minimum="1" maximum="60"/>
+	
+	<mx:Label x="10" y="48.3" text="Short break length" color="#A9A9A9"/>
+	<mx:HSlider id="shortBreakSlider" x="10" y="57" snapInterval="1" minimum="1" maximum="30"/>
+	
+	<mx:Label x="10" y="91.3" text="Long break length" color="#A9A9A9"/>
+	<mx:HSlider id="longBreakSlider" x="10" y="100" snapInterval="1" minimum="1" maximum="60"/>
+	<mx:NumericStepper x="228" y="25" value="4" minimum="1" maximum="30" enabled="true" id="longBreakSelect" toolTip="Number of pomodoros until a long break"/>
+	<mx:Label x="176" y="7" text="Long break interval"/>
+	
+</mx:Canvas>
