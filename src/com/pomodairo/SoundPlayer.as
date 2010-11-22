@@ -56,11 +56,12 @@ package com.pomodairo
 			}
 			
 			if (e.configElement.name == SoundConfigPanel.ALARM_SOUND_FILE) {
-				trace("Load alarm sound: "+e.configElement.value);
+				trace("Load custom alarm sound: "+e.configElement.value);
 				alarmSoundChannel = loadSound(e.configElement.value);
 			}
 			
 			if (e.configElement.name == SoundConfigPanel.CLOCK_SOUND_FILE) {
+				trace("Load custom clock sound: "+e.configElement.value);
 				clockSound = e.configElement.value;
 			}
 		}

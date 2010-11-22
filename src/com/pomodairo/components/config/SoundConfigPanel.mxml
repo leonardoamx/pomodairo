@@ -57,7 +57,7 @@
 				
 				if (props[CLOCK_SOUND_FILE] != null) 
 				{
-					alarmSound = props[CLOCK_SOUND_FILE];
+					clockSound = props[CLOCK_SOUND_FILE];
 				}
         		
         	}
@@ -105,13 +105,23 @@
             }
 			
 			private function selectAlarmFile():void {
-				alarmSoundFile.addEventListener(Event.SELECT, selectHandler);
+				alarmSoundFile.addEventListener(Event.SELECT, setAlarmFilePath);
 				alarmSoundFile.browse(fileTypes);
 			}
 			
-			private function selectHandler(event:Event):void {
+			private function setAlarmFilePath(event:Event):void {
 				alarmFileLocationInput.text = alarmSoundFile.nativePath;
 				alarmSound = alarmSoundFile.nativePath;
+			}      
+			
+			private function selectClockFile():void {
+				clockSoundFile.addEventListener(Event.SELECT, setClockFilePath);
+				clockSoundFile.browse(fileTypes);
+			}
+			
+			private function setClockFilePath(event:Event):void {
+				clockFileLocationInput.text = clockSoundFile.nativePath;
+				clockSound = clockSoundFile.nativePath;
 			}      
 			            
         ]]>
