@@ -5,18 +5,27 @@
 
 <mx:Script>
         <![CDATA[
-        	import com.pomodairo.events.ConfigurationUpdatedEvent;
         	import com.pomodairo.PomodoroEventDispatcher;
         	import com.pomodairo.db.Storage;
+        	import com.pomodairo.events.ConfigurationUpdatedEvent;
 
         	public static var FADE_TICKING_SOUND:String = "sound.fadeTicking";
+			public static var ALARM_SOUND_FILE:String = "sound.alarmSound";
+			public static var CLOCK_SOUND_FILE:String = "sound.clockSound";
         	
         	private var soundEnabled:Boolean = new Boolean(true);
         	private var volume:Number = new Number(100);
         	
         	private var fadeTicking:Boolean = new Boolean(true);
-
+			
+			private var alarmSound:String = "";
+			private var clockSound:String = "";
         	
+			var soundTypes:FileFilter = new FileFilter("Audio Files (*.mp3)", "*.mp3");
+			var fileTypes:Array = new Array(soundTypes);
+			private var alarmSoundFile:File = new File();
+			private var clockSoundFile:File = new File();
+			
         	private function init():void
         	{
         		populate();
@@ -40,6 +49,16 @@
         		{
         			fadeTicking = props[FADE_TICKING_SOUND] == "true";
         		}
+				
+				if (props[ALARM_SOUND_FILE] != null) 
+				{
+					alarmSound = props[ALARM_SOUND_FILE];
+				}
+				
+				if (props[CLOCK_SOUND_FILE] != null) 
+				{
+					alarmSound = props[CLOCK_SOUND_FILE];
+				}
         		
         	}
         	
@@ -48,6 +67,8 @@
         		volumeSlider.value = volume;
         		soundCheckbox.selected = soundEnabled;
         		fadeTickingCheckbox.selected = fadeTicking;
+				alarmFileLocationInput.text = alarmSound;
+				clockFileLocationInput.text = clockSound;
             }
         	
             private function exit():void
@@ -60,10 +81,14 @@
             	volume = volumeSlider.value;
             	soundEnabled = soundCheckbox.selected;
             	fadeTicking = fadeTickingCheckbox.selected;
+				alarmSound = alarmFileLocationInput.text;
+				clockSound = clockFileLocationInput.text;
             	
             	Storage.instance.setConfigurationValue("volume", ""+volume);
             	Storage.instance.setConfigurationValue("sound", ""+soundEnabled);
             	Storage.instance.setConfigurationValue(FADE_TICKING_SOUND, ""+fadeTicking);
+				Storage.instance.setConfigurationValue(ALARM_SOUND_FILE, ""+alarmSound);
+				Storage.instance.setConfigurationValue(CLOCK_SOUND_FILE, ""+clockSound);
             	exit();
             	
             	notifyConfiguration();
@@ -75,7 +100,19 @@
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, "volume", ""+volume));
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, "sound", ""+soundEnabled));
             	PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, FADE_TICKING_SOUND, ""+fadeTicking));
+				PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, ALARM_SOUND_FILE, ""+alarmSound));
+				PomodoroEventDispatcher.getInstance().dispatchEvent(new ConfigurationUpdatedEvent(ConfigurationUpdatedEvent.UPDATED, CLOCK_SOUND_FILE, ""+clockSound));
             }
+			
+			private function selectAlarmFile():void {
+				alarmSoundFile.addEventListener(Event.SELECT, selectHandler);
+				alarmSoundFile.browse(fileTypes);
+			}
+			
+			private function selectHandler(event:Event):void {
+				alarmFileLocationInput.text = alarmSoundFile.nativePath;
+				alarmSound = alarmSoundFile.nativePath;
+			}      
 			            
         ]]>
     </mx:Script>
@@ -86,5 +123,17 @@
 	<mx:Button x="221" y="121" label="Cancel" click="exit()"/>
 	<mx:HSlider id="volumeSlider" x="10" y="12" minimum="0" maximum="100" snapInterval="5"/>
 	<mx:Label x="10" y="4" text="Volume" color="#A9A9A9"/>
+	
+	<mx:Label x="10" y="58.7" color="#A9A9A9" text="Alarm Sound:"/>
+	<mx:TextInput id="alarmFileLocationInput" x="10" y="76" width="165">
+		<mx:toolTip>Custom sound file for the alarm. Leave empty for default.</mx:toolTip>
+	</mx:TextInput>
+	<mx:Button x="170" y="76" label="Browse" click="selectAlarmFile()"/>
+	
+	<mx:Label x="10" y="106" color="#A9A9A9" text="Clock Sound:"/>
+	<mx:TextInput id="clockFileLocationInput" x="10" y="122" width="165">
+		<mx:toolTip>Custom sound file for the clock sound. Leave empty for default.</mx:toolTip>
+	</mx:TextInput>
+	<mx:Button x="170" y="122" label="Browse" click="selectAlarmFile()"/>
 	
 </mx:Canvas>
