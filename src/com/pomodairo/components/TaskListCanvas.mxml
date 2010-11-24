@@ -13,8 +13,6 @@
 			import com.pomodairo.TableUtils;
 			import com.pomodairo.db.Storage;
 			
-			//import org.osflash.thunderbolt.Logger;
-			
 			[Bindable]
 			private var db:Storage = Storage.instance;
 
@@ -58,6 +56,20 @@
 			}
 			
 			private function onUsersDataGridChanged(event:Event):void{}
+			
+			private function onDragComplete(event:Event):void
+			{
+				updatePrios();
+			}
+			
+			private function updatePrios():void
+			{
+				var i:int = pomodorosDataGrid.rowCount - 1;
+				for each (var pom:Pomodoro in pomodorosDataGrid.dataProvider) {
+					pom.ordinal = i--;
+					db.updateOrdinal(pom);			        
+				}
+			}
 	        
 	        private function onRemovePomodoroClicked(event:Event=null):void
 	        {
@@ -155,6 +167,10 @@
 		rightClick="displayMenu(event);"
 		itemRollOver="lastRollOverIndex = event.rowIndex"
 		itemClick="onStartPomodoroClicked(event);"
+		dragMoveEnabled="true"
+		dragEnabled="true"
+		dropEnabled="true"
+		dragComplete="onDragComplete(event)"
 		change="onUsersDataGridChanged(event)" width="100%" >
 		<mx:columns>
 			<mx:DataGridColumn width="125" headerText="Name" dataField="name" itemRenderer="com.pomodairo.components.CustomRenderer" />
@@ -162,6 +178,7 @@
 			<mx:DataGridColumn width="28" headerText="P" dataField="pomodoros" dataTipField="pomodorosDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
 			<mx:DataGridColumn width="28" headerText="U" dataField="unplanned" dataTipField="unplannedDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
 			<mx:DataGridColumn width="28" headerText="I" dataField="interruptions" dataTipField="interruptionsDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
+			<!-- Useful for debugging ordinal stuff --> <!-- <mx:DataGridColumn width="28" headerText="S" dataField="ordinal" dataTipField="ordinalDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" /> -->
 		</mx:columns>
 	</mx:DataGrid>
 	
