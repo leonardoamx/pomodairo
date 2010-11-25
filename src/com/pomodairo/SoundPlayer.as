@@ -28,13 +28,11 @@ package com.pomodairo
 		
 		private var ticToc:SoundChannel;
 		
-		private var alarmSound:String = "";
-		
-		private var clockSound:String = "";
-		
 		private var alarmSoundChannel:Sound;
 		
 		private var clockSoundChannel:Sound;
+		
+		private var clockCustomSound:String;
 		
 		public function SoundPlayer()
 		{
@@ -62,14 +60,15 @@ package com.pomodairo
 			
 			if (e.configElement.name == SoundConfigPanel.CLOCK_SOUND_FILE) {
 				trace("Load custom clock sound: "+e.configElement.value);
-				clockSound = e.configElement.value;
+				clockCustomSound = e.configElement.value;
+				clockSoundChannel = loadSound(e.configElement.value);
 			}
 		}
 		
 		public function playAlarm():void {
 			if (soundEnabled) {
-				if (alarmSound != "") {
-					trace("Play custom alarm: "+alarmSound);
+				if (alarmSoundChannel) {
+					trace("Play custom alarm");
 					alarmSoundChannel.play();
 						
 				} else {	
@@ -81,28 +80,33 @@ package com.pomodairo
 		}
 		
 		public function playTicTocSound():void {
+			trace("Play clock sound");
 			if (soundEnabled) {
-				if (clockSound != "") {
-					trace("Play custom clock sound: "+clockSound);
-					
+				var sound:Sound;
+				if (clockSoundChannel) {
+					sound = clockSoundChannel;
 				} else {
-					if (fadeSound) {
-						trace("Play default clock sound");
-						var tick:SoundEffect = new SoundEffect(new tickClass() as Sound); // Weird stuff, need to send sound into constructor...
-						tick.volumeFrom = 0.7;
-						tick.volumeTo = 0.0;
-						tick.volumeEasingFunction = mx.effects.easing.Linear.easeOut;
-						tick.duration = 3000;
-						tick.useDuration = true;
-						tick.source = tickClass; // ..and set it here.
-						tick.play();
-					} else {
-						stopTicTocSound();
-						var sound:SoundAsset = new tickClass() as SoundAsset;
-						ticToc = sound.play(0, int.MAX_VALUE);
-					}
+					sound = new tickClass() as Sound;
 				}
 				
+				if (fadeSound) {
+					var tick:SoundEffect = new SoundEffect(sound); // Weird stuff, need to send sound into constructor...
+					tick.volumeFrom = 0.7;
+					tick.volumeTo = 0.0;
+					tick.volumeEasingFunction = mx.effects.easing.Linear.easeOut;
+					tick.duration = 3000;
+					tick.useDuration = true;
+					if (clockCustomSound != null && clockCustomSound != "") {
+						tick.source = clockCustomSound; // ..and set it here.
+					} else {
+						tick.source = tickClass; // ..or here.
+					}
+					tick.play();
+				} else {
+					stopTicTocSound();
+					//var sound:SoundAsset = new tickClass() as SoundAsset;
+					ticToc = sound.play(0, int.MAX_VALUE);
+				}
 			}
 		}
 		
@@ -114,9 +118,12 @@ package com.pomodairo
 		
 		
 		private function loadSound(file:String):Sound {
+			if (file == "") {
+				return null;
+			}
+			
 			try {
-				alarmSound = file;
-				var req:URLRequest = new URLRequest(alarmSound);
+				var req:URLRequest = new URLRequest(file);
 				if (req.url && req.url != "") {
 					 return new Sound(req);
 				}

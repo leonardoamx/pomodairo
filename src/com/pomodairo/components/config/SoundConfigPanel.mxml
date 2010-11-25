@@ -135,15 +135,15 @@
 	<mx:Label x="10" y="4" text="Volume" color="#A9A9A9"/>
 	
 	<mx:Label x="10" y="58.7" color="#A9A9A9" text="Alarm Sound:"/>
-	<mx:TextInput id="alarmFileLocationInput" x="10" y="76" width="165">
+	<mx:TextInput id="alarmFileLocationInput" x="10" y="76" width="131">
 		<mx:toolTip>Custom sound file for the alarm. Leave empty for default.</mx:toolTip>
 	</mx:TextInput>
-	<mx:Button x="170" y="76" label="Browse" click="selectAlarmFile()"/>
+	<mx:Button x="149" y="76" label="Browse" click="selectAlarmFile()" width="64"/>
 	
 	<mx:Label x="10" y="106" color="#A9A9A9" text="Clock Sound:"/>
-	<mx:TextInput id="clockFileLocationInput" x="10" y="122" width="165">
+	<mx:TextInput id="clockFileLocationInput" x="10" y="122" width="131">
 		<mx:toolTip>Custom sound file for the clock sound. Leave empty for default.</mx:toolTip>
 	</mx:TextInput>
-	<mx:Button x="170" y="122" label="Browse" click="selectAlarmFile()"/>
+	<mx:Button x="149" y="122" label="Browse" click="selectClockFile()" width="64"/>
 	
 </mx:Canvas>
