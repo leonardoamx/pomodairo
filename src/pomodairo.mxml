@@ -21,6 +21,7 @@
 			import com.pomodairo.TaskManager;
 			import com.pomodairo.components.PomoItemInput;
 			import com.pomodairo.components.StatisticsWindow;
+			import com.pomodairo.components.config.AboutPanel;
 			import com.pomodairo.components.config.AdvancedConfigPanel;
 			import com.pomodairo.components.config.ConfigPanel;
 			import com.pomodairo.components.config.SoundConfigPanel;
@@ -199,8 +200,8 @@
 					showSoundsSettingsDialog();
 				} else if (event.item.@action == 'timing') {
 					showTimingSettingsDialog();
-				} else if (event.item.@action == 'donate') {
-					// openDonatePage();
+				} else if (event.item.@action == 'about') {
+					showAboutPage();
 				}
             }
             
@@ -242,6 +243,12 @@
 				PopUpManager.bringToFront(dialog);
 			}
 	        
+			private function showAboutPage():void {
+				var dialog:AboutPanel = new AboutPanel();
+				PopUpManager.addPopUp(dialog, this, true);
+				PopUpManager.bringToFront(dialog);
+			}
+			
 			/* ----------------------------------------------------
     			END OF MENU STUFF
 	   	  	---------------------------------------------------- */
@@ -285,7 +292,7 @@
 					<menuitem label="Advanced" action="advancedConfig"/>
 				</menuitem>
 				<menuitem label="Statistics" action="statistics"/>
-				<menuitem label="Donate" action="donate"/>
+				<menuitem label="Pomodairo" action="about"/>
             </menuitem>
 
         </mx:XMLList>
