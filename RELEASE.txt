@@ -6,6 +6,8 @@
 
 * Update version and filename in update.xml. Add release notes.
 
+* Commit pomodairo-app.xml and update.xml.
+
 * Build the pomodairo application into an .air file. 
 
 * Use the cubeia.p12 certificate to sign the .air file. It will not update properly with different cert!
