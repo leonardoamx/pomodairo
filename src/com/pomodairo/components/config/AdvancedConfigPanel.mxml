@@ -73,19 +73,26 @@
 			
 			// Store database location in local store
 			private static function storeDBLocation(value:String):void {
-			    var data:ByteArray = new ByteArray();
-			    data.writeUTFBytes(value);
-			    EncryptedLocalStore.setItem(DATABASE_LOCATION, data);
+				try {
+				    var data:ByteArray = new ByteArray();
+				    data.writeUTFBytes(value);
+				    EncryptedLocalStore.setItem(DATABASE_LOCATION, data);
+				}  catch (e:Error) {
+					trace("Failed to store value in the EncryptedLocalStore: "+e);
+				}
 			}
 			
 			// read database location from local store
 			private static function getDBLocation():String {
-			    var bytes:ByteArray = EncryptedLocalStore.getItem(DATABASE_LOCATION);
-			    if (bytes) {
-			        return bytes.readUTFBytes(bytes.bytesAvailable);
-			    } else {
-			    	return null;
-			    }
+				try {
+				    var bytes:ByteArray = EncryptedLocalStore.getItem(DATABASE_LOCATION);
+				    if (bytes) {
+				        return bytes.readUTFBytes(bytes.bytesAvailable);
+				    }
+				}  catch (e:Error) {
+					trace("Failed to access the EncryptedLocalStore: "+e);
+				}
+				return null;
 			}   
 
 			            
