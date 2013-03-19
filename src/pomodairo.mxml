@@ -7,9 +7,9 @@
 	backgroundColor="#292929"
 	closing="beforeClose()"
 	title="{timerCanvas.appTitle}"
-	close="shutdown()">
+	close="shutdown()" xmlns:s="library://ns.adobe.com/flex/spark">
 	
-	<mx:Style source="style/style.css"/>
+	<mx:Style source="style/styles.css"/>
 	
     <mx:Script>
         <![CDATA[
@@ -256,22 +256,20 @@
         ]]>
     </mx:Script>
 
-
-
 	<mx:Fade id="fadein" />
 	<mx:Fade id="fadeout" />
-
 	
-	<mx:Panel x="0" y="0" height="164" width="320" layout="absolute" mouseDown="{nativeWindow.startMove()}">				
+	<s:Panel styleName="timerPanel" x="0" y="0" height="164" width="320" mouseDown="{nativeWindow.startMove()}">				
 		<ns1:timer id="timerCanvas" x="0" y="0" pomodoroLengthInMinutes="25">
 		</ns1:timer>
 		
-		<mx:ControlBar id="controls" height="42" y="88">
+		<s:controlBarContent>
 			<mx:Button label="Task List" click="toggleTaskList()" toolTip="Open/close task list"/>
 			<mx:Button label="Unplanned" id="unplannedButton" click="newUnplanned()" toolTip="Add unplanned" enabled="false"/>
 			<mx:Button label="Interruption" id="interruptionButton" click="newInterruption()" toolTip="Add interruption" enabled="false"/>
-		</mx:ControlBar>
-	</mx:Panel>
+		</s:controlBarContent>
+		
+	</s:Panel>
 	
 	<mx:Label text="x" click="close()" color="#FFFFFF" x="300" y="2"/>
 	<mx:Label text="_" click="minimize()" color="#FFFFFF" x="280" y="2"/>
@@ -294,10 +292,9 @@
 				<menuitem label="Statistics" action="statistics"/>
 				<menuitem label="Pomodairo" action="about"/>
             </menuitem>
-
         </mx:XMLList>
     </mx:MenuBar>
 	
-	<mx:Button x="218" y="1" height="22" width="54" id="toggleViewButton" label="view" click="toggleViewState()"/>
+	<mx:Button x="218" y="0" height="22" width="54" id="toggleViewButton" label="view" click="toggleViewState()"/>
 	
 </mx:WindowedApplication>

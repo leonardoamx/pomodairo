@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Window xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:fc="http://www.adobe.com/2006/fc" title="Pomodairo Statistics" width="600" height="418" initialize="init()" resizable="false">
+<mx:Window xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:fc="http://www.adobe.com/2006/fc" title="Pomodairo Statistics" width="600" height="418" initialize="init()" resizable="false" xmlns:s="library://ns.adobe.com/flex/spark">
 	<mx:Script>
 		<![CDATA[
 			import com.pomodairo.Pomodoro;
@@ -67,7 +67,10 @@
 	
 	<mx:TabNavigator width="600" height="400">
 		<mx:Canvas label="Pomodoros" width="100%" height="100%">
-			<mx:Panel width="100%" height="100%" layout="vertical" id="dataGridPanel1" title="Pomodoros View" x="0" y="0">
+			<s:Panel width="100%" height="100%" id="dataGridPanel1" title="Pomodoros View" x="0" y="0">
+				<s:layout>
+					<s:VerticalLayout />
+				</s:layout>
 				<mx:DataGrid id="pomodorosDataGrid1"
 					dataProvider="{db.datasetStatistics1}" 
 					height="100%"
@@ -96,10 +99,13 @@
 					<mx:Button id="pomsOfDay" label="Refresh" click="onPomsOfDayClicked(null)"/>
 					<mx:Button label="Copy" click="copyTableToClipboard('Pomodoros', db.datasetStatistics1)"/>
 				</mx:ControlBar>
-			</mx:Panel>
+			</s:Panel>
 		</mx:Canvas>
 		<mx:Canvas label="Interruptions" width="100%" height="100%">
-			<mx:Panel width="100%" height="100%" layout="vertical" id="dataGridPanel3" title="Interruptions" x="0" y="0">
+			<s:Panel width="100%" height="100%" id="dataGridPanel3" title="Interruptions" x="0" y="0">
+				<s:layout>
+					<s:VerticalLayout />
+				</s:layout>
 				<mx:DataGrid id="pomodorosDataGrid3"
 					dataProvider="{db.datasetStatistics3}" 
 					height="100%"
@@ -125,10 +131,13 @@
 					<mx:Button id="longestTasks" label="Refresh" click="onInterruptionsClicked(null)"/>
 					<mx:Button label="Copy" click="copyTableToClipboard('Interruptions', db.datasetStatistics3)"/>
 				</mx:ControlBar>
-			</mx:Panel>
+			</s:Panel>
 		</mx:Canvas>
 		<mx:Canvas label="Count" width="100%" height="100%">
-			<mx:Panel width="100%" height="100%" layout="vertical" id="dataGridPanel2" title="Pomodoros Per Day" x="0" y="0">
+			<s:Panel width="100%" height="100%" id="dataGridPanel2" title="Pomodoros Per Day" x="0" y="0">
+				<s:layout>
+					<s:VerticalLayout />
+				</s:layout>
 				<mx:DataGrid id="pomodorosDataGrid2"
 					dataProvider="{db.datasetStatistics2}" 
 					height="100%"
@@ -146,10 +155,13 @@
 					<mx:Button id="pomsPerDay" label="Refresh" click="onPomsPerDayClicked(null)"/>
 					<mx:Button label="Copy" click="copyTableToClipboard('Count', db.datasetStatistics2)"/>
 				</mx:ControlBar>
-			</mx:Panel>
+			</s:Panel>
 		</mx:Canvas>
 		<mx:Canvas label="Reality Factors" width="100%" height="100%">
-			<mx:Panel width="100%" height="100%" layout="vertical" id="dataGridPanel4" title="Weekly Reality Factor" x="0" y="0">
+			<s:Panel width="100%" height="100%" id="dataGridPanel4" title="Weekly Reality Factor" x="0" y="0">
+				<s:layout>
+					<s:VerticalLayout />
+				</s:layout>
 				<mx:DataGrid id="pomodorosDataGrid4"
 					dataProvider="{db.datasetStatistics4}" 
 					height="100%"
@@ -168,7 +180,7 @@
 					<mx:Button id="realityFactor" label="Refresh" click="onRealityFactorsClicked(null)"/>
 					<mx:Button label="Copy" click="copyTableToClipboard('Reality Factors', db.datasetStatistics4)"/>
 				</mx:ControlBar>
-			</mx:Panel>
+			</s:Panel>
 		</mx:Canvas>
 	</mx:TabNavigator>
 </mx:Window>

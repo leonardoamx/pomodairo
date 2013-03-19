@@ -2,11 +2,12 @@
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" 
 	layout="vertical"
 	 width="800" height="550" 
-	 backgroundGradientAlphas="[1.0, 1.0]" 
-	 backgroundGradientColors="[#232323, #0A0A0A]"
 	 verticalScrollPolicy="off"
 	 initialize="init()">
 	
+	<!--  backgroundGradientAlphas="[1.0, 1.0]" 
+	backgroundGradientColors="[#232323, #0A0A0A]"
+	-->
 	<mx:Script>
 		<![CDATA[
 			import com.pomodairo.Pomodoro;

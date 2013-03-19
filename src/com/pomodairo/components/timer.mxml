@@ -486,6 +486,7 @@
         {
             font-family: Digital;
             src: url("assets/digital-7mono.ttf");
+			embedAsCFF: false;
         }
 
         .ClockText 
@@ -512,7 +513,7 @@
 						<mx:RemoveChild target="{newTaskButton}"/>
 						<mx:SetProperty target="{miniCounter}" name="visible" value="true"/>
 						<mx:AddChild position="lastChild">
-							<mx:ProgressBar id="timeProgressBar" x="4" y="4" width="220" height="22" label="{taskManager.activeTask.shortDescription}" 
+							<mx:ProgressBar id="timeProgressBar" x="4" y="2" width="220" height="22" label="{taskManager.activeTask.shortDescription}" 
 											labelPlacement="center" mode="manual"/>
 						</mx:AddChild>
 	    	    </mx:State>
@@ -522,14 +523,14 @@
 	Glass effect wanted! =)
 	<mx:Canvas id="clockBG" backgroundColor="#000000" x="4" y="4" height="80" width="190"/>
     -->
-	<mx:Button id="startTimerButton" 	x="216" y="10" height="50" width="90" visible="false" 	label="Start Timer" click="startTimer()" />
-	<mx:Button id="stopTimerButton" 	x="216" y="10" height="50" width="90" visible="false" 	label="Stop Timer" click="stopTimer();showNextTaskButton();" />
-	<mx:Button id="stopBreakButton" 	x="216" y="10" height="50" width="90" visible="false" 	label="Stop Break" click="stopBreakTimer();showClosePomoButton();"	/>
-	<mx:Button id="newTaskButton" 		x="216" y="10" height="50" width="90" 					label="New Task" click="createPomodoro()" />
+	<mx:Button id="startTimerButton" 	x="216" y="8" height="50" width="90" visible="false" 	label="Start Timer" click="startTimer()" />
+	<mx:Button id="stopTimerButton" 	x="216" y="8" height="50" width="90" visible="false" 	label="Stop Timer" click="stopTimer();showNextTaskButton();" />
+	<mx:Button id="stopBreakButton" 	x="216" y="8" height="50" width="90" visible="false" 	label="Stop Break" click="stopBreakTimer();showClosePomoButton();"	/>
+	<mx:Button id="newTaskButton" 		x="216" y="8" height="50" width="90" 					label="New Task" click="createPomodoro()" />
 	
 	<!-- Clock Counter(s) -->
 	<!-- Regular Counter -->
-	<mx:Label id="counter" x="6" y="0" height="69" styleName="ClockText" text="{toTwoDigitString(pomodoroLengthInMinutes)}:00" color="#FFFF00" />
+	<mx:Label id="counter" x="6" y="-2" height="69" styleName="ClockText" text="{toTwoDigitString(pomodoroLengthInMinutes)}:00" color="#FFFF00" />
 	<mx:GlowFilter id="glow" color="#FFFF00" alpha="1" blurX="8" blurY="8" strength="1"/>
 	<mx:LinkButton id="pomodoroLabel" y="78" label="{taskManager.activeTask.shortDescription}" width="90%" height="17" click="openBugtracker()" textAlign="left" x="10" toolTip="{taskManager.activeTask.longDescription}"/>
 	
@@ -537,7 +538,7 @@
 	<mx:Button id="nextTaskButton" 		x="216" y="70" height="25" width="90" visible="false" label="Next" click="onNextTaskClicked()" />
 	
 	<!-- Mini View Objects (not visible by default) -->
-	<mx:Label id="miniCounter" x="240" y="0" styleName="MiniClockText" text="{toTwoDigitString(pomodoroLengthInMinutes)}:00" color="#FFFF00" visible="false"/>
+	<mx:Label id="miniCounter" x="240" y="-1" styleName="MiniClockText" text="{toTwoDigitString(pomodoroLengthInMinutes)}:00" color="#FFFF00" visible="false"/>
 	
 </mx:Canvas>
 
