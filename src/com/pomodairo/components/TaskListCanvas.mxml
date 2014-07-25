@@ -162,7 +162,7 @@
 
 	<mx:DataGrid id="pomodorosDataGrid"
 		dataProvider="{db.dataset}" 
-		height="261"
+		top="0" right="0" bottom="44" left="0"
 		editable="false"
 		rightClick="displayMenu(event);"
 		itemRollOver="lastRollOverIndex = event.rowIndex"
@@ -182,6 +182,6 @@
 		</mx:columns>
 	</mx:DataGrid>
 	
-	<mx:Button id="addPomoButton" label="Add New" click="onAddPomodoroClicked()" width="91" height="24" x="219" y="269"/>
+	<mx:Button id="addPomoButton" label="Add New" click="onAddPomodoroClicked()" width="91" height="24" right="10" bottom="10"/>
 
 </mx:Canvas>

@@ -7,12 +7,14 @@
 	backgroundColor="#292929"
 	closing="beforeClose()"
 	title="{timerCanvas.appTitle}"
+	windowResize="{resizeHandler(event)}"
+	minWidth="320"
 	close="shutdown()" xmlns:s="library://ns.adobe.com/flex/spark">
 	
 	<mx:Style source="style/styles.css"/>
 	
-    <mx:Script>
-        <![CDATA[
+	<mx:Script>
+		<![CDATA[
 			import air.update.ApplicationUpdaterUI;
 			import air.update.events.UpdateEvent;
 			
@@ -38,13 +40,20 @@
 			import mx.controls.TextInput;
 			import mx.events.MenuEvent;
 			import mx.managers.PopUpManager;
-        
+
+
+            public static const MIN_WIDTH:Number = 320;
+
+            public static const MINI_HEIGHT:Number = 52;
+            public static const SHORT_HEIGHT:Number = 167;
+            public static const FULL_HEIGHT:Number = 167 + 300;
+
 			private var appUpdater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
 			
 			private var taskManager:TaskManager = TaskManager.instance;
 			
 			private var twitterManager:TwitterManager = new TwitterManager();
-			
+
 			private function beforeInit():void {
 				PomodoroEventDispatcher.getInstance().addEventListener(ConfigurationUpdatedEvent.UPDATED, onConfigurationChange);
 				
@@ -59,6 +68,18 @@
 					if (setY >= 0 && setY < Capabilities.screenResolutionY) {
 						this.nativeWindow.y = setY;
 					}
+				}
+
+				var setHeight:Number = Storage.instance.config["window.height"];
+				if (setHeight >= MINI_HEIGHT && setHeight < Capabilities.screenResolutionY)
+				{
+					this.height = setHeight;
+				}
+
+				var setWidth:Number = Storage.instance.config["window.width"];
+				if (setWidth >= MIN_WIDTH && setHeight < Capabilities.screenResolutionX)
+				{
+					this.width = setWidth;
 				}
 				
 				// Fugly hack... loads and presets all configuration values
@@ -133,16 +154,17 @@
         
             private function toggleTaskList():void {
             	if (!taskListPanel.visible) {
-            		this.height = this.height+taskListPanel.height;
-					taskListPanel.visible = true;	
+					taskListPanel.visible = true;
+					var setHeight:Number = Storage.instance.config["window.height"];
+					this.height = setHeight > Capabilities.screenResolutionY || setHeight < FULL_HEIGHT ? FULL_HEIGHT : setHeight;
             	} else {
             		closeTaskList();
             	}
             }
             
             private function closeTaskList(event:PomodoroEvent=null):void {
-            	this.height = 165;
-            	taskListPanel.visible = false;
+				this.height = SHORT_HEIGHT;
+				taskListPanel.visible = false;
             }
 
             private function newInterruption():void {
@@ -164,6 +186,8 @@
             private function beforeClose():void {
             	Storage.instance.setConfigurationValue("window.x",""+this.nativeWindow.x);
             	Storage.instance.setConfigurationValue("window.y",""+this.nativeWindow.y);
+				Storage.instance.setConfigurationValue("window.height", ""+this.height);
+				Storage.instance.setConfigurationValue("window.width", ""+this.width);
             }
             
 			private function onGuiChange(event:GuiChangeEvent):void {
@@ -171,17 +195,39 @@
 					trace("Switch application to mini view");
 					myMenuBar.enabled = false;
 					closeTaskList();
-					this.height = 52;
+					this.height = MINI_HEIGHT;
 				} else {
 					trace("Switch application to regular view");
 					myMenuBar.enabled = true;
-					this.height = 165;
+					this.height = SHORT_HEIGHT;
 				}			
 			}
             
 			private function toggleViewState():void {
 				timerCanvas.toggleMiniView();
 			}
+
+			private function onAddPomodoroClicked(event:Event=null):void
+			{
+				var input:PomoItemInput = new PomoItemInput();
+				input.type = Pomodoro.TYPE_POMODORO;
+				input.selectAfterCreate = true;
+				PopUpManager.addPopUp(input, this, true);
+				PopUpManager.centerPopUp(input);
+			}
+
+			private function resizeHandler(event:Event):void
+			{
+				if (this.height == MINI_HEIGHT || this.height == SHORT_HEIGHT)
+					return;
+
+				var value:Number = Storage.instance.config['window.height'];
+				if (this.height == value)
+					return;
+
+				Storage.instance.setConfigurationValue('window.height', ''+this.height);
+			}
+
 			
     		/* ----------------------------------------------------
         		MENU STUFF
@@ -252,15 +298,15 @@
 			/* ----------------------------------------------------
     			END OF MENU STUFF
 	   	  	---------------------------------------------------- */
-	        
+
         ]]>
     </mx:Script>
 
 	<mx:Fade id="fadein" />
 	<mx:Fade id="fadeout" />
 	
-	<s:Panel styleName="timerPanel" x="0" y="0" height="164" width="320" mouseDown="{nativeWindow.startMove()}">				
-		<ns1:timer id="timerCanvas" x="0" y="0" pomodoroLengthInMinutes="25">
+	<s:Panel styleName="timerPanel" left="0" top="0" height="164" right="0" mouseDown="{nativeWindow.startMove()}">
+		<ns1:timer id="timerCanvas" left="0" top="0" width="100%" pomodoroLengthInMinutes="25">
 		</ns1:timer>
 		
 		<s:controlBarContent>
@@ -271,10 +317,11 @@
 		
 	</s:Panel>
 	
-	<mx:Label text="x" click="close()" color="#FFFFFF" x="300" y="2"/>
-	<mx:Label text="_" click="minimize()" color="#FFFFFF" x="280" y="2"/>
+	<mx:Label text="x" click="close()" color="#FFFFFF" right="8" top="2"/>
+	<mx:Label text="_" click="minimize()" color="#FFFFFF" right="28" top="2"/>
+	<mx:Button right="56" top="0" height="22" width="54" id="toggleViewButton" label="view" click="toggleViewState()"/>
 	
-	<mx:Canvas id="taskListPanel" x="0" y="166" height="300" width="320" visible="false" showEffect="fadein" hideEffect="fadeout">				
+	<mx:Canvas id="taskListPanel" x="0" y="166" height="100%" width="100%" visible="false" showEffect="fadein" hideEffect="fadeout">
 		<ns1:TaskListCanvas x="0" y="0" height="100%" width="100%">
 		</ns1:TaskListCanvas>
 	</mx:Canvas>
@@ -294,7 +341,5 @@
             </menuitem>
         </mx:XMLList>
     </mx:MenuBar>
-	
-	<mx:Button x="218" y="0" height="22" width="54" id="toggleViewButton" label="view" click="toggleViewState()"/>
 	
 </mx:WindowedApplication>
