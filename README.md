@@ -1,10 +1,23 @@
 This project was exported from code.google.com/p/pomodairo
 
+![Pomodairo logo](logo.png)
 #Pomodairo
 
 An Adobe Air application for working with the Pomodoro technique, http://www.pomodorotechnique.com.
 
 Pomodairo includes the obligatory timer of course, but also includes a task list for the pomodoros. The application keeps track of pomodoros, unplanned and interruptions during the day.
+
+## Screenshots
+
+![Mini mode](pomodairo_mini.png)
+Pomodairo Client mini view (version 1.9):
+
+![Standard view](pomodairo.png)
+Pomodairo Client (version 1.7):
+
+![Tasklist](pomodairo_tasklist.png)
+Pomodairo Client with tasklist (version 1.7): 
+
 
 ## Installation
 
@@ -15,9 +28,11 @@ Feedback is very much appreciated! Please click on the Issue tab to report bugs 
 
 The current version is 1.9. Please see the release notes below if you are upgrading from an older version.
 
+
 ## Questions?
 
 There is an FAQ page started here. Check the wiki-pages here. Or you can use the forums found here.
+
 
 ## Donations for original developers
 
