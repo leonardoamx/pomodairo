@@ -313,7 +313,7 @@
 	</fx:Declarations>
 	
 	<s:Panel styleName="timerPanel" left="0" top="0" height="164" right="0" mouseDown="{nativeWindow.startMove()}">
-		<ns1:Timer id="timerCanvas" left="0" top="0" width="100%" pomodoroLengthInMinutes="25" />
+		<ns1:TimerCanvas id="timerCanvas" left="0" top="0" width="100%" pomodoroLengthInMinutes="25" />
 		
 		<s:controlBarContent>
 			<s:Button label="Task List" click="toggleTaskList()" toolTip="Open/close task list"/>
