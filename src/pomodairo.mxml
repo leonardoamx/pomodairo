@@ -37,15 +37,12 @@
 			import com.pomodairo.components.config.SoundConfigPanel;
 			import com.pomodairo.components.config.TimingConfigPanel;
 			import com.pomodairo.components.config.TwitterConfigPanel;
-			import com.pomodairo.components.timer;
 			import com.pomodairo.db.Storage;
 			import com.pomodairo.events.ConfigurationUpdatedEvent;
 			import com.pomodairo.events.GuiChangeEvent;
 			import com.pomodairo.events.PomodoroEvent;
 			import com.pomodairo.twitter.TwitterManager;
-			
-			import mx.controls.Alert;
-			import mx.controls.TextInput;
+
 			import mx.events.MenuEvent;
 			import mx.managers.PopUpManager;
 
@@ -316,7 +313,7 @@
 	</fx:Declarations>
 	
 	<s:Panel styleName="timerPanel" left="0" top="0" height="164" right="0" mouseDown="{nativeWindow.startMove()}">
-		<ns1:timer id="timerCanvas" left="0" top="0" width="100%" pomodoroLengthInMinutes="25" />
+		<ns1:Timer id="timerCanvas" left="0" top="0" width="100%" pomodoroLengthInMinutes="25" />
 		
 		<s:controlBarContent>
 			<s:Button label="Task List" click="toggleTaskList()" toolTip="Open/close task list"/>
