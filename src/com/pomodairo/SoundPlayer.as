@@ -16,10 +16,10 @@ package com.pomodairo
 
 	public class SoundPlayer
 	{
-		[Embed(source="alarm.mp3")]
+		[Embed(source="/assets/alarm.mp3")]
 		public var alarmClass:Class;
 		
-		[Embed(source="ticking.mp3")]
+		[Embed(source="/assets/ticking.mp3")]
 		public var tickClass:Class;
 		
 		private var soundEnabled:Boolean = true;
