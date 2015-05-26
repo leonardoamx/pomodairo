@@ -1,6 +1,6 @@
 This project was exported from code.google.com/p/pomodairo
 
-![Pomodairo logo](logo.png)
+![Pomodairo logo](etc/logo.png)
 #Pomodairo
 
 An Adobe Air application for working with the Pomodoro technique, http://www.pomodorotechnique.com.
@@ -9,13 +9,13 @@ Pomodairo includes the obligatory timer of course, but also includes a task list
 
 ## Screenshots
 
-![Mini mode](pomodairo_mini.png)
+![Mini mode](etc/pomodairo_mini.png)
 Pomodairo Client mini view (version 1.9):
 
-![Standard view](pomodairo.png)
+![Standard view](etc/pomodairo.png)
 Pomodairo Client (version 1.7):
 
-![Tasklist](pomodairo_tasklist.png)
+![Tasklist](etc/pomodairo_tasklist.png)
 Pomodairo Client with tasklist (version 1.7): 
 
 
