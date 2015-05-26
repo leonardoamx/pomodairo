@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" 
-	layout="absolute" height="165" width="320" showFlexChrome="false"
-	verticalScrollPolicy="off" horizontalScrollPolicy="off"
-	initialize="beforeInit()"
-	creationComplete="init()" xmlns:views="com.views.*" xmlns:ns1="com.pomodairo.components.*"
+<s:WindowedApplication 
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:views="com.views.*" 
+	xmlns:ns1="com.pomodairo.components.*"
+
+	height="165" width="320" minWidth="320"
 	backgroundColor="#292929"
-	closing="beforeClose()"
-	title="{timerCanvas.appTitle}"
+
+	initialize="beforeInit()"
+	creationComplete="init()" 
 	windowResize="{resizeHandler(event)}"
-	minWidth="320"
-	close="shutdown()" xmlns:s="library://ns.adobe.com/flex/spark">
+	closing="beforeClose()"
+	close="shutdown()"
+
+	title="{timerCanvas.appTitle}"
+	showStatusBar="false"
+	>
 	
-	<mx:Style source="style/styles.css"/>
+	<fx:Style source="style/styles.css"/>
 	
-	<mx:Script>
+	<fx:Script>
 		<![CDATA[
 			import air.update.ApplicationUpdaterUI;
 			import air.update.events.UpdateEvent;
@@ -300,34 +308,34 @@
 	   	  	---------------------------------------------------- */
 
         ]]>
-    </mx:Script>
+    </fx:Script>
 
-	<mx:Fade id="fadein" />
-	<mx:Fade id="fadeout" />
+	<fx:Declarations>
+		<s:Fade id="fadein" />
+		<s:Fade id="fadeout" />
+	</fx:Declarations>
 	
 	<s:Panel styleName="timerPanel" left="0" top="0" height="164" right="0" mouseDown="{nativeWindow.startMove()}">
-		<ns1:timer id="timerCanvas" left="0" top="0" width="100%" pomodoroLengthInMinutes="25">
-		</ns1:timer>
+		<ns1:timer id="timerCanvas" left="0" top="0" width="100%" pomodoroLengthInMinutes="25" />
 		
 		<s:controlBarContent>
-			<mx:Button label="Task List" click="toggleTaskList()" toolTip="Open/close task list"/>
-			<mx:Button label="Unplanned" id="unplannedButton" click="newUnplanned()" toolTip="Add unplanned" enabled="false"/>
-			<mx:Button label="Interruption" id="interruptionButton" click="newInterruption()" toolTip="Add interruption" enabled="false"/>
+			<s:Button label="Task List" click="toggleTaskList()" toolTip="Open/close task list"/>
+			<s:Button label="Unplanned" id="unplannedButton" click="newUnplanned()" toolTip="Add unplanned" enabled="false"/>
+			<s:Button label="Interruption" id="interruptionButton" click="newInterruption()" toolTip="Add interruption" enabled="false"/>
 		</s:controlBarContent>
 		
 	</s:Panel>
 	
-	<mx:Label text="x" click="close()" color="#FFFFFF" right="8" top="2"/>
-	<mx:Label text="_" click="minimize()" color="#FFFFFF" right="28" top="2"/>
-	<mx:Button right="56" top="0" height="22" width="54" id="toggleViewButton" label="view" click="toggleViewState()"/>
+	<s:Label text="x" click="close()" color="#FFFFFF" right="8" top="2"/>
+	<s:Label text="_" click="minimize()" color="#FFFFFF" right="28" top="2"/>
+	<s:Button right="56" top="0" height="22" width="54" id="toggleViewButton" label="view" click="toggleViewState()"/>
 	
-	<mx:Canvas id="taskListPanel" x="0" y="166" height="100%" width="100%" visible="false" showEffect="fadein" hideEffect="fadeout">
-		<ns1:TaskListCanvas x="0" y="0" height="100%" width="100%">
-		</ns1:TaskListCanvas>
-	</mx:Canvas>
+	<s:Group id="taskListPanel" x="0" y="166" height="100%" width="100%" visible="false" showEffect="fadein" hideEffect="fadeout">
+		<ns1:TaskListCanvas x="0" y="0" height="100%" width="100%" />
+	</s:Group>
 	
 	<mx:MenuBar id="myMenuBar" labelField="@label" itemClick="menuClick(event)">
-        <mx:XMLList>
+        <fx:XMLList>
             <menuitem label="Menu">
 				<menuitem label="Config">
 					<menuitem label="Configuration" action="config"/>
@@ -339,7 +347,7 @@
 				<menuitem label="Statistics" action="statistics"/>
 				<menuitem label="Pomodairo" action="about"/>
             </menuitem>
-        </mx:XMLList>
+        </fx:XMLList>
     </mx:MenuBar>
 	
-</mx:WindowedApplication>
+</s:WindowedApplication>
