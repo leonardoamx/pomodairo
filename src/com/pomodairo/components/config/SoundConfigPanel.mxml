@@ -21,8 +21,8 @@
 			private var alarmSound:String = "";
 			private var clockSound:String = "";
         	
-			var soundTypes:FileFilter = new FileFilter("Audio Files (*.mp3)", "*.mp3");
-			var fileTypes:Array = new Array(soundTypes);
+			private var soundTypes:FileFilter = new FileFilter("Audio Files (*.mp3)", "*.mp3");
+			private var fileTypes:Array = new Array(soundTypes);
 			private var alarmSoundFile:File = new File();
 			private var clockSoundFile:File = new File();
 			

@@ -41,7 +41,7 @@
 				input.setFocus();				
 			}
            
-           function checkSubmit(event:KeyboardEvent):void
+			private function checkSubmit(event:KeyboardEvent):void
             {
                 if(event.charCode == 13)
                        fireSubmit(null);

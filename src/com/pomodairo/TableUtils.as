@@ -36,7 +36,7 @@ package com.pomodairo
 		   }  
            tmpString += "</tr>";
            
-           for(var i:int = 0; i < tmpArray.length; i++)
+           for(i = 0; i < tmpArray.length; i++)
            {
                tmpString += "<tr>";
                for(var j:int = 0; j < keys.length; j++) {
@@ -80,7 +80,7 @@ package com.pomodairo
 		   }  
            tmpString += "\n";
            
-           for(var i:int = 0; i < tmpArray.length; i++)
+           for(i = 0; i < tmpArray.length; i++)
            {
                for(var j:int = 0; j < keys.length; j++) {
                	 if(j == removeRowIndex) {

@@ -7,6 +7,7 @@
 			import com.pomodairo.db.Storage;
 			import flash.system.System;
 			
+			[Bindable]
 			private var db:Storage = Storage.instance;
 			
 			private function init():void {
