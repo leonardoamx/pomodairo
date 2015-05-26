@@ -1,0 +1,292 @@
+/*
+//------------------------------
+//  Accordion
+//------------------------------
+*/
+mx|Accordion
+{
+	borderStyle:solid;
+	borderColor:#000000;
+	borderThickness:1;
+	fontWeight:normal;
+	color: #aaaaaa;
+	textRollOverColor: #FFFFFF;
+	textSelectedColor:#FFFFFF;
+	disabledColor:#5A5A5A;
+	backgroundColor: #333333;
+	/*backgroundImage: Embed(source="kingnarestyle.swf", symbol="Global_Bg");
+	backgroundSize:"100%";*/
+}
+
+
+/*
+//------------------------------
+//  AccordionHeader
+//------------------------------
+*/
+mx|AccordionHeader
+{
+
+	disabledSkin: Embed(source="kingnarestyle.swf", symbol="AccordionHeader_disabledSkin");
+	downSkin: Embed(source="kingnarestyle.swf", symbol="AccordionHeader_downSkin");
+	overSkin: Embed(source="kingnarestyle.swf", symbol="AccordionHeader_overSkin");
+	selectedDisabledSkin: Embed(source="kingnarestyle.swf", symbol="AccordionHeader_disabledSkin");
+	selectedDownSkin: Embed(source="kingnarestyle.swf", symbol="AccordionHeader_downSkin");
+	selectedOverSkin: Embed(source="kingnarestyle.swf", symbol="AccordionHeader_overSkin");
+	selectedUpSkin: Embed(source="kingnarestyle.swf", symbol="AccordionHeader_selectedSkin");
+	upSkin: Embed(source="kingnarestyle.swf", symbol="AccordionHeader_upSkin");
+	color: #aaaaaa;
+	textRollOverColor: #ffffff;
+	textSelectedColor:#444444;
+	disabledColor:#111111;
+	selectedColor:#ffffff;
+}
+
+
+/*
+//------------------------------
+//  ColorPicker
+//------------------------------
+*/
+mx|ColorPicker
+{
+	focusAlpha:	0;
+	swatchPanelStyleName:mySwatchPanelStyle;
+	disabledSkin: Embed(source="kingnarestyle.swf", symbol="ColorPicker_disabledSkin");
+	downSkin: Embed(source="kingnarestyle.swf", symbol="ColorPicker_downSkin");
+	overSkin: Embed(source="kingnarestyle.swf", symbol="ColorPicker_overSkin");
+	upSkin: Embed(source="kingnarestyle.swf", symbol="ColorPicker_upSkin");
+	editableDisabledSkin: Embed(source="kingnarestyle.swf", symbol="ColorPicker_disabledSkin");
+	editableDownSkin: Embed(source="kingnarestyle.swf", symbol="ColorPicker_downSkin");
+	editableOverSkin: Embed(source="kingnarestyle.swf", symbol="ColorPicker_overSkin");
+	editableUpSkin: Embed(source="kingnarestyle.swf", symbol="ColorPicker_upSkin");
+}
+
+
+/*
+//------------------------------
+//  FormItem
+//------------------------------
+*/
+mx|FormItem
+{
+	indicatorSkin: Embed(source="kingnarestyle.swf",symbol="FormItem_indicatorSkin");  
+}
+
+
+/*
+//------------------------------
+//  HDividedBox
+//------------------------------
+*/
+mx|HDividedBox
+{
+	dividerSkin: Embed(source="kingnarestyle.swf",symbol="DividedBox_HDividerSkin");
+	horizontalDividerCursor: Embed(source="kingnarestyle.swf",symbol="DividedBox_horizontalCursor");
+	dividerColor: #000000;
+	horizontalGap: 6;
+}
+
+
+/*
+//------------------------------
+//  HRule
+//------------------------------
+*/
+mx|HRule
+{
+	strokeColor: #000000;
+	shadowColor: #CCCCCC;
+	strokeWidth: 1;
+}
+
+
+/*
+//------------------------------
+//  PopUpButton
+//------------------------------
+*/
+mx|PopUpButton
+{
+/* using symbol */
+/* 	disabledSkin: Embed(source="kingnarestyle.swf", symbol="PopUpButton_disabledSkin");
+	downSkin: Embed(source="kingnarestyle.swf", symbol="PopUpButton_downLeftSkin");
+	overSkin: Embed(source="kingnarestyle.swf", symbol="PopUpButton_overLeftSkin");	
+	popUpDownSkin: Embed(source="kingnarestyle.swf", symbol="PopUpButton_downRightSkin");
+	popUpOverSkin: Embed(source="kingnarestyle.swf", symbol="PopUpButton_overRightSkin");
+	upSkin: Embed(source="kingnarestyle.swf", symbol="PopUpButton_upSkin"); */
+/* using ClassReference */
+	upSkin: ClassReference("com.kingnare.skins.PopUpButton.PopUpButtonSkin");
+	disabledSkin: ClassReference("com.kingnare.skins.PopUpButton.PopUpButtonSkin");
+	downSkin: ClassReference("com.kingnare.skins.PopUpButton.PopUpButtonSkin");
+	overSkin: ClassReference("com.kingnare.skins.PopUpButton.PopUpButtonSkin");
+	popUpDownSkin: ClassReference("com.kingnare.skins.PopUpButton.PopUpButtonSkin");
+	popUpOverSkin: ClassReference("com.kingnare.skins.PopUpButton.PopUpButtonSkin");
+	
+	color: #cccccc;
+	textRollOverColor: #ffffff;
+	textSelectedColor:#ffffff;
+	textDisabledColor: #1e1e1e;
+	fontWeight:normal;
+	arrowButtonWidth:16;
+}
+
+
+/*
+//------------------------------
+//  PopUpMenuButton
+//------------------------------
+*/
+mx|PopUpMenuButton
+{
+/* using symbol */
+/* 	disabledSkin: Embed(source="kingnarestyle.swf", symbol="PopUpButton_disabledSkin");
+	downSkin: Embed(source="kingnarestyle.swf", symbol="PopUpButton_downLeftSkin");
+	overSkin: Embed(source="kingnarestyle.swf", symbol="PopUpButton_overLeftSkin");	
+	popUpDownSkin: Embed(source="kingnarestyle.swf", symbol="PopUpButton_downRightSkin");
+	popUpOverSkin: Embed(source="kingnarestyle.swf", symbol="PopUpButton_overRightSkin");
+	upSkin: Embed(source="kingnarestyle.swf", symbol="PopUpButton_upSkin"); */
+/* using ClassReference */
+	upSkin: ClassReference("com.kingnare.skins.PopUpButton.PopUpButtonSkin");
+	disabledSkin: ClassReference("com.kingnare.skins.PopUpButton.PopUpButtonSkin");
+	downSkin: ClassReference("com.kingnare.skins.PopUpButton.PopUpButtonSkin");
+	overSkin: ClassReference("com.kingnare.skins.PopUpButton.PopUpButtonSkin");
+	popUpDownSkin: ClassReference("com.kingnare.skins.PopUpButton.PopUpButtonSkin");
+	popUpOverSkin: ClassReference("com.kingnare.skins.PopUpButton.PopUpButtonSkin");
+	
+	color: #cccccc;
+	textRollOverColor: #ffffff;
+	textSelectedColor:#ffffff;
+	textDisabledColor: #1e1e1e;
+	fontWeight:normal;
+	arrowButtonWidth:16;
+}
+
+
+/*
+//------------------------------
+//  RadioButton
+//------------------------------
+*/
+mx|RadioButton
+{
+	upIcon: Embed(source="kingnarestyle.swf", symbol="RadioButton_upIcon");
+	selectedDisabledIcon: Embed(source="kingnarestyle.swf", symbol="RadioButtonSelected_disabledIcon");
+	selectedDownIcon: Embed(source="kingnarestyle.swf", symbol="RadioButtonSelected_downIcon");
+	selectedOverIcon: Embed(source="kingnarestyle.swf", symbol="RadioButtonSelected_overIcon");
+	overIcon: Embed(source="kingnarestyle.swf", symbol="RadioButton_overIcon");
+	downIcon: Embed(source="kingnarestyle.swf", symbol="RadioButton_downIcon");
+	disabledIcon: Embed(source="kingnarestyle.swf", symbol="RadioButton_disabledIcon");
+	selectedUpIcon: Embed(source="kingnarestyle.swf", symbol="RadioButtonSelected_upIcon");
+}
+
+
+/*
+//------------------------------
+//  RichTextEditor
+//------------------------------
+*/
+mx|RichTextEditor
+{
+	/* borderColor: #333333;
+	borderAlpha: 1.0;
+	cornerRadius: 2; */
+}
+
+
+
+/*
+//------------------------------
+//  TextArea
+//------------------------------
+*/
+mx|TextArea
+{
+	color: #FFFFFF;
+	borderColor: #000000;
+	borderSkin: Embed(source="kingnarestyle.swf", symbol="TextAreaBackground");
+	backgroundAlpha: 1.0; 
+}
+
+
+/*
+//------------------------------
+//  TitleWindow
+//------------------------------
+*/
+mx|TitleWindow
+{
+	closeButtonDisabledSkin: Embed(source="kingnarestyle.swf",symbol="Panel_closeButtonDisabledSkin");
+	closeButtonDownSkin: Embed(source="kingnarestyle.swf",symbol="Panel_closeButtonDownSkin");
+	closeButtonOverSkin: Embed(source="kingnarestyle.swf",symbol="Panel_closeButtonOverSkin");
+	closeButtonUpSkin: Embed(source="kingnarestyle.swf",symbol="Panel_closeButtonUpSkin");
+	titleStyleName: "windowTitle";
+	cornerRadius:2;
+	backgroundColor: #333333;
+	borderThickness:2;
+	controlBarStyleName: "windowControlBar";
+	borderStyle: solid; 
+}
+/*
+//------------------------------
+//  Tree
+//------------------------------
+*/
+mx|Tree
+{
+	defaultLeafIcon: Embed(source="kingnarestyle.swf",symbol="Tree_defaultLeafIcon");
+	disclosureClosedIcon: Embed(source="kingnarestyle.swf",symbol="Tree_disclosureClosedIcon");
+	disclosureOpenIcon: Embed(source="kingnarestyle.swf",symbol="Tree_disclosureOpenIcon");
+	folderClosedIcon: Embed(source="kingnarestyle.swf",symbol="Tree_folderClosedIcon");
+	folderOpenIcon: Embed(source="kingnarestyle.swf",symbol="Tree_folderOpenIcon");
+	useRollOver: false;
+	backgroundColor: #333333;
+	/* borderSkin: Embed(source="kingnarestyle.swf",symbol="Tree_borderSkin");  */
+}
+
+
+/*
+//------------------------------
+//  VDividedBox
+//------------------------------
+*/
+mx|VDividedBox
+{
+	dividerSkin: Embed(source="kingnarestyle.swf",symbol="DividedBox_VDividerSkin");
+	verticalDividerCursor: Embed(source="kingnarestyle.swf",symbol="DividedBox_verticalCursor");
+	dividerColor: #000000;
+	verticalGap: 6;
+	verticalAlign: top;
+}
+
+
+/*
+//------------------------------
+//  VRule
+//------------------------------
+*/
+mx|VRule
+{
+	strokeColor: #000000;
+	shadowColor: #CCCCCC;
+	strokeWidth: 1;
+}
+
+
+/*
+//------------------------------
+//  VSlider
+//------------------------------
+*/
+mx|VSlider
+{
+	trackSkin: Embed(source="kingnarestyle.swf", symbol="SliderTrack_Skin");
+	showTrackHighlight: true;
+	thumbUpSkin: Embed(source="kingnarestyle.swf", symbol="SliderThumb_upSkin",scaleGridBottom="10",scaleGridLeft="1",scaleGridTop="1",scaleGridRight="10");
+	thumbOverSkin: Embed(source="kingnarestyle.swf", symbol="SliderThumb_overSkin",scaleGridBottom="10",scaleGridLeft="1",scaleGridTop="1",scaleGridRight="10");
+	thumbDownSkin: Embed(source="kingnarestyle.swf", symbol="SliderThumb_downSkin",scaleGridBottom="10",scaleGridLeft="1",scaleGridTop="1",scaleGridRight="10");
+	thumbDisabledSkin: Embed(source="kingnarestyle.swf", symbol="SliderThumb_disabledSkin",scaleGridBottom="10",scaleGridLeft="1",scaleGridTop="1",scaleGridRight="10");
+	trackHighlightSkin: Embed(source="kingnarestyle.swf", symbol="SliderHighlight_Skin");
+	dataTipOffset: 5;
+}
+
