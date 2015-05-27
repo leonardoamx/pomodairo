@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" x="10" y="5" width="298" height="154" backgroundColor="#313131"
+<s:BorderContainer
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	x="10" y="5" width="298" height="154" 
 	creationComplete="init()">
+<!--	backgroundColor="#313131"-->
 
 
-<mx:Script>
+	<fx:Script>
         <![CDATA[
-			import com.pomodairo.PomodoroEventDispatcher;
-			import com.pomodairo.db.Storage;
-			import com.pomodairo.events.ConfigurationUpdatedEvent;
+//			import com.pomodairo.PomodoroEventDispatcher;
+//			import com.pomodairo.db.Storage;
+//			import com.pomodairo.events.ConfigurationUpdatedEvent;
 			
-			import flash.net.navigateToURL;
-			
-			import mx.binding.utils.BindingUtils;
-			import mx.controls.Alert;
+//			import flash.net.navigateToURL;
+
+//			import mx.binding.utils.BindingUtils;
+//			import mx.controls.Alert;
         	
 			private const DONATE_URL:String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TK4ED2PWBY2NW&lc=SE&item_name=Pomodairo&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted";
 			
@@ -47,13 +52,13 @@
 
 			            
         ]]>
-    </mx:Script>
+    </fx:Script>
 	
-	<mx:Button x="221" y="121" label="Close" click="exit()"/>
-	<mx:Image x="151" y="51" source="assets/paypal.gif" click="openPaypal()" buttonMode="true" useHandCursor="true"/>
-	<mx:Text x="10" y="36" text="Pomodairo is freeware and will remain free. However if you find Pomodairo useful then consider making a donation. Thank you!" height="108" width="133"/>
-	<mx:Label x="99" y="10" text="version {version}"/>
-	<mx:Label x="10" y="10" text="POMODAIRO" fontWeight="bold"/>
-	<mx:Label x="10" y="129" text="http://code.google.com/p/pomodairo/" fontSize="8" fontWeight="normal" fontStyle="italic" buttonMode="true" useHandCursor="true" mouseChildren="false" click="openGoogleCode()"/>
+	<s:Button x="221" y="121" label="Close" click="exit()"/>
+	<s:Image x="151" y="51" source="assets/paypal.gif" click="openPaypal()" buttonMode="true" useHandCursor="true"/>
+	<s:Label x="10" y="36" text="Pomodairo is freeware and will remain free. However if you find Pomodairo useful then consider making a donation. Thank you!" height="108" width="133"/>
+	<s:Label x="99" y="10" text="version {version}"/>
+	<s:Label x="10" y="10" text="POMODAIRO" fontWeight="bold"/>
+	<s:Label x="10" y="129" text="http://code.google.com/p/pomodairo/" fontSize="8" fontWeight="normal" fontStyle="italic" buttonMode="true" useHandCursor="true" mouseChildren="false" click="openGoogleCode()"/>
 	
-</mx:Canvas>
+</s:BorderContainer>
