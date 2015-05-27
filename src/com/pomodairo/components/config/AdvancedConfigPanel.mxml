@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" x="10" y="5" width="298" height="154" backgroundColor="#313131"
+<s:BorderContainer
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	x="10" y="5" width="298" height="154" backgroundColor="#313131"
 	creationComplete="init()">
 
-
-<mx:Script>
+	<fx:Script>
         <![CDATA[
-        	import mx.controls.Alert;
-        	import com.pomodairo.events.ConfigurationUpdatedEvent;
-        	import com.pomodairo.PomodoroEventDispatcher;
-        	import com.pomodairo.db.Storage;
+			import com.pomodairo.db.Storage;
+			import com.pomodairo.events.ConfigurationUpdatedEvent;
+			import com.pomodairo.PomodoroEventDispatcher;
+			import flash.utils.Dictionary;
         	
         	public static var DATABASE_LOCATION:String = "db.location";
         	
@@ -42,7 +45,7 @@
         	
             private function exit():void
             {
-            	this.parent.removeChild(this);
+				this.parent.removeChild (this);
             }
             
             public function save():void
@@ -97,15 +100,15 @@
 
 			            
         ]]>
-    </mx:Script>
+    </fx:Script>
 
-	<mx:Label x="10" y="10" color="#A9A9A9" text="Database location:"/>
-	<mx:TextInput id="dataFileLocationInput" x="10" y="26" width="203">
-		<mx:toolTip>Folder that will hold the pomodairo database file. Leave empty for default. NOTE: If you change this you will lose your current data!</mx:toolTip>
-	</mx:TextInput>
-	<mx:Button x="221" y="25" label="Browse" click="selectFile()"/>
+	<s:Label x="10" y="10" color="#A9A9A9" text="Database location:"/>
+	<s:TextInput id="dataFileLocationInput" x="10" y="26" width="203">
+		<s:toolTip>Folder that will hold the pomodairo database file. Leave empty for default. NOTE: If you change this you will lose your current data!</s:toolTip>
+	</s:TextInput>
+	<s:Button x="221" y="25" label="Browse" click="selectFile()"/>
 	
-	<mx:Button x="221" y="90" label="Save" click="save()" width="63"/>
-	<mx:Button x="221" y="121" label="Cancel" click="exit()"/>
+	<s:Button x="221" y="90" label="Save" click="save()" width="63"/>
+	<s:Button x="221" y="121" label="Cancel" click="exit()"/>
 	
-</mx:Canvas>
+</s:BorderContainer>
