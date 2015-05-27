@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="320" height="300"
-	initialize="init()"	horizontalScrollPolicy="off" verticalScrollPolicy="off">
+<s:Group 
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+
+	width="320" height="300"
+	initialize="init()"
+	>
 	
-	<mx:Script>
+	<fx:Script>
 		<![CDATA[
 			import mx.managers.PopUpManager;
 			import mx.controls.Alert;
 			import com.pomodairo.events.PomodoroEvent;
-			import com.pomodairo.components.CustomRenderer;
 			import com.pomodairo.PomodoroEventDispatcher;
 			import com.pomodairo.Pomodoro;
 			import com.pomodairo.TableUtils;
@@ -64,7 +69,7 @@
 			
 			private function updatePrios():void
 			{
-				var i:int = pomodorosDataGrid.rowCount - 1;
+				var i:int = pomodorosDataGrid.dataProviderLength - 1;
 				for each (var pom:Pomodoro in pomodorosDataGrid.dataProvider) {
 					pom.ordinal = i--;
 					db.updateOrdinal(pom);			        
@@ -136,7 +141,7 @@
 	        
 			public function copyTableToClipboard(event:Event=null):void
 			{
-				var data:Array = db.dataset;
+				var data:Array = db.dataset.toArray ();
 				var tmpString:String = new TableUtils().getPomodorosTableAsCsv(data);
 				System.setClipboard(tmpString);
 			}
@@ -156,32 +161,37 @@
 			}
 
 		]]>
-	</mx:Script>
-	
-	<mx:Number id="lastRollOverIndex" />
+	</fx:Script>
+	<fx:Declarations>
+		<fx:Number id="lastRollOverIndex" />
+	</fx:Declarations>
 
-	<mx:DataGrid id="pomodorosDataGrid"
+	<s:DataGrid id="pomodorosDataGrid"
 		dataProvider="{db.dataset}" 
 		top="0" right="0" bottom="44" left="0"
 		editable="false"
 		rightClick="displayMenu(event);"
-		itemRollOver="lastRollOverIndex = event.rowIndex"
-		itemClick="onStartPomodoroClicked(event);"
+		gridRollOver="lastRollOverIndex = event.rowIndex"
+		gridClick="onStartPomodoroClicked(event);"
 		dragMoveEnabled="true"
 		dragEnabled="true"
 		dropEnabled="true"
 		dragComplete="onDragComplete(event)"
-		change="onUsersDataGridChanged(event)" width="100%" >
-		<mx:columns>
-			<mx:DataGridColumn width="125" headerText="Name" dataField="name" itemRenderer="com.pomodairo.components.CustomRenderer" />
-			<mx:DataGridColumn width="28" headerText="E" dataField="estimated" dataTipField="estimatedDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
-			<mx:DataGridColumn width="28" headerText="P" dataField="pomodoros" dataTipField="pomodorosDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
-			<mx:DataGridColumn width="28" headerText="U" dataField="unplanned" dataTipField="unplannedDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
-			<mx:DataGridColumn width="28" headerText="I" dataField="interruptions" dataTipField="interruptionsDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
-			<!-- Useful for debugging ordinal stuff --> <!-- <mx:DataGridColumn width="28" headerText="S" dataField="ordinal" dataTipField="ordinalDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" /> -->
-		</mx:columns>
-	</mx:DataGrid>
+		selectionChange="onUsersDataGridChanged(event)" width="100%">
+		<s:columns>
+			<s:ArrayList>
+				<s:GridColumn width="125" headerText="Name" dataField="name" itemRenderer="com.pomodairo.components.CustomRenderer" />
+				<s:GridColumn width="28" headerText="E" dataField="estimated" dataTipField="estimatedDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
+				<s:GridColumn width="28" headerText="P" dataField="pomodoros" dataTipField="pomodorosDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
+				<s:GridColumn width="28" headerText="U" dataField="unplanned" dataTipField="unplannedDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
+				<s:GridColumn width="28" headerText="I" dataField="interruptions" dataTipField="interruptionsDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" />
+				<!-- Useful for debugging ordinal stuff 
+				<s:GridColumn width="28" headerText="S" dataField="ordinal" dataTipField="ordinalDescription" showDataTips="true" itemRenderer="com.pomodairo.components.CustomRenderer" /> 
+				-->
+			</s:ArrayList>
+		</s:columns>
+	</s:DataGrid>
 	
-	<mx:Button id="addPomoButton" label="Add New" click="onAddPomodoroClicked()" width="91" height="24" right="10" bottom="10"/>
+	<s:Button id="addPomoButton" label="Add New" click="onAddPomodoroClicked()" width="91" height="24" right="10" bottom="10"/>
 
-</mx:Canvas>
+</s:Group>

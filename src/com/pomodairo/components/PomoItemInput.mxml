@@ -108,7 +108,7 @@
 	        		// and the item read from the db again.
 	        		// 2. The db does not have a easy synchronous get.
 	        		Storage.instance.getAllPomodoros();
-					var dataset:Array = Storage.instance.dataset;
+					var dataset:Array = Storage.instance.dataset.toArray();
 					for each (var pom:Pomodoro in dataset)
 					{
 						if (pom.name == item.name) {

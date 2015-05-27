@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Label 
-  xmlns:mx="http://www.adobe.com/2006/mxml"
-  width="100%" height="100%" creationComplete="init()">
-  <mx:Script>
+<s:GridItemRenderer  
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+  creationComplete="init()">
+  <fx:Script>
     <![CDATA[
       import mx.events.ListEvent;
-      import mx.controls.DataGrid;
       import com.pomodairo.Pomodoro;
       import mx.controls.dataGridClasses.DataGridListData;
+	  import spark.components.Grid;
       
-      private var dg:DataGrid;
+      private var dg:Grid;
       private var _strikethrough: Boolean = false;
       
       private function init():void
       {
-        dg = listData.owner as DataGrid;
+        dg =grid as Grid;
       }
         
 	    public function set strikethrough(bool: Boolean): void {
-	        this._strikethrough = bool;
-	        this.invalidateDisplayList();
+	        _strikethrough = bool;
+	        labelDisplay.invalidateDisplayList();
 	    }
 	    
 	    public function get strikethrough(): Boolean {
-	        return this._strikethrough;
+	        return _strikethrough;
 	    }
 		
 		
@@ -39,34 +41,35 @@
 	          strikethrough = false;
 	        }     	
 	            	
-	        this.setStyle('color',0xCCCCCC);
-	        this.setStyle('fontStyle', 'normal');
-	        this.setStyle('fontWeight', 'normal');
+	        labelDisplay.setStyle('color',0xCCCCCC);
+	        labelDisplay.setStyle('fontStyle', 'normal');
+	        labelDisplay.setStyle('fontWeight', 'normal');
 			
             super.updateDisplayList (unscaledWidth, unscaledHeight);
            
-            this.graphics.clear();
-            if (this._strikethrough) {
-                this.graphics.lineStyle(1, this.getStyle("color"));
-                this.graphics.moveTo(0, unscaledHeight/2);
-                this.graphics.lineTo(unscaledWidth, unscaledHeight/2);                
+            labelDisplay.graphics.clear();
+            if (_strikethrough) {
+                labelDisplay.graphics.lineStyle(1, labelDisplay.getStyle("color"));
+                labelDisplay.graphics.moveTo(0, unscaledHeight/2);
+                labelDisplay.graphics.lineTo(unscaledWidth, unscaledHeight/2);                
             }
             else {
 	            if (data.estimated == 0) {
-	                this.setStyle('color',0x777777);
+	                labelDisplay.setStyle('color',0x777777);
 	            }
 	            if (data.estimated < data.pomodoros) {
-	            	this.setStyle('color',0xCC0000);
+	            	labelDisplay.setStyle('color',0xCC0000);
 	            }
 	            if (data.created.day != new Date().day ) {
-	            	this.setStyle('fontStyle', 'italic');
+	            	labelDisplay.setStyle('fontStyle', 'italic');
 	            }
 	            if (data.pomodoros > 0 ) {
-	            	this.setStyle('fontWeight', 'bold');
+	            	labelDisplay.setStyle('fontWeight', 'bold');
 	            }
             }
         }
       
     ]]>
-  </mx:Script>
-</mx:Label>
+  </fx:Script>
+  <s:Label id="labelDisplay" width="100%" />
+</s:GridItemRenderer >

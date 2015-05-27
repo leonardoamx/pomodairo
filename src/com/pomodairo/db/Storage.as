@@ -7,6 +7,7 @@ package com.pomodairo.db
 	import com.pomodairo.components.config.AdvancedConfigPanel;
 	import com.pomodairo.events.ConfigurationUpdatedEvent;
 	import com.pomodairo.events.PomodoroEvent;
+	import mx.collections.ArrayList;
 	
 	import flash.data.SQLConnection;
 	import flash.data.SQLMode;
@@ -29,7 +30,7 @@ package com.pomodairo.db
 		public static var instance:Storage = new Storage();
 		
 		[Bindable]
-		public var dataset:Array;
+		public var dataset:ArrayList;
 		
 		[Bindable]
 		public var datasetStatistics1:Array;
@@ -374,7 +375,7 @@ package com.pomodairo.db
 			var result:SQLResult = dbStatement.getResult();
 		    if (result != null)
 		    {
-		    	dataset = result.data;
+		    	dataset = new ArrayList (result.data);
 		    }
 		}
 		
