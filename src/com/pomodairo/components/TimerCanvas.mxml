@@ -183,10 +183,12 @@
 			 * This can originate from multiple locations.
 			 */
 			private function onPomodoroSelected(e:PomodoroEvent):void {
-				if (!e.pomodoro.done && !timer.running) {
-					taskManager.setActive(e.pomodoro);
-					stopBreakTimer();
-					showStartButton();
+				if (e){
+					if (!e.pomodoro.done && !timer.running) {
+						taskManager.setActive(e.pomodoro);
+						stopBreakTimer();
+						showStartButton();
+					}
 				}
 			}
 			

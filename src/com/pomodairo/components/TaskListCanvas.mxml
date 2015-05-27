@@ -10,6 +10,7 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import flash.events.Event;
 			import mx.managers.PopUpManager;
 			import mx.controls.Alert;
 			import com.pomodairo.events.PomodoroEvent;
@@ -104,9 +105,11 @@
 	        private function onStartPomodoroClicked(event:Event=null):void
 	        {
 	        	var pom:Pomodoro = pomodorosDataGrid.selectedItem as Pomodoro;
-	        	var evt:PomodoroEvent = new PomodoroEvent(PomodoroEvent.SELECTED);
-	        	evt.pomodoro = pom;
-	        	PomodoroEventDispatcher.getInstance().dispatchEvent(evt);
+				if (pom){
+					var evt:PomodoroEvent = new PomodoroEvent(PomodoroEvent.SELECTED);
+					evt.pomodoro = pom;
+					PomodoroEventDispatcher.getInstance().dispatchEvent(evt);
+				}
 	        } 
 	        
 	        private function onDonePomodoroClicked(event:Event=null):void
