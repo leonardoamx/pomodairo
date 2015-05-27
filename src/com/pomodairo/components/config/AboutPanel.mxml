@@ -10,15 +10,9 @@
 
 	<fx:Script>
         <![CDATA[
-//			import com.pomodairo.PomodoroEventDispatcher;
-//			import com.pomodairo.db.Storage;
-//			import com.pomodairo.events.ConfigurationUpdatedEvent;
-			
-//			import flash.net.navigateToURL;
+			import flash.desktop.NativeApplication;
+			import flash.net.URLRequest;
 
-//			import mx.binding.utils.BindingUtils;
-//			import mx.controls.Alert;
-        	
 			private const DONATE_URL:String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TK4ED2PWBY2NW&lc=SE&item_name=Pomodairo&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted";
 			
 			[Bindable]
