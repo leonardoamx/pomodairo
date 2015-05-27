@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" x="10" y="5" width="298" height="154" backgroundColor="#313131"
+<s:BorderContainer
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	x="10" y="5" width="298" height="154" backgroundColor="#313131"
 	creationComplete="init()">
 
 
-<mx:Script>
+	<fx:Script>
         <![CDATA[
         	import com.pomodairo.events.ConfigurationUpdatedEvent;
         	import com.pomodairo.PomodoroEventDispatcher;
@@ -88,17 +92,18 @@
             }
 			            
         ]]>
-    </mx:Script>
-	<mx:CheckBox x="10" y="10" label="Always on top" id="alwaysOnTopCheckbox" />
-	<mx:CheckBox x="10" y="40" label="Update taskbar" id="updateTaskbarCheckbox"  selected="true">
-		<mx:toolTip>Should the taskbar icon be updated with the current pomodoro and time remaining?</mx:toolTip>
-	</mx:CheckBox>
-	<mx:Button x="221" y="90" label="Save" click="save()" width="63"/>
-	<mx:Button x="221" y="121" label="Cancel" click="exit()"/>
-	<mx:CheckBox x="10" y="70" label="Remember pos." id="positionCheckbox" selected="true"/>
-	<mx:Label x="10" y="107" color="#A9A9A9" text="URL to open (e.g. to Bugtracker):"/>
-	<mx:TextInput id="urlToOpenInput" x="10" y="122" width="203">
-		<mx:toolTip>URL to open, when clicking on the active task label that contains a hash number (e.g. task name 'Write unit tests #123' could open URL 'bugtracker.mycompany.com?id=123').</mx:toolTip>
-	</mx:TextInput>
+    </fx:Script>
 	
-</mx:Canvas>
+	<s:CheckBox x="10" y="10" label="Always on top" id="alwaysOnTopCheckbox" />
+	<s:CheckBox x="10" y="40" label="Update taskbar" id="updateTaskbarCheckbox"  selected="true">
+		<s:toolTip>Should the taskbar icon be updated with the current pomodoro and time remaining?</s:toolTip>
+	</s:CheckBox>
+	<s:Button x="221" y="90" label="Save" click="save()" width="63"/>
+	<s:Button x="221" y="121" label="Cancel" click="exit()"/>
+	<s:CheckBox x="10" y="70" label="Remember pos." id="positionCheckbox" selected="true"/>
+	<s:Label x="10" y="107" color="#A9A9A9" text="URL to open (e.g. to Bugtracker):"/>
+	<s:TextInput id="urlToOpenInput" x="10" y="122" width="203">
+		<s:toolTip>URL to open, when clicking on the active task label that contains a hash number (e.g. task name 'Write unit tests #123' could open URL 'bugtracker.mycompany.com?id=123').</s:toolTip>
+	</s:TextInput>
+	
+</s:BorderContainer>
