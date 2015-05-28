@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" x="10" y="5" width="298" height="154" backgroundColor="#313131"
+<s:BorderContainer
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	x="10" y="5" width="298" height="154" backgroundColor="#313131"
 	creationComplete="init()">
 
-
-<mx:Script>
+	<fx:Script>
         <![CDATA[
         	import com.pomodairo.PomodoroEventDispatcher;
         	import com.pomodairo.db.Storage;
         	import com.pomodairo.events.ConfigurationUpdatedEvent;
+			import flash.events.Event;
+			import flash.filesystem.File;
+			import flash.net.FileFilter;
 
         	public static var FADE_TICKING_SOUND:String = "sound.fadeTicking";
 			public static var ALARM_SOUND_FILE:String = "sound.alarmSound";
@@ -125,25 +131,25 @@
 			}      
 			            
         ]]>
-    </mx:Script>
+    </fx:Script>
 
-	<mx:CheckBox id="soundCheckbox" x="178.8" y="15.3" label="Sound enabled"/>
-	<mx:CheckBox id="fadeTickingCheckbox" x="178.8" y="45.3" label="Fade ticking"/>
-	<mx:Button x="221" y="90" label="Save" click="save()" width="63"/>
-	<mx:Button x="221" y="121" label="Cancel" click="exit()"/>
-	<mx:HSlider id="volumeSlider" x="10" y="12" minimum="0" maximum="100" snapInterval="5"/>
-	<mx:Label x="10" y="4" text="Volume" color="#A9A9A9"/>
+	<s:CheckBox id="soundCheckbox" x="178.8" y="15.3" label="Sound enabled"/>
+	<s:CheckBox id="fadeTickingCheckbox" x="178.8" y="45.3" label="Fade ticking"/>
+	<s:Button x="221" y="90" label="Save" click="save()" width="63"/>
+	<s:Button x="221" y="121" label="Cancel" click="exit()"/>
+	<s:HSlider id="volumeSlider" x="10" y="12" minimum="0" maximum="100" snapInterval="5"/>
+	<s:Label x="10" y="4" text="Volume" color="#A9A9A9"/>
 	
-	<mx:Label x="10" y="58.7" color="#A9A9A9" text="Alarm Sound:"/>
-	<mx:TextInput id="alarmFileLocationInput" x="10" y="76" width="131">
-		<mx:toolTip>Custom sound file for the alarm. Leave empty for default.</mx:toolTip>
-	</mx:TextInput>
-	<mx:Button x="149" y="76" label="Browse" click="selectAlarmFile()" width="64"/>
+	<s:Label x="10" y="58.7" color="#A9A9A9" text="Alarm Sound:"/>
+	<s:TextInput id="alarmFileLocationInput" x="10" y="76" width="131">
+		<s:toolTip>Custom sound file for the alarm. Leave empty for default.</s:toolTip>
+	</s:TextInput>
+	<s:Button x="149" y="76" label="Browse" click="selectAlarmFile()" width="64"/>
 	
-	<mx:Label x="10" y="106" color="#A9A9A9" text="Clock Sound:"/>
-	<mx:TextInput id="clockFileLocationInput" x="10" y="122" width="131">
-		<mx:toolTip>Custom sound file for the clock sound. Leave empty for default.</mx:toolTip>
-	</mx:TextInput>
-	<mx:Button x="149" y="122" label="Browse" click="selectClockFile()" width="64"/>
+	<s:Label x="10" y="106" color="#A9A9A9" text="Clock Sound:"/>
+	<s:TextInput id="clockFileLocationInput" x="10" y="122" width="131">
+		<s:toolTip>Custom sound file for the clock sound. Leave empty for default.</s:toolTip>
+	</s:TextInput>
+	<s:Button x="149" y="122" label="Browse" click="selectClockFile()" width="64"/>
 	
-</mx:Canvas>
+</s:BorderContainer>
