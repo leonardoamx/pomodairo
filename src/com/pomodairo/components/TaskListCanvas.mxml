@@ -179,7 +179,7 @@
 		dragMoveEnabled="true"
 		dragEnabled="true"
 		dropEnabled="true"
-		dragComplete="onDragComplete(event)"
+		gridMouseDrag="onDragComplete(event)"
 		selectionChange="onUsersDataGridChanged(event)" width="100%">
 		<s:columns>
 			<s:ArrayList>
