@@ -4,8 +4,8 @@
 	xmlns:s="library://ns.adobe.com/flex/spark"
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	x="10" y="5" width="298" height="154" 
+	backgroundColor="#313131"
 	creationComplete="init()">
-<!--	backgroundColor="#313131"-->
 
 
 	<fx:Script>

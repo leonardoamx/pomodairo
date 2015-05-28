@@ -31,13 +31,13 @@ SOFTWARE.
 //------------------------------
 //  Application
 //------------------------------
-* /
-mx|Application
+*/
+s|Application
 {
 	backgroundGradientAlphas: 1.0, 1.0;
 	backgroundGradientColors: #333333, #333333;
 }
-*/
+
 
 /*
 //------------------------------
@@ -88,7 +88,7 @@ mx|Alert
 //  Button
 //------------------------------
 */
-mx|Button
+s|Button
 {
 	color: #AAAAAA;
 	textRollOverColor: #FFFFFF;
@@ -379,7 +379,7 @@ mx|DateField
 //  HScrollBar
 //------------------------------
 */
-mx|HScrollBar
+s|HScrollBar
 {
 
 	trackSkin: Embed(source="kingnarestyle.swf", symbol="ScrollBars_trackSkin");
@@ -600,7 +600,7 @@ s|NumericStepper
 	borderAlpha: 0.2;
 } */
 
-mx|Panel
+s|Panel
 {
 	color: #DDDDDD;
 	backgroundColor: #333333;
@@ -721,7 +721,7 @@ mx|TabNavigator
 //  TextInput
 //------------------------------
 */
-mx|TextInput
+s|TextInput
 {
 /*	backgroundAlpha: 1.0;*/
 	borderColor: #B7BABC;
@@ -822,7 +822,7 @@ mx|ToolTip
 //  VScrollBar
 //------------------------------
 */
-mx|VScrollBar
+s|VScrollBar
 {
 	trackUpSkin: Embed(source="kingnarestyle.swf", symbol="ScrollBars_trackSkin");
 	trackOverSkin: Embed(source="kingnarestyle.swf", symbol="ScrollBars_trackSkin");
