@@ -258,7 +258,7 @@ mx|CursorManager
 //  DataGrid
 //------------------------------
 */
-mx|DataGrid
+s|DataGrid
 {
 
 	columnDropIndicatorSkin: Embed(source="kingnarestyle.swf", symbol="DataGrid_columnDropIndicatorSkin");
@@ -415,7 +415,7 @@ s|HSlider
 //  Label
 //------------------------------
 */
-mx|Label
+s|Label
 {
 	color: #FFFFFF;
 	disabledColor: #BBBBBB;
@@ -549,7 +549,7 @@ NativeMenu
 //  NumericStepper
 //------------------------------
 */
-mx|NumericStepper
+s|NumericStepper
 {
 /* using symbol */
 /* 	downArrowDisabledSkin: Embed(source="kingnarestyle.swf", symbol="NumericStepperDownArrow_disabledSkin");
@@ -871,7 +871,7 @@ mx|VScrollBar
 }
 
 /* AIR Part Test*/
-mx|Window
+s|Window
 {
 	 statusBarBackgroundColor:#C0C0C0;
 }

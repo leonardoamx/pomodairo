@@ -33,13 +33,13 @@ package com.pomodairo.db
 		public var dataset:ArrayList;
 		
 		[Bindable]
-		public var datasetStatistics1:Array;
+		public var datasetStatistics1:ArrayList;
 		[Bindable]
-		public var datasetStatistics2:Array;
+		public var datasetStatistics2:ArrayList;
 		[Bindable]
-		public var datasetStatistics3:Array;
+		public var datasetStatistics3:ArrayList;
 		[Bindable]
-		public var datasetStatistics4:Array;
+		public var datasetStatistics4:ArrayList;
 		[Bindable]
 		public var datasetStatistics5:Array;
 		[Bindable]
@@ -342,7 +342,7 @@ package com.pomodairo.db
 			var result:SQLResult = dbStatement.getResult();
 		    if (result != null)
 		    {
-		    	datasetStatistics1 = result.data;
+		    	datasetStatistics1 = new ArrayList (result.data);
 		    }
 		}
 		private function onDBStatementStatisticsResult2(event:SQLEvent):void
@@ -350,7 +350,7 @@ package com.pomodairo.db
 			var result:SQLResult = dbStatement.getResult();
 		    if (result != null)
 		    {
-		    	datasetStatistics2 = result.data;
+		    	datasetStatistics2 = new ArrayList (result.data);
 		    }
 		}
 		private function onDBStatementStatisticsResult3(event:SQLEvent):void
@@ -358,7 +358,7 @@ package com.pomodairo.db
 			var result:SQLResult = dbStatement.getResult();
 		    if (result != null)
 		    {
-		    	datasetStatistics3 = result.data;
+		    	datasetStatistics3 = new ArrayList (result.data);
 		    }
 		}
 		private function onDBStatementStatisticsResult4(event:SQLEvent):void
@@ -366,7 +366,7 @@ package com.pomodairo.db
 			var result:SQLResult = dbStatement.getResult();
 		    if (result != null)
 		    {
-		    	datasetStatistics4 = result.data;
+		    	datasetStatistics4 = new ArrayList (result.data);
 		    }
 		}
 		

@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Window xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:fc="http://www.adobe.com/2006/fc" title="Pomodairo Statistics" width="600" height="418" initialize="init()" resizable="false" xmlns:s="library://ns.adobe.com/flex/spark">
-	<mx:Script>
+<s:Window
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:fc="http://www.adobe.com/2006/fc" 
+	title="Pomodairo Statistics" width="600" height="418" initialize="init()" resizable="false" showStatusBar="false">
+	<fx:Script>
 		<![CDATA[
 			import com.pomodairo.Pomodoro;
 			import com.pomodairo.TableUtils;
 			import com.pomodairo.db.Storage;
+			import flash.events.Event;
+			import flash.events.MouseEvent;
 			import flash.system.System;
+			import mx.controls.DateField;
 			
 			[Bindable]
 			private var db:Storage = Storage.instance;
@@ -56,132 +64,149 @@
 	        	db.getRealityFactors();
 	        }
 	        
-	        public function copyTableToClipboard(title:String, data:Array):void
+	        public function copyTableToClipboard(title:String, dataList:ArrayList):void
             {
+			  var data:Array = dataList.source;
 			  var tmpString:String = new TableUtils().getTableAsCsv(data);
               System.setClipboard(tmpString);
             }
 
 
 		]]>
-	</mx:Script>
+	</fx:Script>
 	
 	<mx:TabNavigator width="600" height="400">
-		<mx:Canvas label="Pomodoros" width="100%" height="100%">
-			<s:Panel width="100%" height="100%" id="dataGridPanel1" title="Pomodoros View" x="0" y="0">
-				<s:layout>
-					<s:VerticalLayout />
-				</s:layout>
-				<mx:DataGrid id="pomodorosDataGrid1"
-					dataProvider="{db.datasetStatistics1}" 
-					height="100%"
-					editable="false"
-					change="onUsersDataGridChanged(event)" width="100%">
-					<mx:columns>
-						<mx:DataGridColumn width="80" headerText="Name" dataField="name"/>
-						<mx:DataGridColumn width="20" headerText="Type" dataField="type"/>
-						<mx:DataGridColumn width="70" headerText="Closed" dataField="closed"/>
-						<mx:DataGridColumn width="40" headerText="Estimated" dataField="estimated"/>
-						<mx:DataGridColumn width="40" headerText="Pomodoros" dataField="pomodoros"/>
-						<mx:DataGridColumn width="40" headerText="Delta" dataField="delta"/>
-						<mx:DataGridColumn width="40" headerText="Interruptions" dataField="interruptions"/>
-					</mx:columns>
-				</mx:DataGrid>
-				<mx:ControlBar>
-					<mx:Label text="Start Date"/>
-					<mx:DateField id="dateFieldPomsOfDay" initialize="initDateField(this.dateFieldPomsOfDay)"/>
-					<mx:Label text="Days"/>
-					<mx:NumericStepper minimum="-365" maximum="365" stepSize="1" id="pomodoroRangeStepper" value="0" width="50" maxChars="4" />
-					<mx:Label text="Filter"/>
-					<fc:AutoComplete
-						id="pomodoroFilter"
-						dataProvider="{db.datasetStatistics5}"
-					   width="132"/>
-					<mx:Button id="pomsOfDay" label="Refresh" click="onPomsOfDayClicked(null)"/>
-					<mx:Button label="Copy" click="copyTableToClipboard('Pomodoros', db.datasetStatistics1)"/>
-				</mx:ControlBar>
-			</s:Panel>
-		</mx:Canvas>
-		<mx:Canvas label="Interruptions" width="100%" height="100%">
-			<s:Panel width="100%" height="100%" id="dataGridPanel3" title="Interruptions" x="0" y="0">
-				<s:layout>
-					<s:VerticalLayout />
-				</s:layout>
-				<mx:DataGrid id="pomodorosDataGrid3"
-					dataProvider="{db.datasetStatistics3}" 
-					height="100%"
-					editable="false"
-					change="onUsersDataGridChanged(event)" width="100%">
-					<mx:columns>
-						<mx:DataGridColumn width="140" headerText="Name" dataField="name"/>
-						<mx:DataGridColumn width="100" headerText="Created" dataField="created"/>
-						<mx:DataGridColumn width="100" headerText="Type" dataField="type"/>
-						<mx:DataGridColumn width="40" headerText="Task" dataField="parent"/>
-					</mx:columns>
-				</mx:DataGrid>
-				<mx:ControlBar>
-					<mx:Label text="Start Date"/>
-					<mx:DateField id="dateFieldInterruptionsOfDay" initialize="initDateField(this.dateFieldInterruptionsOfDay)"/>
-					<mx:Label text="Days"/>
-					<mx:NumericStepper minimum="-365" maximum="365" stepSize="1" id="interruptionsRangeStepper" value="0" width="50" maxChars="4" />
-					<mx:Label text="Filter"/>
-					<fc:AutoComplete
-						id="interruptionFilter"
-						dataProvider="{db.datasetStatistics6}"
-					   width="132"/>
-					<mx:Button id="longestTasks" label="Refresh" click="onInterruptionsClicked(null)"/>
-					<mx:Button label="Copy" click="copyTableToClipboard('Interruptions', db.datasetStatistics3)"/>
-				</mx:ControlBar>
-			</s:Panel>
-		</mx:Canvas>
-		<mx:Canvas label="Count" width="100%" height="100%">
-			<s:Panel width="100%" height="100%" id="dataGridPanel2" title="Pomodoros Per Day" x="0" y="0">
-				<s:layout>
-					<s:VerticalLayout />
-				</s:layout>
-				<mx:DataGrid id="pomodorosDataGrid2"
-					dataProvider="{db.datasetStatistics2}" 
-					height="100%"
-					editable="false"
-					change="onUsersDataGridChanged(event)" width="100%">
-					<mx:columns>
-						<mx:DataGridColumn width="100" headerText="Created" dataField="created"/>
-						<mx:DataGridColumn width="40" headerText="Estimated" dataField="estimated"/>
-						<mx:DataGridColumn width="40" headerText="Pomodoros" dataField="pomodoros"/>
-						<mx:DataGridColumn width="40" headerText="Delta" dataField="delta"/>
-						<mx:DataGridColumn width="40" headerText="Interruptions" dataField="interruptions"/>
-					</mx:columns>
-				</mx:DataGrid>
-				<mx:ControlBar>
-					<mx:Button id="pomsPerDay" label="Refresh" click="onPomsPerDayClicked(null)"/>
-					<mx:Button label="Copy" click="copyTableToClipboard('Count', db.datasetStatistics2)"/>
-				</mx:ControlBar>
-			</s:Panel>
-		</mx:Canvas>
-		<mx:Canvas label="Reality Factors" width="100%" height="100%">
-			<s:Panel width="100%" height="100%" id="dataGridPanel4" title="Weekly Reality Factor" x="0" y="0">
-				<s:layout>
-					<s:VerticalLayout />
-				</s:layout>
-				<mx:DataGrid id="pomodorosDataGrid4"
-					dataProvider="{db.datasetStatistics4}" 
-					height="100%"
-					editable="false"
-					change="onUsersDataGridChanged(event)" width="100%">
-					<mx:columns>
-						<mx:DataGridColumn width="40" headerText="Week" dataField="week"/>
-						<mx:DataGridColumn width="50" headerText="Reality Factor" dataField="factor"/>
-						<mx:DataGridColumn width="40" headerText="Estimated" dataField="estimated"/>
-						<mx:DataGridColumn width="40" headerText="Pomodoros" dataField="pomodoros"/>
-						<mx:DataGridColumn width="40" headerText="Delta" dataField="delta"/>
-						<mx:DataGridColumn width="40" headerText="Interruptions" dataField="interruptions"/>
-					</mx:columns>
-				</mx:DataGrid>
-				<mx:ControlBar>
-					<mx:Button id="realityFactor" label="Refresh" click="onRealityFactorsClicked(null)"/>
-					<mx:Button label="Copy" click="copyTableToClipboard('Reality Factors', db.datasetStatistics4)"/>
-				</mx:ControlBar>
-			</s:Panel>
-		</mx:Canvas>
+		<s:NavigatorContent label="Pomodoros" width="100%" height="100%">
+			<s:Group width="100%" height="100%">
+				<s:Panel width="100%" height="100%" id="dataGridPanel1" title="Pomodoros View" x="0" y="0">
+					<s:layout>
+						<s:VerticalLayout />
+					</s:layout>
+					<s:DataGrid id="pomodorosDataGrid1"
+						dataProvider="{db.datasetStatistics1}" 
+						height="100%"
+						editable="false"
+						selectionChange="onUsersDataGridChanged(event)" width="100%">
+						<s:columns>
+							<s:ArrayList>
+								<s:GridColumn width="80" headerText="Name" dataField="name"/>
+								<s:GridColumn width="20" headerText="Type" dataField="type"/>
+								<s:GridColumn width="70" headerText="Closed" dataField="closed"/>
+								<s:GridColumn width="40" headerText="Estimated" dataField="estimated"/>
+								<s:GridColumn width="40" headerText="Pomodoros" dataField="pomodoros"/>
+								<s:GridColumn width="40" headerText="Delta" dataField="delta"/>
+								<s:GridColumn width="40" headerText="Interruptions" dataField="interruptions"/>
+							</s:ArrayList>
+						</s:columns>
+					</s:DataGrid>
+					<mx:ControlBar>
+						<s:Label text="Start Date"/>
+						<mx:DateField id="dateFieldPomsOfDay" initialize="initDateField(this.dateFieldPomsOfDay)"/>
+						<s:Label text="Days"/>
+						<s:NumericStepper minimum="-365" maximum="365" stepSize="1" id="pomodoroRangeStepper" value="0" width="50" maxChars="4" />
+						<s:Label text="Filter"/>
+						<fc:AutoComplete
+							id="pomodoroFilter"
+							dataProvider="{db.datasetStatistics5}"
+						   width="132"/>
+						<s:Button id="pomsOfDay" label="Refresh" click="onPomsOfDayClicked(null)"/>
+						<s:Button label="Copy" click="copyTableToClipboard('Pomodoros', db.datasetStatistics1)"/>
+					</mx:ControlBar>
+				</s:Panel>
+			</s:Group>
+		</s:NavigatorContent>
+		<s:NavigatorContent label="Interruptions" width="100%" height="100%">
+			<s:Group width="100%" height="100%">
+				<s:Panel width="100%" height="100%" id="dataGridPanel3" title="Interruptions" x="0" y="0">
+					<s:layout>
+						<s:VerticalLayout />
+					</s:layout>
+					<s:DataGrid id="pomodorosDataGrid3"
+						dataProvider="{db.datasetStatistics3}" 
+						height="100%"
+						editable="false"
+						selectionChange="onUsersDataGridChanged(event)" width="100%">
+						<s:columns>
+							<s:ArrayList>
+								<s:GridColumn width="140" headerText="Name" dataField="name"/>
+								<s:GridColumn width="100" headerText="Created" dataField="created"/>
+								<s:GridColumn width="100" headerText="Type" dataField="type"/>
+								<s:GridColumn width="40" headerText="Task" dataField="parent"/>
+							</s:ArrayList>
+						</s:columns>
+					</s:DataGrid>
+					<mx:ControlBar>
+						<s:Label text="Start Date"/>
+						<mx:DateField id="dateFieldInterruptionsOfDay" initialize="initDateField(this.dateFieldInterruptionsOfDay)"/>
+						<s:Label text="Days"/>
+						<s:NumericStepper minimum="-365" maximum="365" stepSize="1" id="interruptionsRangeStepper" value="0" width="50" maxChars="4" />
+						<s:Label text="Filter"/>
+						<fc:AutoComplete
+							id="interruptionFilter"
+							dataProvider="{db.datasetStatistics6}"
+						   width="132"/>
+						<s:Button id="longestTasks" label="Refresh" click="onInterruptionsClicked(null)"/>
+						<s:Button label="Copy" click="copyTableToClipboard('Interruptions', db.datasetStatistics3)"/>
+					</mx:ControlBar>
+				</s:Panel>
+			</s:Group>
+		</s:NavigatorContent>
+		<s:NavigatorContent label="Count" width="100%" height="100%">
+			<s:Group width="100%" height="100%">
+				<s:Panel width="100%" height="100%" id="dataGridPanel2" title="Pomodoros Per Day" x="0" y="0">
+					<s:layout>
+						<s:VerticalLayout />
+					</s:layout>
+					<s:DataGrid id="pomodorosDataGrid2"
+						dataProvider="{db.datasetStatistics2}" 
+						height="100%"
+						editable="false"
+						selectionChange="onUsersDataGridChanged(event)" width="100%">
+						<s:columns>
+							<s:ArrayList>
+								<s:GridColumn width="100" headerText="Created" dataField="created"/>
+								<s:GridColumn width="40" headerText="Estimated" dataField="estimated"/>
+								<s:GridColumn width="40" headerText="Pomodoros" dataField="pomodoros"/>
+								<s:GridColumn width="40" headerText="Delta" dataField="delta"/>
+								<s:GridColumn width="40" headerText="Interruptions" dataField="interruptions"/>
+							</s:ArrayList>
+						</s:columns>
+					</s:DataGrid>
+					<mx:ControlBar>
+						<s:Button id="pomsPerDay" label="Refresh" click="onPomsPerDayClicked(null)"/>
+						<s:Button label="Copy" click="copyTableToClipboard('Count', db.datasetStatistics2)"/>
+					</mx:ControlBar>
+				</s:Panel>
+			</s:Group>
+		</s:NavigatorContent>
+		<s:NavigatorContent label="Reality Factors" width="100%" height="100%">
+			<s:Group width="100%" height="100%">
+				<s:Panel width="100%" height="100%" id="dataGridPanel4" title="Weekly Reality Factor" x="0" y="0">
+					<s:layout>
+						<s:VerticalLayout />
+					</s:layout>
+					<s:DataGrid id="pomodorosDataGrid4"
+						dataProvider="{db.datasetStatistics4}" 
+						height="100%"
+						editable="false"
+						selectionChange="onUsersDataGridChanged(event)" width="100%">
+						<s:columns>
+							<s:ArrayList>
+								<s:GridColumn width="40" headerText="Week" dataField="week"/>
+								<s:GridColumn width="50" headerText="Reality Factor" dataField="factor"/>
+								<s:GridColumn width="40" headerText="Estimated" dataField="estimated"/>
+								<s:GridColumn width="40" headerText="Pomodoros" dataField="pomodoros"/>
+								<s:GridColumn width="40" headerText="Delta" dataField="delta"/>
+								<s:GridColumn width="40" headerText="Interruptions" dataField="interruptions"/>
+							</s:ArrayList>
+						</s:columns>
+					</s:DataGrid>
+					<mx:ControlBar>
+						<s:Button id="realityFactor" label="Refresh" click="onRealityFactorsClicked(null)"/>
+						<s:Button label="Copy" click="copyTableToClipboard('Reality Factors', db.datasetStatistics4)"/>
+					</mx:ControlBar>
+				</s:Panel>
+			</s:Group>
+		</s:NavigatorContent>
 	</mx:TabNavigator>
-</mx:Window>
+</s:Window>
