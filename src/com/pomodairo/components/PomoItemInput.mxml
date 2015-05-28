@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="256" height="52" 
+<s:BorderContainer
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	width="256" height="52" 
 	creationComplete="init()" borderColor="#000000" borderStyle="solid" backgroundColor="#181818" showEffect="fadein" hideEffect="fadeout">
 	
-	<mx:Script>
+	<fx:Script>
         <![CDATA[
+			import flash.events.Event;
+			import flash.events.KeyboardEvent;
         	import mx.controls.Alert;
         	import com.pomodairo.db.Storage;
         	import com.pomodairo.Pomodoro;
@@ -133,13 +139,14 @@
             }
             
         ]]>
-    </mx:Script>
-    
-    <mx:Fade id="fadein" duration="1000" alphaFrom="0" alphaTo="1.0"/>
-	<mx:Fade id="fadeout" duration="1000"  alphaFrom="1.0" alphaTo="0.0"/>
+    </fx:Script>
+	<fx:Declarations>
+		<s:Fade id="fadein" duration="1000" alphaFrom="0" alphaTo="1.0"/>
+		<s:Fade id="fadeout" duration="1000"  alphaFrom="1.0" alphaTo="0.0"/>
+	</fx:Declarations>
 	
-	<mx:TextInput id="input" width="236" x="10" y="16" focusIn="descriptionFocus(event);" color="#FFFFFF" fontSize="14" height="28" showEffect="fadein" hideEffect="fadeout"/>
-	<mx:TextInput id="estimatedInput" width="36" x="208" y="16" focusIn="estimateFocus(event);" color="#FFFFFF" fontSize="14" height="28" showEffect="fadein" hideEffect="fadeout" maxChars="1" restrict="0-7"/>
-	<mx:Label id="instruction" x="10" y="0" text="{currentText}" color="#8A8A8A"/>
+	<s:TextInput id="input" width="236" x="10" y="16" focusIn="descriptionFocus(event);" color="#FFFFFF" fontSize="14" contentBackgroundAlpha="0" height="28" showEffect="fadein" hideEffect="fadeout"/>
+	<s:TextInput id="estimatedInput" width="36" x="208" y="16" focusIn="estimateFocus(event);" color="#FFFFFF" fontSize="14" contentBackgroundAlpha="0" height="28" showEffect="fadein" hideEffect="fadeout" maxChars="1" restrict="0-7"/>
+	<s:Label id="instruction" x="10" y="0" text="{currentText}" color="#8A8A8A"/>
 	
-</mx:Canvas>
+</s:BorderContainer>
