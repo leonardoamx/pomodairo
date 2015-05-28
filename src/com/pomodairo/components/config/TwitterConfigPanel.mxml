@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" x="10" y="5" width="298" height="154" backgroundColor="#313131"
+<s:BorderContainer
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	x="10" y="5" width="298" height="154" backgroundColor="#313131"
 	creationComplete="init()">
 
-
-<mx:Script>
+	<fx:Script>
         <![CDATA[
         	import com.pomodairo.PomodoroEventDispatcher;
         	import com.pomodairo.db.Storage;
         	import com.pomodairo.events.ConfigurationUpdatedEvent;
-        	
-        	import mx.controls.Alert;
-        	
+			import flash.events.Event;
+			import flash.utils.Dictionary;
+			import mx.controls.Alert;
+
         	public static var ENABLED:String = "twitter.enabled";
         	public static var POST_POMODOROS:String = "twitter.doPost";
         	public static var GROUP_USERNAME:String = "twitter.groupUsername";
@@ -89,18 +93,18 @@
             }
 			            
         ]]>
-    </mx:Script>
+    </fx:Script>
 
-	<mx:CheckBox id="enabledCheckbox" x="10" y="10" label="Use Twitter (still experimental)" change="onEnableTwitterChanged(event)"/>
+	<s:CheckBox id="enabledCheckbox" x="10" y="10" label="Use Twitter (still experimental)" change="onEnableTwitterChanged(event)"/>
 	
-	<mx:Label x="10" y="40" color="#A9A9A9" text="Group Username"/>
-	<mx:TextInput id="groupUsernameField" x="10" y="56" width="130">
-		<mx:toolTip>Enter any username to be used for updates here.</mx:toolTip>
-	</mx:TextInput>
+	<s:Label x="10" y="40" color="#A9A9A9" text="Group Username"/>
+	<s:TextInput id="groupUsernameField" x="10" y="56" width="130">
+		<s:toolTip>Enter any username to be used for updates here.</s:toolTip>
+	</s:TextInput>
 	
-	<mx:CheckBox x="10" y="88" label="Post status updates" id="postCheckbox" />
+	<s:CheckBox x="10" y="88" label="Post status updates" id="postCheckbox" />
 	
-	<mx:Button x="221" y="90" label="Save" click="save()" width="63"/>
-	<mx:Button x="221" y="121" label="Cancel" click="exit()"/>
+	<s:Button x="221" y="90" label="Save" click="save()" width="63"/>
+	<s:Button x="221" y="121" label="Cancel" click="exit()"/>
 	
-</mx:Canvas>
+</s:BorderContainer>

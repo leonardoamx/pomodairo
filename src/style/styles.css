@@ -127,7 +127,7 @@ mx|ButtonBar
 //  CheckBox
 //------------------------------
 */
-mx|CheckBox
+s|CheckBox
 {
 	disabledIcon: Embed(source="kingnarestyle.swf", symbol="CheckBox_disabledIcon");
 	downIcon: Embed(source="kingnarestyle.swf", symbol="CheckBox_downIcon");
