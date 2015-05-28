@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" x="10" y="5" width="298" height="154" backgroundColor="#313131"
+<s:BorderContainer
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	x="10" y="5" width="298" height="154" backgroundColor="#313131"
 	creationComplete="init()">
 
-
-<mx:Script>
+	<fx:Script>
         <![CDATA[
         	import com.pomodairo.events.ConfigurationUpdatedEvent;
         	import com.pomodairo.PomodoroEventDispatcher;
         	import com.pomodairo.db.Storage;
+			import flash.utils.Dictionary;
         	
 			public static var POMODORO_LENGTH:String = "pomodoroLength";
 			public static var SHORT_BREAK_LENGTH:String = "time.shortBreakLength";
@@ -89,19 +93,20 @@
             }
 			            
         ]]>
-    </mx:Script>
-	<mx:Button x="221" y="90" label="Save" click="save()" width="63"/>
-	<mx:Button x="221" y="121" label="Cancel" click="exit()"/>
+    </fx:Script>
+
+	<s:Button x="221" y="90" label="Save" click="save()" width="63"/>
+	<s:Button x="221" y="121" label="Cancel" click="exit()"/>
 	
-	<mx:Label x="10" y="6" text="Pomodoro length" color="#A9A9A9"/>
-	<mx:HSlider id="pomodoroSlider" x="10" y="15" snapInterval="1" minimum="1" maximum="60"/>
+	<s:Label x="10" y="6" text="Pomodoro length" color="#A9A9A9"/>
+	<s:HSlider id="pomodoroSlider" x="10" y="15" snapInterval="1" minimum="1" maximum="60"/>
 	
-	<mx:Label x="10" y="48.3" text="Short break length" color="#A9A9A9"/>
-	<mx:HSlider id="shortBreakSlider" x="10" y="57" snapInterval="1" minimum="1" maximum="30"/>
+	<s:Label x="10" y="48.3" text="Short break length" color="#A9A9A9"/>
+	<s:HSlider id="shortBreakSlider" x="10" y="57" snapInterval="1" minimum="1" maximum="30"/>
 	
-	<mx:Label x="10" y="91.3" text="Long break length" color="#A9A9A9"/>
-	<mx:HSlider id="longBreakSlider" x="10" y="100" snapInterval="1" minimum="1" maximum="60"/>
-	<mx:NumericStepper x="228" y="25" value="4" minimum="1" maximum="30" enabled="true" id="longBreakSelect" toolTip="Number of pomodoros until a long break"/>
-	<mx:Label x="176" y="7" text="Long break interval"/>
+	<s:Label x="10" y="91.3" text="Long break length" color="#A9A9A9"/>
+	<s:HSlider id="longBreakSlider" x="10" y="100" snapInterval="1" minimum="1" maximum="60"/>
+	<s:NumericStepper x="228" y="25" value="4" minimum="1" maximum="30" enabled="true" id="longBreakSelect" toolTip="Number of pomodoros until a long break"/>
+	<s:Label x="176" y="7" text="Long break interval"/>
 	
-</mx:Canvas>
+</s:BorderContainer>

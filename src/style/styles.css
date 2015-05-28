@@ -25,9 +25,7 @@ SOFTWARE.
 */
 
 @namespace mx "library://ns.adobe.com/flex/mx";
-/* 
 @namespace s "library://ns.adobe.com/flex/spark";
-*/
 
 /*
 //------------------------------
@@ -399,7 +397,7 @@ mx|HScrollBar
 //  HSlider
 //------------------------------
 */
-mx|HSlider
+s|HSlider
 {
 	trackSkin: Embed(source="kingnarestyle.swf", symbol="SliderTrack_Skin");
 	showTrackHighlight: true;
