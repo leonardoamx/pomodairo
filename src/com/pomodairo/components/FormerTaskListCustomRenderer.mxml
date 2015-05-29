@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Label
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+  creationComplete="init()">
+  <fx:Script>
+    <![CDATA[
+	  import mx.controls.DataGrid;
+      import mx.events.ListEvent;
+      import com.pomodairo.Pomodoro;
+      import mx.controls.dataGridClasses.DataGridListData;
+      
+      private var dg:DataGrid;
+      private var _strikethrough: Boolean = false;
+      
+      private function init():void
+      {
+        dg =listData.owner as DataGrid;
+      }
+        
+	    public function set strikethrough(bool: Boolean): void {
+	        _strikethrough = bool;
+	        this.invalidateDisplayList();
+	    }
+	    
+	    public function get strikethrough(): Boolean {
+	        return _strikethrough;
+	    }
+		
+		
+		override protected function updateDisplayList(unscaledWidth: Number, unscaledHeight: Number): void {
+	        if(data.done)
+	        {
+	          //This row is selected update stuff
+	          strikethrough = true;
+	        }
+	        else
+	        {
+	          //This row is not selected reset stuff
+	          strikethrough = false;
+	        }     	
+	            	
+	        this.setStyle('color',0xCCCCCC);
+	        this.setStyle('fontStyle', 'normal');
+	        this.setStyle('fontWeight', 'normal');
+			
+            super.updateDisplayList (unscaledWidth, unscaledHeight);
+           
+            this.graphics.clear();
+            if (_strikethrough) {
+                this.graphics.lineStyle(1, this.getStyle("color"));
+                this.graphics.moveTo(0, unscaledHeight/2);
+                this.graphics.lineTo(unscaledWidth, unscaledHeight/2);                
+            }
+            else {
+	            if (data.estimated == 0) {
+	                this.setStyle('color',0x777777);
+	            }
+	            if (data.estimated < data.pomodoros) {
+	            	this.setStyle('color',0xCC0000);
+	            }
+	            if (data.created.day != new Date().day ) {
+	            	this.setStyle('fontStyle', 'italic');
+	            }
+	            if (data.pomodoros > 0 ) {
+	            	this.setStyle('fontWeight', 'bold');
+	            }
+            }
+        }
+      
+    ]]>
+  </fx:Script>
+</mx:Label>
