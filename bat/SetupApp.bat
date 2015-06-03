@@ -1,3 +1,6 @@
+:: Set working dir
+cd %~dp0 & cd ..
+
 :user_configuration
 
 :: About AIR application packaging
@@ -20,24 +23,23 @@ set APP_XML=pomodairo-app.xml
 set APP_DIR=bin
 set FILE_OR_DIR=-C %APP_DIR% .
 
-:: Your application ID (must match <id> of Application descriptor)
-for /f "tokens=3 delims=<>" %%a in ('findstr /C:"<id>" %APP_XML%') do set APP_ID=%%a
+:: Your application ID (must match <id> of Application descriptor) and remove spaces
+for /f "tokens=3 delims=<>" %%a in ('findstr /R /C:"^[ 	]*<id>" %APP_XML%') do set APP_ID=%%a
 set APP_ID=%APP_ID: =%
 
 :: Output
 set AIR_PATH=air
 set AIR_NAME=Pomodairo
 
-
 :validation
-%SystemRoot%\System32\find /C "<id>%APP_ID%</id>" "%APP_XML%" > NUL
+findstr /C:"<id>%APP_ID%</id>" "%APP_XML%" > NUL
 if errorlevel 1 goto badid
 goto end
 
 :badid
 echo.
 echo ERROR: 
-echo   Application ID in 'bat\SetupApplication.bat' (APP_ID) 
+echo   Application ID in 'bat\SetupApp.bat' (APP_ID) 
 echo   does NOT match Application descriptor '%APP_XML%' (id)
 echo.
 if %PAUSE_ERRORS%==1 pause
