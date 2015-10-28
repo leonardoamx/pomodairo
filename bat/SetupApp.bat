@@ -16,8 +16,12 @@ set CERT_FILE="bat\Pomodairo.p12"
 set SIGNING_OPTIONS=-storetype pkcs12 -keystore %CERT_FILE% -storepass %CERT_PASS%
 
 :: Application descriptor
-set APP_XML=application.xml
-set APP_XML=pomodairo-app.xml
+rem set APP_XML=application.xml
+SET APP_DESCRIPTOR=%1
+IF "%APP_DESCRIPTOR%" == "" (
+  SET APP_DESCRIPTOR=Pomodairo-app.xml
+)
+set APP_XML=%APP_DESCRIPTOR%
 
 :: Files to package
 set APP_DIR=bin
