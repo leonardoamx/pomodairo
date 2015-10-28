@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:WindowedApplication 
+<mx:WindowedApplication 
 	xmlns:fx="http://ns.adobe.com/mxml/2009"
 	xmlns:s="library://ns.adobe.com/flex/spark"
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	xmlns:views="com.views.*" 
 	xmlns:ns1="com.pomodairo.components.*"
 	width="800" height="550" 
-	initialize="init()">
-	
-	<!--  backgroundGradientAlphas="[1.0, 1.0]" 
+	initialize="init()"
+
+	layout="vertical"
+	>
+	<!--  
+	backgroundGradientAlphas="[1.0, 1.0]" 
 	backgroundGradientColors="[#232323, #0A0A0A]"
-	-->
 	<s:layout><s:VerticalLayout /></s:layout>
+	-->
 	<fx:Script>
 		<![CDATA[
 			import com.pomodairo.Pomodoro;
@@ -120,4 +123,4 @@
 		</mx:ControlBar>
 	</mx:Panel>
 	
-</s:WindowedApplication>
+</mx:WindowedApplication>
